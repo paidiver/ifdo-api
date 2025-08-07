@@ -85,7 +85,7 @@ env:
   GDAL_HTTP_VERSION: 2
   PYTHONWARNINGS: "ignore"
 
-existingSecret: atlantis-secret
+existingSecret: paidiver-secret
 envFromSecret: true
 
 resources:
