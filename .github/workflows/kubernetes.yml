@@ -1,4 +1,4 @@
-name: Deploy Atlantis
+name: Deploy Kubernetes Resources
 
 on:
   push:
@@ -10,16 +10,6 @@ on:
 
 env:
   SECRETS_NAME: paidiver-secret
-  REGISTRY_API_URL: $CI_API_V4_URL/projects/$CI_PROJECT_ID/registry/repositories
-  DEPLOYMENT_NAME: paidiver
-  DEPLOYMENT_PREFIX: deployment/
-  DEPLOYMENT_SUFFIX:
-  NUMBER_OF_TAGS_TO_KEEP: 3
-  CONTAINER_NAME: $CI_PROJECT_NAME
-  IMAGE_NAME: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
-  KUBERNETES_NAMESPACE: paidiver
-
-
 
 jobs:
   create_namespace:
@@ -45,6 +35,9 @@ jobs:
       image: bitnami/kubectl:latest
     needs: create_namespace
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
       - name: Setup Kubeconfig
         run: |
           echo "${{ secrets.KUBE_CONFIG }}" | base64 -d > kubeconfig
