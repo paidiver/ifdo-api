@@ -1,0 +1,8 @@
+apiVersion: v1
+appVersion: 0.1.0
+description: A REST API and a Web Map tile server for Image Metadata
+name: ifdo-api
+version: 1.2.7
+maintainers:
+  - name: soutobias
+    url: https://github.com/soutobias

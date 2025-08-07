@@ -1,0 +1,33 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "{{ include "db.fullname" . }}-migrate-{{ .Release.Revision }}"
+  annotations:
+    "helm.sh/hook": post-upgrade
+    # "helm.sh/hook-delete-policy": before-hook-creation
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded,hook-failed
+
+spec:
+  template:
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+      {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: migrate
+          image: "{{ .Values.migration.repository }}:{{ .Values.migration.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: Always
+          {{- if .Values.envFromSecret }}
+          envFrom:
+            - secretRef:
+                name: {{ .Values.existingSecret }}
+          {{- end }}
+          command:
+            - sh
+            - -c
+            - |
+              export DATABASE_URL="postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@{{ include "db.fullname" . }}:{{ .Values.service.port }}/${POSTGRES_DB}"
+              echo "Running Alembic migrations..."
+              poetry run alembic upgrade head
+      restartPolicy: Never

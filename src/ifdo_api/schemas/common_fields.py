@@ -1,0 +1,99 @@
+from datetime import datetime
+from datetime import timezone
+from typing import Any
+from pydantic import BaseModel
+from pydantic import Field
+from pydantic import conint
+from pydantic import conlist
+from ifdo_api.schemas.fields import ImageCameraCalibrationModelSchema
+from ifdo_api.schemas.fields import ImageCameraHousingViewportSchema
+from ifdo_api.schemas.fields import ImageCameraPoseSchema
+from ifdo_api.schemas.fields import ImageContextSchema
+from ifdo_api.schemas.fields import ImageCreatorSchema
+from ifdo_api.schemas.fields import ImageDomeportParameterSchema
+from ifdo_api.schemas.fields import ImageEventSchema
+from ifdo_api.schemas.fields import ImageFlatportParameterSchema
+from ifdo_api.schemas.fields import ImageLicenseSchema
+from ifdo_api.schemas.fields import ImagePhotometricCalibrationSchema
+from ifdo_api.schemas.fields import ImagePISchema
+from ifdo_api.schemas.fields import ImagePlatformSchema
+from ifdo_api.schemas.fields import ImageProjectSchema
+from ifdo_api.schemas.fields import ImageSensorSchema
+
+
+# Main Pydantic model
+class CommonFieldsSchema(BaseModel):
+    """Schema for common fields shared across various models, representing metadata and associated information."""
+
+    name: str = Field(..., max_length=255)
+    sha256_hash: str = Field(..., max_length=64)
+    date_time: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    latitude: float = Field(..., ge=-90, le=90)
+    longitude: float = Field(..., ge=-180, le=180)
+    # location: Point = Field(..., description="WGS84 geographic center location")
+    altitude_meters: float
+    coordinate_uncertainty_m: float | None = None
+
+    context: ImageContextSchema | None = None
+    project: ImageProjectSchema | None = None
+    event: ImageEventSchema | None = None
+    platform: ImagePlatformSchema | None = None
+    sensor: ImageSensorSchema | None = None
+    pi: ImagePISchema | None = None
+    license: ImageLicenseSchema | None = None
+
+    creators: list[ImageCreatorSchema] = Field(default_factory=list)
+
+    copyright: str | None = None
+    abstract: str | None = None
+
+    entropy: float | None = Field(default=None, ge=0.0, le=1.0)
+    particle_count: int | None = Field(default=None, ge=0)
+    average_color: conlist(conint(ge=0, le=255), min_length=3, max_length=3) | None = None  # type: ignore[valid-type]
+    mpeg7_color_layout: list[float] | None = None
+    mpeg7_color_statistic: list[float] | None = None
+    mpeg7_color_structure: list[float] | None = None
+    mpeg7_dominant_color: list[float] | None = None
+    mpeg7_edge_histogram: list[float] | None = None
+    mpeg7_homogeneous_texture: list[float] | None = None
+    mpeg7_scalable_color: list[float] | None = None
+
+    acquisition: str | None = None
+    quality: str | None = None
+    deployment: str | None = None
+    navigation: str | None = None
+    scale_reference: str | None = None
+    illumination: str | None = None
+    pixel_magnitude: str | None = None
+    marine_zone: str | None = None
+    spectral_resolution: str | None = None
+    capture_mode: str | None = None
+    fauna_attraction: str | None = None
+
+    area_square_meters: float | None = Field(default=None, gt=0.0, description="Area in square meters, must be greater than 0")
+    meters_above_ground: float | None = None
+    acquisition_settings: dict[str, Any] | None = None
+
+    camera_yaw_degrees: float | None = None
+    camera_pitch_degrees: float | None = None
+    camera_roll_degrees: float | None = None
+    overlap_fraction: float | None = Field(default=None, ge=0.0, le=1.0)
+
+    camera_pose: ImageCameraPoseSchema | None = None
+    camera_housing_viewport: ImageCameraHousingViewportSchema | None = None
+    flatport_parameter: ImageFlatportParameterSchema | None = None
+    domeport_parameter: ImageDomeportParameterSchema | None = None
+    camera_calibration_model: ImageCameraCalibrationModelSchema | None = None
+    photometric_calibration: ImagePhotometricCalibrationSchema | None = None
+
+    objective: str | None = None
+    target_environment: str | None = None
+    target_timescale: str | None = None
+    spatial_constraints: str | None = None
+    temporal_constraints: str | None = None
+    time_synchronisation: str | None = None
+    item_identification_scheme: str | None = None
+    curation_protocol: str | None = None
+    visual_constraints: str | None = None
+
+    model_config = {"from_attributes": True}

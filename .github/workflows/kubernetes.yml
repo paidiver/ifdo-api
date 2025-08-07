@@ -1,0 +1,118 @@
+# name: Deploy Atlantis
+
+# on:
+#   push:
+#     branches:
+#       - main
+
+# env:
+#   SECRETS_NAME: paidiver-secret
+#   REGISTRY_API_URL: $CI_API_V4_URL/projects/$CI_PROJECT_ID/registry/repositories
+#   DEPLOYMENT_NAME: $CI_PROJECT_NAME
+#   DEPLOYMENT_PREFIX: deployment/
+#   DEPLOYMENT_SUFFIX:
+#   NUMBER_OF_TAGS_TO_KEEP: 3
+#   CONTAINER_NAME: $CI_PROJECT_NAME
+#   IMAGE_NAME: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+#   KUBERNETES_NAMESPACE: atlantis
+#   GITLAB_SECRET_NAME: gitlab-registry-creds
+
+
+# jobs:
+#   create_namespace:
+#     name: Create Namespace
+#     runs-on: ubuntu-latest
+#     container:
+#       image: bitnami/kubectl:latest
+#     steps:
+#       - name: Setup Kubeconfig
+#         run: |
+#           echo "$KUBE_CONFIG" | base64 -d > kubeconfig
+#           chmod 600 kubeconfig
+#           echo "KUBECONFIG=$(pwd)/kubeconfig" >> $GITHUB_ENV
+#           echo "HELM_KUBECONFIG=$(pwd)/kubeconfig" >> $GITHUB_ENV
+#       - name: Create namespace if not exists
+#         run: |
+#           kubectl get namespace "$KUBERNETES_NAMESPACE" || kubectl create namespace "$KUBERNETES_NAMESPACE"
+
+#   create_secrets:
+#     name: Create Secrets
+#     runs-on: ubuntu-latest
+#     container:
+#       image: bitnami/kubectl:latest
+#     needs: create_namespace
+#     steps:
+#       - name: Setup Kubeconfig
+#         run: |
+#           echo "$KUBE_CONFIG" | base64 -d > kubeconfig
+#           chmod 600 kubeconfig
+#           echo "KUBECONFIG=$(pwd)/kubeconfig" >> $GITHUB_ENV
+#           echo "HELM_KUBECONFIG=$(pwd)/kubeconfig" >> $GITHUB_ENV
+#       - name: Generate .env
+#         run: ./make_env.sh
+#       - name: Create Kubernetes secrets
+#         run: |
+#           ENV_SUFFIX=""
+#           SECRET_NAME=${SECRETS_NAME}
+#           kubectl create secret generic "$SECRET_NAME" \
+#             --namespace=$KUBERNETES_NAMESPACE \
+#             --dry-run=client -o yaml \
+#             | kubectl apply -n $KUBERNETES_NAMESPACE -f -
+
+#           kubectl create secret docker-registry "$GITLAB_SECRET_NAME" \
+#             --docker-server=registry.gitlab.com \
+#             --docker-username=soutobias11 \
+#             --docker-password=$REGISTRY_CLEANUP_TOKEN \
+#             --docker-email=tobfer@noc.ac.uk \
+#             --namespace=$KUBERNETES_NAMESPACE \
+#             --dry-run=client -o yaml \
+#             | kubectl apply -n $KUBERNETES_NAMESPACE -f -
+
+#   ssl_certificates:
+#     name: Apply SSL Certificates
+#     runs-on: ubuntu-latest
+#     container:
+#       image: bitnami/kubectl:latest
+#     needs: create_secrets
+#     steps:
+#       - name: Setup Kubeconfig
+#         run: |
+#           echo "$KUBE_CONFIG" | base64 -d > kubeconfig
+#           chmod 600 kubeconfig
+#           echo "KUBECONFIG=$(pwd)/kubeconfig" >> $GITHUB_ENV
+#           echo "HELM_KUBECONFIG=$(pwd)/kubeconfig" >> $GITHUB_ENV
+#       - name: Apply Cluster Issuer
+#         run: |
+#           kubectl apply -f ./config/cluster-issuer.yaml
+
+#   deploy_charts:
+#     name: Deploy Helm Charts
+#     runs-on: ubuntu-latest
+#     container:
+#       image: alpine/helm:3.12.0
+#     needs: ssl_certificates
+#     steps:
+#       - name: Setup Kubeconfig
+#         run: |
+#           echo "$KUBE_CONFIG" | base64 -d > kubeconfig
+#           chmod 600 kubeconfig
+#           echo "KUBECONFIG=$(pwd)/kubeconfig" >> $GITHUB_ENV
+#           echo "HELM_KUBECONFIG=$(pwd)/kubeconfig" >> $GITHUB_ENV
+#       - name: Deploy Charts
+#         run: |
+#           for CHART_PATH in $(find ./charts -mindepth 1 -maxdepth 1 -type d); do
+#             CHART_NAME=$(basename "$CHART_PATH")
+#             RELEASE_NAME="$CHART_NAME"
+
+#             if helm ls -n "$KUBERNETES_NAMESPACE" | grep -q "$RELEASE_NAME"; then
+#               echo "Upgrading release $RELEASE_NAME"
+#               helm upgrade "$RELEASE_NAME" "$CHART_PATH" \
+#                 --namespace "$KUBERNETES_NAMESPACE" \
+#                 --set imagePullSecrets[0].name=$GITLAB_SECRET_NAME
+#             else
+#               echo "Installing release $RELEASE_NAME"
+#               helm install "$RELEASE_NAME" "$CHART_PATH" \
+#                 --namespace "$KUBERNETES_NAMESPACE" \
+#                 --set imagePullSecrets[0].name=$GITLAB_SECRET_NAME
+#             fi
+#           done

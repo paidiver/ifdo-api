@@ -1,0 +1,40 @@
+services:
+  db:
+    image: postgis/postgis:16-3.5
+    container_name: paidiver_ifdo_api
+    restart: always
+    env_file:
+      - ../.env
+    ports:
+      - "5433:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+
+  app:
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile
+    command:
+      bash -c "bash /tmp/scripts/wait-for-it.sh db:5432 --timeout=30 && poetry run uvicorn ifdo_api.api.app:app --host 0.0.0.0 --port 8081  --workers 5 --reload"
+    restart: always
+    volumes:
+      - ../:/code:Z
+      - ../docker/scripts:/tmp/scripts
+    ports:
+      - "8081:8081"
+    image: api:latest
+    depends_on:
+      - redis
+
+    # network_mode: "host"  # Use the host network
+  redis:
+    image: redis:alpine
+    restart: always
+    ports:
+      - "6380:6379"
+    volumes:
+      - redis_data:/data
+
+volumes:
+  redis_data:
+  pg_data:

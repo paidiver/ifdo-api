@@ -1,0 +1,119 @@
+# Default values for paidiver.
+replicaCount: 3
+
+image:
+  repository: ghcr.io/paidiver/ifdo-api
+  tag: latest
+  pullPolicy: IfNotPresent
+  command: "uvicorn"
+  args:
+    - "ifdo_api.api.app:app"
+    - "--host"
+    - "0.0.0.0"
+    - "--port"
+    - "80"
+    - "--workers"
+    - "1"
+
+nameOverride: ""
+fullnameOverride: ""
+
+terminationGracePeriodSeconds: 30
+
+service:
+  type: ClusterIP
+  port: 8084
+
+ingress:
+  enabled: true
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-paidiver
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/use-regex: "true"
+
+    # Add these for CORS
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "*"             # adjust as needed for security
+    nginx.ingress.kubernetes.io/cors-allow-methods: "GET, POST, OPTIONS"
+    nginx.ingress.kubernetes.io/cors-allow-headers: "Authorization,Content-Type"
+    nginx.ingress.kubernetes.io/cors-max-age: "3600"
+
+    # Add these for rate limiting
+    nginx.ingress.kubernetes.io/limit-rpm: "1000" # 1000 requests per minute per client IP
+    nginx.ingress.kubernetes.io/limit-burst-multiplier: "1"
+    nginx.ingress.kubernetes.io/limit-connections: "20"
+
+    # Optional: max client request size
+    # nginx.ingress.kubernetes.io/proxy-body-size: "10m"
+
+  hosts:
+    # - host: paidiver.local
+    # - host: api.paidiver.xyz
+    #   paths:
+    #     - path: /paidiver/
+    #       pathType: Prefix
+    - host: postgis-api.paidiver.xyz
+      paths:
+        - path: /
+          pathType: Prefix
+  className: nginx
+  tls:
+   - secretName: letsencrypt-paidiver-api-tls
+    #  hosts:
+    #    - api.paidiver.xyz
+     hosts:
+      #  - postgis-api.local
+       - api.paidiver.xyz
+
+extraHostPathMounts: []
+  # - name: map-sources
+  #   mountPath: /map-sources/
+  #   hostPath: /home/ubuntu/map-sources
+  #   readOnly: false
+  #   mountPropagation: HostToContainer # OPTIONAL
+
+imagePullSecrets: []
+
+env:
+  CPL_TMPDIR: /tmp
+  GDAL_CACHEMAX: 200  # 200 mb
+  VSI_CACHE: "TRUE"
+  VSI_CACHE_SIZE: 5000000  # 5 MB (per file-handle)
+  GDAL_DISABLE_READDIR_ON_OPEN: "EMPTY_DIR"
+  GDAL_HTTP_MERGE_CONSECUTIVE_RANGES: "YES"
+  GDAL_HTTP_MULTIPLEX: "YES"
+  GDAL_HTTP_VERSION: 2
+  PYTHONWARNINGS: "ignore"
+
+existingSecret: atlantis-secret
+envFromSecret: true
+
+resources:
+  limits:
+    cpu: 1
+    memory: 2Gi
+  requests:
+    cpu: 1
+    memory: 2Gi
+
+serviceAccountName: ""
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #     - ALL
+  # readOnlyRootFilesystem: true
+  # allowPrivilegeEscalation: false
+  # runAsNonRoot: true
+  # runAsUser: 1001
+
+podSecurityContext: {}
+  # fsGroup: 1001
+  # runAsNonRoot: true
+  # runAsUser: 1001
