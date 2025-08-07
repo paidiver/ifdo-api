@@ -101,9 +101,9 @@ jobs:
           if helm ls -n "${{ secrets.KUBE_NAMESPACE }}" | grep -q "$RELEASE_NAME"; then
             echo "Upgrading release $RELEASE_NAME"
             helm upgrade "$RELEASE_NAME" "$CHART_PATH" \
-              --namespace "${{ secrets.KUBE_NAMESPACE }}" \
+              --namespace "${{ secrets.KUBE_NAMESPACE }}"
           else
             echo "Installing new release $RELEASE_NAME"
             helm install "$RELEASE_NAME" "$CHART_PATH" \
-              --namespace "${{ secrets.KUBE_NAMESPACE }}" \
+              --namespace "${{ secrets.KUBE_NAMESPACE }}"
           fi
