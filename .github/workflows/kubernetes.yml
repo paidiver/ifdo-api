@@ -34,6 +34,16 @@ jobs:
     container:
       image: bitnami/kubectl:latest
     needs: create_namespace
+    env:
+      POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+      POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+      POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+      POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
+      POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }}
+      REDIS_HOST: ${{ secrets.REDIS_HOST }}
+      REDIS_PORT: ${{ secrets.REDIS_PORT }}
+      POSTGRES_PORT_ALEMBIC: ${{ secrets.POSTGRES_PORT }}
+      POSTGRES_HOST_ALEMBIC: ${{ secrets.POSTGRES_HOST }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -44,13 +54,19 @@ jobs:
           chmod 600 kubeconfig
           echo "KUBECONFIG=$(pwd)/kubeconfig" >> $GITHUB_ENV
           echo "HELM_KUBECONFIG=$(pwd)/kubeconfig" >> $GITHUB_ENV
-      - name: Generate .env
-        run: ./make_env.sh
       - name: Create Kubernetes secrets
         run: |
           ENV_SUFFIX=""
           kubectl create secret generic "$SECRETS_NAME" \
-            --from-env-file=.env${ENV_SUFFIX} \
+            --from-literal=POSTGRES_USER="$POSTGRES_USER" \
+            --from-literal=POSTGRES_PASSWORD="$POSTGRES_PASSWORD" \
+            --from-literal=POSTGRES_DB="$POSTGRES_DB" \
+            --from-literal=POSTGRES_PORT="$POSTGRES_PORT" \
+            --from-literal=POSTGRES_HOST="$POSTGRES_HOST" \
+            --from-literal=REDIS_HOST="$REDIS_HOST" \
+            --from-literal=REDIS_PORT="$REDIS_PORT" \
+            --from-literal=POSTGRES_PORT_ALEMBIC="$POSTGRES_PORT_ALEMBIC" \
+            --from-literal=POSTGRES_HOST_ALEMBIC="$POSTGRES_HOST_ALEMBIC" \
             --namespace=${{ secrets.KUBE_NAMESPACE }} \
             --dry-run=client -o yaml \
             | kubectl apply -n ${{ secrets.KUBE_NAMESPACE }} -f -

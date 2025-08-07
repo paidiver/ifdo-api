@@ -69,11 +69,10 @@ jobs:
           chmod 600 kubeconfig
           echo "KUBECONFIG=$(pwd)/kubeconfig" >> $GITHUB_ENV
           echo "HELM_KUBECONFIG=$(pwd)/kubeconfig" >> $GITHUB_ENV
-          RELEASE_NAME="db"
-          CHART_PATH="./deployment/$RELEASE_NAME"
-
       - name: Deploy DB Chart if not exists
         run: |
+          RELEASE_NAME="db"
+          CHART_PATH="./deployment/$RELEASE_NAME"
           if ! helm ls -n "${{ secrets.KUBE_NAMESPACE }}" | grep -q "^$RELEASE_NAME"; then
             echo "Installing new release $RELEASE_NAME"
             helm install "$RELEASE_NAME" "$CHART_PATH" \
@@ -86,6 +85,8 @@ jobs:
 
       - name: Upgrade DB Migration
         run: |
+          RELEASE_NAME="db"
+          CHART_PATH="./deployment/$RELEASE_NAME"
           echo "Upgrading release $RELEASE_NAME"
           helm upgrade "$RELEASE_NAME" "$CHART_PATH" \
             --namespace "${{ secrets.KUBE_NAMESPACE }}" \
