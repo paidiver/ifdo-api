@@ -73,7 +73,7 @@ async def lifespan(application: FastAPI) -> asynccontextmanager:
     await close_db_connection(application)
 
 
-app = FastAPI(lifespan=lifespan, title="Paidiver ST3 PG API", version="0.1.0", openapi_url="/openapi.json", docs_url="/api.html")
+app = FastAPI(lifespan=lifespan, title="Paidiver ST3 PG API", version="0.1.0", openapi_url="/openapi.json", docs_url="/docs")
 
 
 origins = ["http://localhost:8080", "https://localhost:8080"]
@@ -111,17 +111,19 @@ def main() -> RedirectResponse:
     Returns:
         RedirectResponse: RedirectResponse to the documentation
     """
-    return RedirectResponse(url="/api.html")
+    return RedirectResponse(url="/docs")
 
 
-@app.get("/test", include_in_schema=False)
-def test() -> dict:
-    """A simple test that the API is working.
-
-    Returns:
-        dict: a dictionary with the information that the API si working
-    """
-    return {"API": "I'm alive"}
+@app.get(
+    "/healthz",
+    description="Health Check.",
+    summary="Health Check.",
+    operation_id="healthCheck",
+    tags=["Health Check"],
+)
+def ping() -> dict:
+    """Health check."""
+    return {"ping": "pong!"}
 
 
 #######################
