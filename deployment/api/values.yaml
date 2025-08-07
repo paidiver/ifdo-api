@@ -52,7 +52,7 @@ ingress:
     #   paths:
     #     - path: /paidiver/
     #       pathType: Prefix
-    - host: postgis-api.paidiver.xyz
+    - host: api.paidiver.xyz
       paths:
         - path: /
           pathType: Prefix

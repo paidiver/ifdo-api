@@ -1,4 +1,4 @@
-1. Get the Titile docs deployed here:
+1. Get the Api docs deployed here:
 {{- if .Values.ingress.enabled }}
 {{- range $host := .Values.ingress.hosts }}
   {{- range .paths }}
