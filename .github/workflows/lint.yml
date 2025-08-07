@@ -1,5 +1,13 @@
 name: Lint Ifdo-api Code
 
+on:
+  push:
+    # branches:
+    # - main
+  pull_request:
+    # branches:
+    # - main
+
 jobs:
   lint:
     if: github.actor != 'github-actions[bot]'

@@ -50,6 +50,7 @@ jobs:
         run: |
           ENV_SUFFIX=""
           kubectl create secret generic "$SECRETS_NAME" \
+            --from-env-file=.env${ENV_SUFFIX} \
             --namespace=${{ secrets.KUBE_NAMESPACE }} \
             --dry-run=client -o yaml \
             | kubectl apply -n ${{ secrets.KUBE_NAMESPACE }} -f -
