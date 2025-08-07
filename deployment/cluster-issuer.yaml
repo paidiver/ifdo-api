@@ -1,0 +1,16 @@
+# Cluster issuer for the cert manager
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-paidiver
+spec:
+  acme:
+    # The email address used for registration and recovery contact.
+    email: tobias.ferreira@noc.ac.uk
+    server: https://acme-v02.api.letsencrypt.org/directory
+    privateKeySecretRef:
+      name: letsencrypt-paidiver
+    solvers:
+    - http01:
+        ingress:
+          class: nginx
