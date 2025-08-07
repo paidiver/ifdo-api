@@ -76,7 +76,7 @@ async def lifespan(application: FastAPI) -> asynccontextmanager:
 app = FastAPI(lifespan=lifespan, title="Paidiver ST3 PG API", version="0.1.0", openapi_url="/openapi.json", docs_url="/docs")
 
 
-origins = ["http://localhost:8080", "https://localhost:8080"]
+origins = ["*"]
 
 app.add_middleware(
     CORSMiddleware,
