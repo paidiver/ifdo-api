@@ -4,7 +4,7 @@ replicaCount: 1
 image:
   repository: ghcr.io/paidiver/ifdo-api
   tag: latest
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
   command: "uvicorn"
   args:
     - "ifdo_api.api.app:app"
@@ -48,11 +48,11 @@ ingress:
 
   hosts:
     # - host: paidiver.local
-    # - host: api.paidiver.xyz
+    # - host: api.paidiver.site
     #   paths:
     #     - path: /paidiver/
     #       pathType: Prefix
-    - host: api.paidiver.xyz
+    - host: api.paidiver.site
       paths:
         - path: /
           pathType: Prefix
@@ -60,10 +60,10 @@ ingress:
   tls:
    - secretName: letsencrypt-paidiver-api-tls
     #  hosts:
-    #    - api.paidiver.xyz
+    #    - api.paidiver.site
      hosts:
       #  - postgis-api.local
-       - api.paidiver.xyz
+       - api.paidiver.site
 
 extraHostPathMounts: []
   # - name: map-sources

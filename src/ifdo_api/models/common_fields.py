@@ -34,38 +34,50 @@ class CommonFields:
             )
         },
     )
+    handle = Column(
+        String,
+        nullable=True,
+        # nullable=False,
+        info={"help_text": "A Handle URL to point to the landing page of the dataset or image"},
+    )
     sha256_hash = Column(
         String(64),
-        nullable=False,
+        nullable=True,
+        # nullable=False,
         unique=True,
         info={"help_text": "An SHA256 hash to represent the whole file for integrity verification"},
     )
     date_time = Column(
         DateTime,
-        nullable=False,
+        nullable=True,
+        # nullable=False,
         info={"help_text": "UTC time of image acquisition (or start time of a video)"},
     )
-    location = Column(
+    geom = Column(
         Geometry(geometry_type="POINT", srid=4326),
-        nullable=False,
+        nullable=True,
+        # nullable=False,
         info={"help_text": "Geographic location of the center of the image set, in WGS84 coordinates (EPSG:4326)"},
     )
     latitude = Column(
         Float,
-        nullable=False,
+        nullable=True,
+        # nullable=False,
         info={"help_text": "Latitude of the camera center in degrees, WGS84 coordinates (EPSG:4326)"},
     )
     longitude = Column(
         Float,
-        nullable=False,
+        nullable=True,
+        # nullable=False,
         info={"help_text": "Longitude of the camera center in degrees, WGS84 coordinates (EPSG:4326)"},
     )
     altitude_meters = Column(
         Float,
-        nullable=False,
+        nullable=True,
+        # nullable=False,
         info={"help_text": "Z-coordinate of camera center in meters. Positive above sea level, negative below."},
     )
-    coordinate_uncertainty_m = Column(
+    coordinate_uncertainty_meters = Column(
         Float,
         nullable=True,
         info={"help_text": "The average/static uncertainty of coordinates in this dataset, in meters."},
@@ -150,19 +162,22 @@ class CommonFields:
 
     acquisition = Column(
         Enum(AcquisitionEnum),
-        nullable=False,
+        nullable=True,
+        # nullable=False,
         info={"help_text": "photo: still images, video: moving images, slide: microscopy images / slide scans"},
     )
 
     quality = Column(
         Enum(QualityEnum),
-        nullable=False,
+        nullable=True,
+        # nullable=False,
         info={"help_text": "raw: straight from the sensor, processed: QA/QC'd, product: image data ready for interpretation"},
     )
 
     deployment = Column(
         Enum(DeploymentEnum),
-        nullable=False,
+        nullable=True,
+        # nullable=False,
         info={
             "help_text": (
                 "mapping: planned path execution along 2-3 spatial axes, stationary: fixed spatial position, "
@@ -175,7 +190,8 @@ class CommonFields:
 
     navigation = Column(
         Enum(NavigationEnum),
-        nullable=False,
+        nullable=True,
+        # nullable=False,
         info={
             "help_text": (
                 "satellite: GPS/Galileo etc., beacon: USBL etc., transponder: LBL etc., reconstructed: position "
@@ -186,7 +202,8 @@ class CommonFields:
 
     scale_reference = Column(
         Enum(ScaleReferenceEnum),
-        nullable=False,
+        nullable=True,
+        # nullable=False,
         info={
             "help_text": (
                 "3D camera: the imaging system provides scale directly, calibrated camera: image data and additional "
@@ -198,7 +215,8 @@ class CommonFields:
     )
     illumination = Column(
         Enum(IlluminationEnum),
-        nullable=False,
+        nullable=True,
+        # nullable=False,
         info={
             "help_text": (
                 "sunlight: the scene is only illuminated by the sun, artificial light: the scene is only illuminated "
@@ -209,13 +227,15 @@ class CommonFields:
 
     pixel_magnitude = Column(
         Enum(PixelMagnitudeEnum),
-        nullable=False,
+        nullable=True,
+        # nullable=False,
         info={"help_text": "average size of one pixel of an image, e.g. km, hm, dam, m, cm, mm, um"},
     )
 
     marine_zone = Column(
         Enum(MarineZoneEnum),
-        nullable=False,
+        nullable=True,
+        # nullable=False,
         info={
             "help_text": (
                 "seafloor: images taken in/on/right above the seafloor, water column: images taken in the free water "
@@ -227,7 +247,8 @@ class CommonFields:
 
     spectral_resolution = Column(
         Enum(SpectralResEnum),
-        nullable=False,
+        nullable=True,
+        # nullable=False,
         info={
             "help_text": (
                 "grayscale: single channel imagery, rgb: three channel imagery, multi-spectral: 4-10 channel imagery, "
@@ -238,19 +259,22 @@ class CommonFields:
 
     capture_mode = Column(
         Enum(CaptureModeEnum),
-        nullable=False,
+        nullable=True,
+        # nullable=False,
         info={"help_text": "whether the time points of image capture were systematic, human-triggered or both"},
     )
 
     fauna_attraction = Column(
         Enum(FaunaAttractionEnum),
-        nullable=False,
+        nullable=True,
+        # nullable=False,
         info={"help_text": "Allowed: none, baited, light"},
     )
 
     area_square_meters = Column(
         Float,
-        nullable=False,
+        nullable=True,
+        # nullable=False,
         info={
             "help_text": (
                 "The footprint of the entire image in square meters. This is the area that the images cover on the seafloor or in the water column."

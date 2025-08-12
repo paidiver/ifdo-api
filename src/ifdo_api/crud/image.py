@@ -1,9 +1,9 @@
 """This module implements the CRUD for the Image model."""
 
-from sqlalchemy import func
 from sqlalchemy.orm import Session
 from ifdo_api.crud.base import CRUDBase
 from ifdo_api.crud.base import jsonable_encoder_exclude_none_and_empty
+from ifdo_api.crud.dataset import dataset_crud
 from ifdo_api.crud.fields import image_camera_calibration_model_crud
 from ifdo_api.crud.fields import image_camera_housing_viewport_crud
 from ifdo_api.crud.fields import image_camera_pose_crud
@@ -63,23 +63,17 @@ class CRUDImage(CRUDBase[Image]):
 
         Args:
             db (Session): Database session.
-            dataset_id (int): The ID of the dataset to which the image belongs.
             obj_in (ModelType): Object to be created.
 
         Returns:
             ModelType: The created object.
         """
         obj_in_data = jsonable_encoder_exclude_none_and_empty(obj_in)
+        dataset_crud.show(db=db, id_pk=obj_in_data["dataset_id"])
+
         obj_in_data = self.create_fields(db, obj_in_data, image_models_info)
 
         db_obj = self.model(**obj_in_data)
-
-        max_id = db.query(func.max(self.model.id)).first()
-
-        if max_id[0]:
-            db_obj.id = max_id[0] + 1
-        else:
-            db_obj.id = 1
 
         db.add(db_obj)
         db.commit()

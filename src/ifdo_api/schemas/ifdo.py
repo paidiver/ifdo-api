@@ -1,6 +1,4 @@
-from uuid import uuid4
-from pydantic import BaseModel
-from pydantic import Field
+from ifdo_api.crud.dataset import image_set_related_material_crud
 from ifdo_api.crud.fields import image_camera_calibration_model_crud
 from ifdo_api.crud.fields import image_camera_housing_viewport_crud
 from ifdo_api.crud.fields import image_camera_pose_crud
@@ -15,179 +13,156 @@ from ifdo_api.crud.fields import image_pi_crud
 from ifdo_api.crud.fields import image_platform_crud
 from ifdo_api.crud.fields import image_project_crud
 from ifdo_api.crud.fields import image_sensor_crud
-from ifdo_api.schemas.dataset import DatasetSchema
-from ifdo_api.schemas.fields import ImageCameraCalibrationModelSchema
-from ifdo_api.schemas.fields import ImageCameraHousingViewportSchema
+from ifdo_api.models.base import AcquisitionEnum
+from ifdo_api.models.base import CaptureModeEnum
+from ifdo_api.models.base import DeploymentEnum
+from ifdo_api.models.base import FaunaAttractionEnum
+from ifdo_api.models.base import IlluminationEnum
+from ifdo_api.models.base import MarineZoneEnum
+from ifdo_api.models.base import NavigationEnum
+from ifdo_api.models.base import PixelMagnitudeEnum
+from ifdo_api.models.base import QualityEnum
+from ifdo_api.models.base import ScaleReferenceEnum
+from ifdo_api.models.base import SpectralResEnum
 from ifdo_api.schemas.fields import ImageCameraPoseSchema
-from ifdo_api.schemas.fields import ImageContextSchema
-from ifdo_api.schemas.fields import ImageCreatorSchema
-from ifdo_api.schemas.fields import ImageDomeportParameterSchema
-from ifdo_api.schemas.fields import ImageEventSchema
-from ifdo_api.schemas.fields import ImageFlatportParameterSchema
-from ifdo_api.schemas.fields import ImageLicenseSchema
-from ifdo_api.schemas.fields import ImagePhotometricCalibrationSchema
-from ifdo_api.schemas.fields import ImagePISchema
-from ifdo_api.schemas.fields import ImagePlatformSchema
-from ifdo_api.schemas.fields import ImageProjectSchema
-from ifdo_api.schemas.fields import ImageSensorSchema
-from ifdo_api.schemas.image import ImageSchema
 
-
-class IfdoSchema(BaseModel):
-    """Schema for a dataset model, representing a collection of images and their metadata."""
-
-    image_set_header: DatasetSchema = Field(
-        default_factory=lambda: (  # noqa: PLC3002
-            lambda uid: DatasetSchema(
-                uuid=uid,
-                name=f"Default Image Set: {uid}",
-                handle=f"http://example.com/{uid}",
-            )
-        )(uuid4())
-    )
-    image_set_items: dict[str, ImageSchema] = Field(default_factory=dict)
-
+ifdo_mapping = {
+    "image-set-name": {"field_name": "name"},
+    "image-set-uuid": {"field_name": "id", "location": "header"},
+    "image-set-handle": {"field_name": "handle", "location": "header"},
+    "image-set-local-path": {"field_name": "local_path", "location": "header"},
+    "image-set-min-latitude-degrees": {"field_name": "min_latitude_degrees", "location": "header"},
+    "image-set-max-latitude-degrees": {"field_name": "max_latitude_degrees", "location": "header"},
+    "image-set-min-longitude-degrees": {"field_name": "min_longitude_degrees", "location": "header"},
+    "image-set-max-longitude-degrees": {"field_name": "max_longitude_degrees", "location": "header"},
+    "image-datetime": {"field_name": "date_time", "location": "header"},
+    "image-latitude": {
+        "field_name": "latitude",
+    },
+    "image-longitude": {
+        "field_name": "longitude",
+    },
+    "image-altitude-meters": {
+        "field_name": "altitude_meters",
+    },
+    "image-coordinate-uncertainty-meters": {
+        "field_name": "coordinate_uncertainty_meters",
+    },
+    "image-hash-sha256": {"field_name": "sha256_hash"},
+    "image-abstract": {"field_name": "abstract"},
+    "image-entropy": {"field_name": "entropy"},
+    "image-particle-count": {"field_name": "particle_count"},
+    "image-average-color": {"field_name": "average_color"},
+    "image-mpeg7-color-layout": {"field_name": "mpeg7_color_layout"},
+    "image-mpeg7-color-statistic": {"field_name": "mpeg7_color_statistic"},
+    "image-mpeg7-color-structure": {"field_name": "mpeg7_color_structure"},
+    "image-mpeg7-dominant-color": {"field_name": "mpeg7_dominant_color"},
+    "image-mpeg7-edge-histogram": {"field_name": "mpeg7_edge_histogram"},
+    "image-mpeg7-homogeneous-texture": {"field_name": "mpeg7_homogeneous_texture"},
+    "image-mpeg7-scalable-color": {"field_name": "mpeg7_scalable_color"},
+    "image-acquisition": {"field_name": "acquisition", "normalize": AcquisitionEnum},
+    "image-quality": {"field_name": "quality", "normalize": QualityEnum},
+    "image-deployment": {"field_name": "deployment", "normalize": DeploymentEnum},
+    "image-navigation": {"field_name": "navigation", "normalize": NavigationEnum},
+    "image-scale-reference": {"field_name": "scale_reference", "normalize": ScaleReferenceEnum},
+    "image-illumination": {"field_name": "illumination", "normalize": IlluminationEnum},
+    "image-pixel-magnitude": {"field_name": "pixel_magnitude", "normalize": PixelMagnitudeEnum},
+    "image-marine-zone": {"field_name": "marine_zone", "normalize": MarineZoneEnum},
+    "image-spectral-resolution": {"field_name": "spectral_resolution", "normalize": SpectralResEnum},
+    "image-capture-mode": {"field_name": "capture_mode", "normalize": CaptureModeEnum},
+    "image-fauna-attraction": {"field_name": "fauna_attraction", "normalize": FaunaAttractionEnum},
+    "image-area-square-meters": {"field_name": "area_square_meters"},
+    "image-meters-above-ground": {"field_name": "meters_above_ground"},
+    "image-acquisition-settings": {"field_name": "acquisition_settings"},
+    "image-camera-yaw-degrees": {"field_name": "camera_yaw_degrees"},
+    "image-camera-pitch-degrees": {"field_name": "camera_pitch_degrees"},
+    "image-camera-roll-degrees": {"field_name": "camera_roll_degrees"},
+    "image-overlap-fraction": {"field_name": "overlap_fraction"},
+    "image-objective": {"field_name": "objective"},
+    "image-target-environment": {"field_name": "target_environment"},
+    "image-target-timescale": {"field_name": "target_timescale"},
+    "image-spatial-constraints": {"field_name": "spatial_constraints"},
+    "image-temporal-constraints": {"field_name": "temporal_constraints"},
+    "image-time-synchronisation": {"field_name": "time_synchronisation"},
+    "image-item-identification-scheme": {"field_name": "item_identification_scheme"},
+    "image-curation-protocol": {"field_name": "curation_protocol"},
+    "image-visual-constraints": {"field_name": "visual_constraints"},
+    "image-uuid": {"field_name": "id", "location": "items"},
+    "image-handle": {"field_name": "handle", "location": "items"},
+    "image-context": {
+        "field_name": "context",
+        "crud": image_context_crud,
+        "unique": "name",
+    },
+    "image-project": {
+        "field_name": "project",
+        "crud": image_project_crud,
+        "unique": "name",
+    },
+    "image-event": {"field_name": "event", "crud": image_event_crud, "unique": "name"},
+    "image-platform": {
+        "field_name": "platform",
+        "crud": image_platform_crud,
+        "unique": "name",
+    },
+    "image-sensor": {
+        "field_name": "sensor",
+        "crud": image_sensor_crud,
+        "unique": "name",
+    },
+    "image-pi": {
+        "field_name": "pi",
+        "crud": image_pi_crud,
+        "unique": "name",
+    },
+    "image-license": {
+        "field_name": "license",
+        "crud": image_license_crud,
+        "unique": "name",
+    },
+    "image-camera-pose": {"field_name": "camera_pose", "schema": ImageCameraPoseSchema, "crud": image_camera_pose_crud},
+    "image-camera-housing-viewport": {
+        "field_name": "camera_housing_viewport",
+        "crud": image_camera_housing_viewport_crud,
+    },
+    "image-flatport-parameters": {
+        "field_name": "flatport_parameters",
+        "crud": image_flatport_parameter_crud,
+    },
+    "image-domeport-parameters": {
+        "field_name": "domeport_parameters",
+        "crud": image_domeport_parameter_crud,
+    },
+    "image-camera-calibration-model": {
+        "field_name": "camera_calibration_model",
+        "crud": image_camera_calibration_model_crud,
+    },
+    "image-photometric-calibration": {
+        "field_name": "photometric_calibration",
+        "crud": image_photometric_calibration_crud,
+    },
+    "image-creators": {
+        "field_name": "creators",
+        "crud": image_creator_crud,
+        "list": True,
+        "unique": "name",
+    },
+    "image-set-related-materials": {
+        "field_name": "related_materials",
+        "crud": image_set_related_material_crud,
+        "list": True,
+        "location": "header",
+    },
+}
 
 ifdo_addional_fiels_mapping = {
     "image-coordinate-reference-system": "coordinate_reference_system",
     "image-datetime-format": "date_time_format",
 }
-ifdo_items_mapping = {
-    "image-uuid": "uuid",
-    "image-handle": "handle",
-}
-
-ifdo_header_mapping = {
-    "image-set-name": "name",
-    "image-set-uuid": "uuid",
-    "image-set-handle": "handle",
-    "image-set-local-path": "local_path",
-    "image-set-min-latitude-degrees": "min_latitude_degrees",
-    "image-set-max-latitude-degrees": "max_latitude_degrees",
-    "image-set-min-longitude-degrees": "min_longitude_degrees",
-    "image-set-max-longitude-degrees": "max_longitude_degrees",
-}
-
-ifdo_header_relational_mapping = {
-    "image-set-related-materials": "related_materials",
-}
 
 
-ifdo_provenance_mapping = {
-    "provenance-agents": "provenance_agents",
-    "provenance-entities": "provenance_entities",
-    "provenance-activities": "provenance_activities",
-}
-
-
-ifdo_common_relationship_mapping = {
-    "image-context": {
-        "field_name": "context_id",
-        "schema": ImageContextSchema,
-        "crud": image_context_crud,
-    },
-    "image-project": {
-        "field_name": "project_id",
-        "schema": ImageProjectSchema,
-        "crud": image_project_crud,
-    },
-    "image-event": {"field_name": "event_id", "schema": ImageEventSchema, "crud": image_event_crud},
-    "image-platform": {
-        "field_name": "platform_id",
-        "schema": ImagePlatformSchema,
-        "crud": image_platform_crud,
-    },
-    "image-sensor": {
-        "field_name": "sensor_id",
-        "schema": ImageSensorSchema,
-        "crud": image_sensor_crud,
-    },
-    "image-pi": {
-        "field_name": "pi_id",
-        "schema": ImagePISchema,
-        "crud": image_pi_crud,
-    },
-    "image-creators": {
-        "field_name": "creators",
-        "schema": ImageCreatorSchema,
-        "crud": image_creator_crud,
-    },
-    "image-license": {
-        "field_name": "license_id",
-        "schema": ImageLicenseSchema,
-        "crud": image_license_crud,
-    },
-    "image-camera-pose": {"field_name": "camera_pose_id", "schema": ImageCameraPoseSchema, "crud": image_camera_pose_crud},
-    "image-camera-housing-viewport": {
-        "field_name": "camera_housing_viewport_id",
-        "schema": ImageCameraHousingViewportSchema,
-        "crud": image_camera_housing_viewport_crud,
-    },
-    "image-flatport-parameters": {
-        "field_name": "flatport_parameters_id",
-        "schema": ImageFlatportParameterSchema,
-        "crud": image_flatport_parameter_crud,
-    },
-    "image-domeport-parameters": {
-        "field_name": "domeport_parameters_id",
-        "schema": ImageDomeportParameterSchema,
-        "crud": image_domeport_parameter_crud,
-    },
-    "image-camera-calibration-model": {
-        "field_name": "camera_calibration_model_id",
-        "schema": ImageCameraCalibrationModelSchema,
-        "crud": image_camera_calibration_model_crud,
-    },
-    "image-photometric-calibration": {
-        "field_name": "photometric_calibration_id",
-        "schema": ImagePhotometricCalibrationSchema,
-        "crud": image_photometric_calibration_crud,
-    },
-}
-
-ifdo_common_mapping = {
-    "image-datetime": "date_time",
-    "image-latitude": "latitude",
-    "image-longitude": "longitude",
-    "image-altitude-meters": "altitude_meters",
-    "image-coordinate-uncertainty-meters": "coordinate_uncertainty_meters",
-    "image-hash-sha256": "sha256_hash",
-    "image-abstract": "abstract",
-    "image-entropy": "entropy",
-    "image-particle-count": "particle_count",
-    "image-average-color": "average_color",
-    "image-mpeg7-color-layout": "mpeg7_color_layout",
-    "image-mpeg7-color-statistic": "mpeg7_color_statistic",
-    "image-mpeg7-color-structure": "mpeg7_color_structure",
-    "image-mpeg7-dominant-color": "mpeg7_dominant_color",
-    "image-mpeg7-edge-histogram": "mpeg7_edge_histogram",
-    "image-mpeg7-homogeneous-texture": "mpeg7_homogeneous_texture",
-    "image-mpeg7-scalable-color": "mpeg7_scalable_color",
-    "image-acquisition": "acquisition",
-    "image-quality": "quality",
-    "image-deployment": "deployment",
-    "image-navigation": "navigation",
-    "image-scale-reference": "scale_reference",
-    "image-illumination": "illumination",
-    "image-pixel-magnitude": "pixel_magnitude",
-    "image-marine-zone": "marine_zone",
-    "image-spectral-resolution": "spectral_resolution",
-    "image-capture-mode": "capture_mode",
-    "image-fauna-attraction": "fauna_attraction",
-    "image-area-square-meters": "area_square_meters",
-    "image-meters-above-ground": "meters_above_ground",
-    "image-acquisition-settings": "acquisition_settings",
-    "image-camera-yaw-degrees": "camera_yaw_degrees",
-    "image-camera-pitch-degrees": "camera_pitch_degrees",
-    "image-camera-roll-degrees": "camera_roll_degrees",
-    "image-overlap-fraction": "overlap_fraction",
-    "image-objective": "objective",
-    "image-target-environment": "target_environment",
-    "image-target-timescale": "target_timescale",
-    "image-spatial-constraints": "spatial_constraints",
-    "image-temporal-constraints": "temporal_constraints",
-    "image-time-synchronisation": "time_synchronisation",
-    "image-item-identification-scheme": "item_identification_scheme",
-    "image-curation-protocol": "curation_protocol",
-    "image-visual-constraints": "visual_constraints",
-}
+# ifdo_provenance_mapping = {
+#     "provenance-agents": "provenance_agents",
+#     "provenance-entities": "provenance_entities",
+#     "provenance-activities": "provenance_activities",
+# }

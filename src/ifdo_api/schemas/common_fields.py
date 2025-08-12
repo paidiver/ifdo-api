@@ -1,6 +1,7 @@
 from datetime import datetime
-from datetime import timezone
 from typing import Any
+from typing import ClassVar
+from uuid import UUID
 from pydantic import BaseModel
 from pydantic import Field
 from pydantic import conint
@@ -25,13 +26,23 @@ from ifdo_api.schemas.fields import ImageSensorSchema
 class CommonFieldsSchema(BaseModel):
     """Schema for common fields shared across various models, representing metadata and associated information."""
 
+    id: UUID | None = None
+    # Field(default_factory=uuid4, description="Unique UUID for the image/dataset")
+
     name: str = Field(..., max_length=255)
-    sha256_hash: str = Field(..., max_length=64)
-    date_time: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
-    latitude: float = Field(..., ge=-90, le=90)
-    longitude: float = Field(..., ge=-180, le=180)
+
+    sha256_hash: str | None = None
+    date_time: datetime | None = None
+    latitude: float | None = None
+    longitude: float | None = None
+
+    # sha256_hash: str = Field(..., max_length=64)
+    # date_time: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    # latitude: float = Field(..., ge=-90, le=90)
+    # longitude: float = Field(..., ge=-180, le=180)
+
     # location: Point = Field(..., description="WGS84 geographic center location")
-    altitude_meters: float
+    altitude_meters: float | None = None
     coordinate_uncertainty_m: float | None = None
 
     context: ImageContextSchema | None = None
@@ -47,8 +58,11 @@ class CommonFieldsSchema(BaseModel):
     copyright: str | None = None
     abstract: str | None = None
 
-    entropy: float | None = Field(default=None, ge=0.0, le=1.0)
-    particle_count: int | None = Field(default=None, ge=0)
+    entropy: float | None = None
+    particle_count: int | None = None
+
+    # entropy: float | None = Field(default=None, ge=0.0, le=1.0)
+    # particle_count: int | None = Field(default=None, ge=0)
     average_color: conlist(conint(ge=0, le=255), min_length=3, max_length=3) | None = None  # type: ignore[valid-type]
     mpeg7_color_layout: list[float] | None = None
     mpeg7_color_statistic: list[float] | None = None
@@ -70,14 +84,17 @@ class CommonFieldsSchema(BaseModel):
     capture_mode: str | None = None
     fauna_attraction: str | None = None
 
-    area_square_meters: float | None = Field(default=None, gt=0.0, description="Area in square meters, must be greater than 0")
+    area_square_meters: float | None = None
+    # area_square_meters: float | None = Field(default=None, gt=0.0, description="Area in square meters, must be greater than 0")
     meters_above_ground: float | None = None
     acquisition_settings: dict[str, Any] | None = None
 
     camera_yaw_degrees: float | None = None
     camera_pitch_degrees: float | None = None
     camera_roll_degrees: float | None = None
-    overlap_fraction: float | None = Field(default=None, ge=0.0, le=1.0)
+
+    overlap_fraction: float | None = None
+    # overlap_fraction: float | None = Field(default=None, ge=0.0, le=1.0)
 
     camera_pose: ImageCameraPoseSchema | None = None
     camera_housing_viewport: ImageCameraHousingViewportSchema | None = None
@@ -96,4 +113,7 @@ class CommonFieldsSchema(BaseModel):
     curation_protocol: str | None = None
     visual_constraints: str | None = None
 
-    model_config = {"from_attributes": True}
+    model_config: ClassVar[dict] = {
+        "from_attributes": True,  # to load from ORM objects
+        "exclude_none": True,  # hide fields with value None when serializing
+    }

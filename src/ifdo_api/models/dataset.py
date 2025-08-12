@@ -5,11 +5,9 @@ from shapely.geometry import box
 from sqlalchemy import Column
 from sqlalchemy import Float
 from sqlalchemy import ForeignKey
-from sqlalchemy import Integer
 from sqlalchemy import String
 from sqlalchemy import Table
 from sqlalchemy.orm import relationship
-from sqlalchemy.orm import validates
 from ifdo_api.models.base import Base
 from ifdo_api.models.base import DefaultColumns
 from ifdo_api.models.common_fields import CommonFields
@@ -19,49 +17,48 @@ from ifdo_api.models.image import Image
 datasets_creators = Table(
     "datasets_creators",
     Base.metadata,
-    Column("dataset_id", Integer, ForeignKey("datasets.id"), primary_key=True),
-    Column("creator_id", Integer, ForeignKey("image_creators.id"), primary_key=True),
+    Column("dataset_id", ForeignKey("datasets.id", ondelete="CASCADE"), primary_key=True),
+    Column("creator_id", ForeignKey("image_creators.id", ondelete="CASCADE"), primary_key=True),
 )
 
 dataset_related_material = Table(
     "dataset_related_materials",
     Base.metadata,
-    Column("dataset_id", Integer, ForeignKey("datasets.id"), primary_key=True),
-    Column("material_id", Integer, ForeignKey("image_set_related_materials.id"), primary_key=True),
+    Column("dataset_id", ForeignKey("datasets.id", ondelete="CASCADE"), primary_key=True),
+    Column("material_id", ForeignKey("image_set_related_materials.id", ondelete="CASCADE"), primary_key=True),
 )
 
 dataset_provenance_agents = Table(
     "dataset_provenance_agents",
     Base.metadata,
-    Column("dataset_id", Integer, ForeignKey("datasets.id"), primary_key=True),
-    Column("agent_id", Integer, ForeignKey("provenance_agents.id"), primary_key=True),
+    Column("dataset_id", ForeignKey("datasets.id", ondelete="CASCADE"), primary_key=True),
+    Column("agent_id", ForeignKey("provenance_agents.id", ondelete="CASCADE"), primary_key=True),
 )
 
 dataset_provenance_entities = Table(
     "dataset_provenance_entities",
     Base.metadata,
-    Column("dataset_id", Integer, ForeignKey("datasets.id"), primary_key=True),
-    Column("entity_id", Integer, ForeignKey("provenance_entities.id"), primary_key=True),
+    Column("dataset_id", ForeignKey("datasets.id", ondelete="CASCADE"), primary_key=True),
+    Column("entity_id", ForeignKey("provenance_entities.id", ondelete="CASCADE"), primary_key=True),
 )
 
 dataset_provenance_activities = Table(
     "dataset_provenance_activities",
     Base.metadata,
-    Column("dataset_id", Integer, ForeignKey("datasets.id"), primary_key=True),
-    Column("activity_id", Integer, ForeignKey("provenance_activities.id"), primary_key=True),
+    Column("dataset_id", ForeignKey("datasets.id", ondelete="CASCADE"), primary_key=True),
+    Column("activity_id", ForeignKey("provenance_activities.id", ondelete="CASCADE"), primary_key=True),
 )
 
 
 class Dataset(CommonFields, DefaultColumns, Base):
     """A collection of images, videos, or other media files that are related to a specific project, event, or context."""
 
-    __tablename__ = "datasets"
-    handle = Column(
-        String,
-        nullable=False,
-        info={"help_text": "A Handle URL to point to the landing page of the data set"},
-    )
+    def __init__(self, **kwargs):  # noqa: ANN003
+        super().__init__(**kwargs)
+        self._update_geom()
+        self._update_limits()
 
+    __tablename__ = "datasets"
     context_id = Column(
         ForeignKey("image_contexts.id", onupdate="CASCADE", ondelete="SET NULL"),
         nullable=True,
@@ -113,12 +110,12 @@ class Dataset(CommonFields, DefaultColumns, Base):
         info={"help_text": "Information to identify the creators of the image set"},
     )
 
-    camera_pose_id = Column(Integer, ForeignKey("image_camera_poses.id"), nullable=True)
-    camera_housing_viewport_id = Column(Integer, ForeignKey("image_camera_housing_viewports.id"), nullable=True)
-    flatport_parameter_id = Column(Integer, ForeignKey("image_flatport_parameters.id"), nullable=True)
-    domeport_parameter_id = Column(Integer, ForeignKey("image_domeport_parameters.id"), nullable=True)
-    photometric_calibration_id = Column(Integer, ForeignKey("image_photometric_calibrations.id"), nullable=True)
-    camera_calibration_model_id = Column(Integer, ForeignKey("image_camera_calibration_models.id"), nullable=True)
+    camera_pose_id = Column(ForeignKey("image_camera_poses.id"), nullable=True)
+    camera_housing_viewport_id = Column(ForeignKey("image_camera_housing_viewports.id"), nullable=True)
+    flatport_parameter_id = Column(ForeignKey("image_flatport_parameters.id"), nullable=True)
+    domeport_parameter_id = Column(ForeignKey("image_domeport_parameters.id"), nullable=True)
+    photometric_calibration_id = Column(ForeignKey("image_photometric_calibrations.id"), nullable=True)
+    camera_calibration_model_id = Column(ForeignKey("image_camera_calibration_models.id"), nullable=True)
 
     camera_pose = relationship("ImageCameraPose", foreign_keys=[camera_pose_id], back_populates="datasets", passive_deletes=True)
     camera_housing_viewport = relationship(
@@ -169,7 +166,7 @@ class Dataset(CommonFields, DefaultColumns, Base):
 
     limits = Column(
         Geometry(geometry_type="POLYGON", srid=4326),
-        nullable=False,
+        nullable=True,
         info={"help_text": "Geographic bounding box of the dataset in WGS84 coordinates."},
     )
 
@@ -182,6 +179,8 @@ class Dataset(CommonFields, DefaultColumns, Base):
         "Image",
         foreign_keys=[Image.dataset_id],
         back_populates="dataset",
+        cascade="all, delete-orphan",
+        passive_deletes=True,
         info={"help_text": "The images that are part of this dataset. This is a one-to-many relationship."},
     )
 
@@ -214,46 +213,88 @@ class Dataset(CommonFields, DefaultColumns, Base):
             }
         )
 
-    @validates("latitude", "longitude")
-    def _update_location(self, key: str, value: float) -> float:
-        """Update the location based on latitude and longitude.
+    def _update_geom(self) -> None:
+        if self.latitude is not None and self.longitude is not None:
+            self.geom = from_shape(Point(self.longitude, self.latitude), srid=4326)
 
-        Args:
-            key (str): The key being validated (latitude or longitude).
-            value (float): The value being set for the key.
-
-        Returns:
-            float: The validated value for the key.
-        """
-        if (key == "latitude" and value is not None and self.longitude is not None) or (
-            key == "longitude" and value is not None and self.latitude is not None
-        ):
-            lat = value if key == "latitude" else self.latitude
-            lon = value if key == "longitude" else self.longitude
-            self.location = from_shape(Point(lon, lat), srid=4326)
-
-        return value
-
-    @validates("min_latitude_degrees", "max_latitude_degrees", "min_longitude_degrees", "max_longitude_degrees")
-    def _update_limits(self, _: str, value: float) -> float:
-        """Update the limits based on bounding box coordinates.
-
-        Args:
-            _ (str): The key being validated (min/max latitude/longitude).
-            value (float): The value being set for the key.
-
-        Returns:
-            float: The validated value for the key.
-        """
-        # Only update the limits if all coordinates are available
+    def _update_limits(self) -> None:
         if (
             self.min_latitude_degrees is not None
             and self.max_latitude_degrees is not None
             and self.min_longitude_degrees is not None
             and self.max_longitude_degrees is not None
         ):
-            # Create a bounding box polygon
             bbox = box(self.min_longitude_degrees, self.min_latitude_degrees, self.max_longitude_degrees, self.max_latitude_degrees)
             self.limits = from_shape(bbox, srid=4326)
 
-        return value
+    # @validates("latitude", "longitude")
+    # def validate_location(self, key, value):
+    #     setattr(self, key, value)
+    #     self._update_geom()
+    #     return value
+
+    # @validates("min_latitude_degrees", "max_latitude_degrees", "min_longitude_degrees", "max_longitude_degrees")
+    # def validate_limits(self, key, value):
+    #     setattr(self, key, value)
+    #     self._update_limits()
+    #     return value
+
+    # @validates("latitude", "longitude")
+    # def _update_geom(self, key: str, value: float) -> float:
+    #     """Update the location based on latitude and longitude.
+
+    #     Args:
+    #         key (str): The key being validated (latitude or longitude).
+    #         value (float): The value being set for the key.
+
+    #     Returns:
+    #         float: The validated value for the key.
+    #     """
+    #     if (key == "latitude" and value is not None and self.longitude is not None) or (
+    #         key == "longitude" and value is not None and self.latitude is not None
+    #     ):
+    #         lat = value if key == "latitude" else self.latitude
+    #         lon = value if key == "longitude" else self.longitude
+    #         self.geom = from_shape(Point(lon, lat), srid=4326)
+
+    #     return value
+
+    # @validates("min_latitude_degrees", "max_latitude_degrees", "min_longitude_degrees", "max_longitude_degrees")
+    # def _update_limits(self, key: str, value: float) -> float:
+    #     """Update the limits based on bounding box coordinates.
+
+    #     Args:
+    #         key (str): The key being validated (min/max latitude/longitude).
+    #         value (float): The value being set for the key.
+
+    #     Returns:
+    #         float: The validated value for the key.
+    #     """
+    #     # Only update the limits if all coordinates are available
+    #     if (
+    #         (key == "min_latitude_degrees" and value is not None and self.min_latitude_degrees is not None)
+    #         or (key == "max_latitude_degrees" and value is not None and self.max_latitude_degrees is not None)
+    #         or (key == "min_longitude_degrees" and value is not None and self.min_longitude_degrees is not None)
+    #         or (key == "max_longitude_degrees" and value is not None and self.max_longitude_degrees is not None)
+    #     ):
+    #         min_longitude_degrees = value if key == "min_longitude_degrees" else self.min_longitude_degrees
+    #         max_longitude_degrees = value if key == "max_longitude_degrees" else self.max_longitude_degrees
+    #         min_latitude_degrees = value if key == "min_latitude_degrees" else self.min_latitude_degrees
+    #         max_latitude_degrees = value if key == "max_latitude_degrees" else self.max_latitude_degrees
+    #         # Create a bounding box polygon
+    #         bbox = box(min_longitude_degrees, min_latitude_degrees, max_longitude_degrees, max_latitude_degrees)
+    #         self.limits = from_shape(bbox, srid=4326)
+
+    #     return value
+
+
+# @listens_for(Dataset, "before_update")
+# def set_limits_before_update(mapper, connection, target) -> None:
+#     if (
+#         target.min_latitude_degrees is not None
+#         and target.max_latitude_degrees is not None
+#         and target.min_longitude_degrees is not None
+#         and target.max_longitude_degrees is not None
+#     ):
+#         bbox = box(target.min_longitude_degrees, target.min_latitude_degrees, target.max_longitude_degrees, target.max_latitude_degrees)
+#         target.limits = from_shape(bbox, srid=4326)

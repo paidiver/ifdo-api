@@ -4,7 +4,6 @@ from datetime import timezone
 from uuid import uuid4
 from sqlalchemy import Column
 from sqlalchemy import DateTime
-from sqlalchemy import Integer
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import declarative_base
 
@@ -14,13 +13,14 @@ Base = declarative_base()
 class DefaultColumns:
     """Mixin class to add created_at and updated_at timestamps to a model."""
 
+    # id = Column(
+    #     Integer,
+    #     primary_key=True,
+    #     autoincrement=True,
+    # )
     id = Column(
-        Integer,
+        UUID,
         primary_key=True,
-        autoincrement=True,
-    )
-    uuid = Column(
-        UUID(as_uuid=True),
         nullable=False,
         unique=True,
         default=uuid4,
@@ -29,7 +29,19 @@ class DefaultColumns:
     updated_at = Column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc), nullable=False)
 
 
-class AcquisitionEnum(str, enum.Enum):
+class CaseInsensitiveEnum(str, enum.Enum):
+    """Base Enum that allows case-insensitive matching."""
+
+    @classmethod
+    def _missing_(cls, value: str) -> "CaseInsensitiveEnum | None":
+        if isinstance(value, str):
+            for member in cls:
+                if member.value.lower() == value.lower():
+                    return member
+        return None
+
+
+class AcquisitionEnum(CaseInsensitiveEnum):
     """Enumeration for acquisition types in the system."""
 
     photo = "photo"
@@ -37,7 +49,7 @@ class AcquisitionEnum(str, enum.Enum):
     slide = "slide"
 
 
-class NavigationEnum(str, enum.Enum):
+class NavigationEnum(CaseInsensitiveEnum):
     """Enumeration for navigation types in the system."""
 
     satellite = "satellite"
@@ -46,16 +58,16 @@ class NavigationEnum(str, enum.Enum):
     reconstructed = "reconstructed"
 
 
-class ScaleReferenceEnum(str, enum.Enum):
+class ScaleReferenceEnum(CaseInsensitiveEnum):
     """Enumeration for scale references in the system."""
 
     camera_3d = "3D camera"
-    camera_calibrated = "Calibrated camera"
-    laser_marker = "Laser marker"
-    optical_flow = "Optical flow"
+    camera_calibrated = "calibrated camera"
+    laser_marker = "laser marker"
+    optical_flow = "optical flow"
 
 
-class IlluminationEnum(str, enum.Enum):
+class IlluminationEnum(CaseInsensitiveEnum):
     """Enumeration for illumination types in the system."""
 
     sunlight = "sunlight"
@@ -63,7 +75,7 @@ class IlluminationEnum(str, enum.Enum):
     mixed_light = "mixed light"
 
 
-class PixelMagnitudeEnum(str, enum.Enum):
+class PixelMagnitudeEnum(CaseInsensitiveEnum):
     """Enumeration for pixel magnitude types in the system."""
 
     km = "km"
@@ -75,7 +87,7 @@ class PixelMagnitudeEnum(str, enum.Enum):
     um = "µm"
 
 
-class MarineZoneEnum(str, enum.Enum):
+class MarineZoneEnum(CaseInsensitiveEnum):
     """Enumeration for marine zones in the system."""
 
     seafloor = "seafloor"
@@ -85,7 +97,7 @@ class MarineZoneEnum(str, enum.Enum):
     laboratory = "laboratory"
 
 
-class SpectralResEnum(str, enum.Enum):
+class SpectralResEnum(CaseInsensitiveEnum):
     """Enumeration for spectral resolution types in the system."""
 
     grayscale = "grayscale"
@@ -94,7 +106,7 @@ class SpectralResEnum(str, enum.Enum):
     hyper_spectral = "hyper-spectral"
 
 
-class CaptureModeEnum(str, enum.Enum):
+class CaptureModeEnum(CaseInsensitiveEnum):
     """Enumeration for capture modes in the system."""
 
     timer = "timer"
@@ -102,7 +114,7 @@ class CaptureModeEnum(str, enum.Enum):
     mixed = "mixed"
 
 
-class FaunaAttractionEnum(str, enum.Enum):
+class FaunaAttractionEnum(CaseInsensitiveEnum):
     """Enumeration for fauna attraction methods in the system."""
 
     none = "none"
@@ -110,7 +122,7 @@ class FaunaAttractionEnum(str, enum.Enum):
     light = "light"
 
 
-class DeploymentEnum(str, enum.Enum):
+class DeploymentEnum(CaseInsensitiveEnum):
     """Enumeration for deployment types in the system."""
 
     mapping = "mapping"
@@ -121,7 +133,7 @@ class DeploymentEnum(str, enum.Enum):
     sampling = "sampling"
 
 
-class QualityEnum(str, enum.Enum):
+class QualityEnum(CaseInsensitiveEnum):
     """Enumeration for quality types in the system."""
 
     raw = "raw"

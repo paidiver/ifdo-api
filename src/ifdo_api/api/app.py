@@ -8,6 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from fastapi_cache import FastAPICache
 from fastapi_cache.backends.redis import RedisBackend
+from pydantic import BaseModel
 from redis.asyncio import Redis
 from starlette.responses import RedirectResponse
 from tipg.collections import register_collection_catalog
@@ -19,6 +20,7 @@ from tipg.factory import OGCFeaturesFactory
 from tipg.factory import OGCTilesFactory
 from tipg.settings import PostgresSettings
 from ifdo_api.api.exceptions import AppException
+from ifdo_api.api.v1 import catalog
 from ifdo_api.api.v1 import dataset
 from ifdo_api.api.v1 import image
 from ifdo_api.api.v1.annotation import annotation
@@ -45,6 +47,12 @@ from ifdo_api.api.v1.fields import image_set_related_material
 # from ifdo_api.api.v1.provenance import provenance_agent
 # from ifdo_api.api.v1.provenance import provenance_entity
 from ifdo_api.db.db import get_db_url
+
+
+class HealthResponse(BaseModel):
+    """Health check response model."""
+
+    ping: str
 
 
 @asynccontextmanager
@@ -114,22 +122,11 @@ def main() -> RedirectResponse:
     return RedirectResponse(url="/docs")
 
 
-@app.get(
-    "/healthz",
-    description="Health Check.",
-    summary="Health Check.",
-    operation_id="healthCheck",
-    tags=["Health Check"],
-)
-def ping() -> dict:
-    """Health check."""
-    return {"ping": "pong!"}
-
-
 #######################
 # V1
 #######################
 
+app.include_router(catalog.router, prefix="/v1/catalogs", tags=["Catalog"])
 app.include_router(image.router, prefix="/v1/images", tags=["Image"])
 app.include_router(dataset.router, prefix="/v1/datasets", tags=["Dataset"])
 
@@ -166,10 +163,24 @@ endpoints_features = OGCFeaturesFactory(with_common=True)
 endpoints_tiles = OGCTilesFactory(with_common=True)
 
 app.include_router(endpoints_features.router, prefix="/v1/ogc-features", tags=["OGC Features"])
-app.include_router(endpoints_tiles.router, prefix="/v1/ogc-tiles", tags=["OGC Tiles"])
+app.include_router(endpoints_tiles.router, prefix="", tags=["OGC Tiles"])
 
 
 add_exception_handlers(app, DEFAULT_STATUS_CODES)
+
+
+@app.get(
+    "/healthz",
+    description="Health Check.",
+    summary="Health Check.",
+    operation_id="healthCheck",
+    tags=["Health Check"],
+    response_model=HealthResponse,
+)
+def ping() -> dict:
+    """Health check."""
+    return {"ping": "pong!"}
+
 
 if __name__ == "__main__":
     import uvicorn

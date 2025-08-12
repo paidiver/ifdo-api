@@ -14,6 +14,12 @@ from ifdo_api.schemas.fields import ImageCreatorSchema
 T = TypeVar("T")
 
 
+class DeleteSchema(BaseModel):
+    """Schema for delete response."""
+
+    message: str
+
+
 def generate_crud_router(  # noqa: C901
     model_crud: Generic[T],
     schema: type[BaseModel],
@@ -66,7 +72,7 @@ def generate_crud_router(  # noqa: C901
             Returns:
                 schema: The item with the specified ID.
             """
-            return model_crud.show(db=db, uuid=item_id)
+            return model_crud.show(db=db, id_pk=item_id)
 
     if "create" in routes:
 
@@ -92,8 +98,8 @@ def generate_crud_router(  # noqa: C901
 
     if "delete" in routes:
 
-        @router.delete("/{item_id}", response_model=schema)
-        async def delete(item_id: UUID, db: Annotated[Session, Depends(get_db)]) -> list[BaseModel]:
+        @router.delete("/{item_id}", response_model=DeleteSchema)
+        async def delete(item_id: UUID, db: Annotated[Session, Depends(get_db)]) -> dict:
             """Delete an item by its ID.
 
             Args:
@@ -106,7 +112,7 @@ def generate_crud_router(  # noqa: C901
             Returns:
                 schema: The deleted item.
             """
-            return model_crud.delete(db=db, uuid=item_id)
+            return model_crud.delete(db=db, id_pk=item_id)
 
     if "update" in routes:
 
@@ -125,7 +131,7 @@ def generate_crud_router(  # noqa: C901
             Returns:
                 schema: The updated item.
             """
-            db_item = model_crud.show(db=db, uuid=item_id)
+            db_item = model_crud.show(db=db, id_pk=item_id)
             if not db_item:
                 raise NotFoundException(model.__name__)
             return model_crud.update(db=db, id_pk=db_item.id, obj_in=update_data)

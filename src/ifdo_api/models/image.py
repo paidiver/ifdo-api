@@ -2,10 +2,8 @@ from geoalchemy2.shape import from_shape
 from shapely.geometry import Point
 from sqlalchemy import Column
 from sqlalchemy import ForeignKey
-from sqlalchemy import Integer
 from sqlalchemy import Table
 from sqlalchemy.orm import relationship
-from sqlalchemy.orm import validates
 from ifdo_api.models.base import Base
 from ifdo_api.models.base import DefaultColumns
 from ifdo_api.models.common_fields import CommonFields
@@ -13,13 +11,17 @@ from ifdo_api.models.common_fields import CommonFields
 images_creators = Table(
     "images_creators",
     Base.metadata,
-    Column("image_id", Integer, ForeignKey("images.id"), primary_key=True),
-    Column("creator_id", Integer, ForeignKey("image_creators.id"), primary_key=True),
+    Column("image_id", ForeignKey("images.id", ondelete="CASCADE"), primary_key=True),
+    Column("creator_id", ForeignKey("image_creators.id", ondelete="CASCADE"), primary_key=True),
 )
 
 
 class Image(DefaultColumns, CommonFields, Base):
     """This class represents an image in the database."""
+
+    def __init__(self, **kwargs):  # noqa: ANN003
+        super().__init__(**kwargs)
+        self._update_geom()
 
     __tablename__ = "images"
     context_id = Column(
@@ -73,12 +75,12 @@ class Image(DefaultColumns, CommonFields, Base):
         info={"help_text": "Information to identify the creators of the image set"},
     )
 
-    camera_pose_id = Column(Integer, ForeignKey("image_camera_poses.id"), nullable=True)
-    camera_housing_viewport_id = Column(Integer, ForeignKey("image_camera_housing_viewports.id"), nullable=True)
-    flatport_parameter_id = Column(Integer, ForeignKey("image_flatport_parameters.id"), nullable=True)
-    domeport_parameter_id = Column(Integer, ForeignKey("image_domeport_parameters.id"), nullable=True)
-    photometric_calibration_id = Column(Integer, ForeignKey("image_photometric_calibrations.id"), nullable=True)
-    camera_calibration_model_id = Column(Integer, ForeignKey("image_camera_calibration_models.id"), nullable=True)
+    camera_pose_id = Column(ForeignKey("image_camera_poses.id"), nullable=True)
+    camera_housing_viewport_id = Column(ForeignKey("image_camera_housing_viewports.id"), nullable=True)
+    flatport_parameter_id = Column(ForeignKey("image_flatport_parameters.id"), nullable=True)
+    domeport_parameter_id = Column(ForeignKey("image_domeport_parameters.id"), nullable=True)
+    photometric_calibration_id = Column(ForeignKey("image_photometric_calibrations.id"), nullable=True)
+    camera_calibration_model_id = Column(ForeignKey("image_camera_calibration_models.id"), nullable=True)
 
     camera_pose = relationship("ImageCameraPose", foreign_keys=[camera_pose_id], back_populates="images", passive_deletes=True)
     camera_housing_viewport = relationship(
@@ -95,8 +97,8 @@ class Image(DefaultColumns, CommonFields, Base):
     )
 
     dataset_id = Column(
-        ForeignKey("datasets.uuid", onupdate="CASCADE", ondelete="SET NULL"),
-        nullable=True,
+        ForeignKey("datasets.id", onupdate="CASCADE", ondelete="CASCADE"),
+        nullable=False,
         info={"help_text": "The dataset this image belongs to. A dataset can have multiple images."},
     )
 
@@ -138,25 +140,9 @@ class Image(DefaultColumns, CommonFields, Base):
             }
         )
 
-    @validates("latitude", "longitude")
-    def _update_location(self, key: str, value: float) -> float:
-        """Update the location based on latitude and longitude.
-
-        Args:
-            key (str): The key being validated (latitude or longitude).
-            value (float): The value being set for the key.
-
-        Returns:
-            float: The validated value for the key.
-        """
-        if (key == "latitude" and value is not None and self.longitude is not None) or (
-            key == "longitude" and value is not None and self.latitude is not None
-        ):
-            lat = value if key == "latitude" else self.latitude
-            lon = value if key == "longitude" else self.longitude
-            self.location = from_shape(Point(lon, lat), srid=4326)
-
-        return value
+    def _update_geom(self) -> None:
+        if self.latitude is not None and self.longitude is not None:
+            self.geom = from_shape(Point(self.longitude, self.latitude), srid=4326)
 
     def get_merged_field(self, field_name: str) -> any:
         """Returns image.field or dataset.field if image.field is None.
@@ -168,11 +154,13 @@ class Image(DefaultColumns, CommonFields, Base):
             any: The value of the field from the image or dataset, or None if not found.
         """
         value = getattr(self, field_name)
-        if value is not None:
+        if value is not None and value not in ([], {}, ""):
             return value
-        if self.dataset:
-            return getattr(self.dataset, field_name)
-        return None
+        if self.dataset and hasattr(self.dataset, field_name):
+            value = getattr(self.dataset, field_name)
+            # if isinstance(value, Base):
+            #     return value.to_dict()
+        return value
 
     def to_merged_dict(self) -> dict:
         """Returns a dict with fallback values applied.
@@ -180,74 +168,74 @@ class Image(DefaultColumns, CommonFields, Base):
         Returns:
             dict: A dictionary representation of the image with fallback values applied.
         """
-        return {
-            "id": self.id,
-            "uuid": self.uuid,
-            "dataset_id": self.dataset_id,
-            "context_id": self.get_merged_field("context_id"),
-            "project_id": self.get_merged_field("project_id"),
-            "event_id": self.get_merged_field("event_id"),
-            "platform_id": self.get_merged_field("platform_id"),
-            "sensor_id": self.get_merged_field("sensor_id"),
-            "pi_id": self.get_merged_field("pi_id"),
-            "license_id": self.get_merged_field("license_id"),
-            "creators": [self.get_merged_field("creators")],
-            "camera_pose_id": self.get_merged_field("camera_pose_id"),
-            "camera_housing_viewport_id": self.get_merged_field("camera_housing_viewport_id"),
-            "flatport_parameter_id": self.get_merged_field("flatport_parameter_id"),
-            "domeport_parameter_id": self.get_merged_field("domeport_parameter_id"),
-            "camera_calibration_model_id": self.get_merged_field("camera_calibration_model_id"),
-            "photometric_calibration_id": self.get_merged_field("photometric_calibration_id"),
-            "annotations": [annotation.to_dict() for annotation in self.annotations],
-            "annotation_labels": [label.to_dict() for label in self.annotation_labels],
-            "annotation_creators": [creator.to_dict() for creator in self.annotation_creators],
-            "sha256_hash": self.get_merged_field("sha256_hash"),
-            "date_time": self.get_merged_field("date_time"),
-            "location": self.get_merged_field("location"),
-            "latitude": self.get_merged_field("latitude"),
-            "longitude": self.get_merged_field("longitude"),
-            "altitude_meters": self.get_merged_field("altitude_meters"),
-            "coordinate_uncertainty_m": self.get_merged_field("coordinate_uncertainty_m"),
-            "copyright": self.get_merged_field("copyright"),
-            "abstract": self.get_merged_field("abstract"),
-            "entropy": self.get_merged_field("entropy"),
-            "particle_count": self.get_merged_field("particle_count"),
-            "average_color": self.get_merged_field("average_color"),
-            "mpeg7_color_layout": self.get_merged_field("mpeg7_color_layout"),
-            "mpeg7_color_statistic": self.get_merged_field("mpeg7_color_statistic"),
-            "mpeg7_color_structure": self.get_merged_field("mpeg7_color_structure"),
-            "mpeg7_dominant_color": self.get_merged_field("mpeg7_dominant_color"),
-            "mpeg7_edge_histogram": self.get_merged_field("mpeg7_edge_histogram"),
-            "mpeg7_homogeneous_texture": self.get_merged_field("mpeg7_homogeneous_texture"),
-            "mpeg7_scalable_color": self.get_merged_field("mpeg7_scalable_color"),
-            "acquisition": self.get_merged_field("acquisition"),
-            "quality": self.get_merged_field("quality"),
-            "deployment": self.get_merged_field("deployment"),
-            "navigation": self.get_merged_field("navigation"),
-            "scale_reference": self.get_merged_field("scale_reference"),
-            "illumination": self.get_merged_field("illumination"),
-            "pixel_magnitude": self.get_merged_field("pixel_magnitude"),
-            "marine_zone": self.get_merged_field("marine_zone"),
-            "spectral_resolution": self.get_merged_field("spectral_resolution"),
-            "capture_mode": self.get_merged_field("capture_mode"),
-            "fauna_attraction": self.get_merged_field("fauna_attraction"),
-            "area_square_meters": self.get_merged_field("area_square_meters"),
-            "meters_above_ground": self.get_merged_field("meters_above_ground"),
-            "acquisition_settings": self.get_merged_field("acquisition_settings"),
-            "camera_yaw_degrees": self.get_merged_field("camera_yaw_degrees"),
-            "camera_pitch_degrees": self.get_merged_field("camera_pitch_degrees"),
-            "camera_roll_degrees": self.get_merged_field("camera_roll_degrees"),
-            "overlap_fraction": self.get_merged_field("overlap_fraction"),
-            "objective": self.get_merged_field("objective"),
-            "target_environment": self.get_merged_field("target_environment"),
-            "target_timescale": self.get_merged_field("target_timescale"),
-            "spatial_constraints": self.get_merged_field("spatial_constraints"),
-            "temporal_constraints": self.get_merged_field("temporal_constraints"),
-            "time_synchronisation": self.get_merged_field("time_synchronisation"),
-            "item_identification_scheme": self.get_merged_field("item_identification_scheme"),
-            "curation_protocol": self.get_merged_field("curation_protocol"),
-            "visual_constraints": self.get_merged_field("visual_constraints"),
-        }
+        common_fields = [
+            "handle",
+            "context_id",
+            "project_id",
+            "event_id",
+            "platform_id",
+            "sensor_id",
+            "pi_id",
+            "license_id",
+            "creators",
+            "camera_pose_id",
+            "camera_housing_viewport_id",
+            "flatport_parameter_id",
+            "domeport_parameter_id",
+            "camera_calibration_model_id",
+            "photometric_calibration_id",
+            "sha256_hash",
+            "date_time",
+            "geom",
+            "latitude",
+            "longitude",
+            "altitude_meters",
+            "coordinate_uncertainty_meters",
+            "copyright",
+            "abstract",
+            "entropy",
+            "particle_count",
+            "average_color",
+            "mpeg7_color_layout",
+            "mpeg7_color_statistic",
+            "mpeg7_color_structure",
+            "mpeg7_dominant_color",
+            "mpeg7_edge_histogram",
+            "mpeg7_homogeneous_texture",
+            "mpeg7_scalable_color",
+            "acquisition",
+            "quality",
+            "deployment",
+            "navigation",
+            "scale_reference",
+            "illumination",
+            "pixel_magnitude",
+            "marine_zone",
+            "spectral_resolution",
+            "capture_mode",
+            "fauna_attraction",
+            "area_square_meters",
+            "meters_above_ground",
+            "acquisition_settings",
+            "camera_yaw_degrees",
+            "camera_pitch_degrees",
+            "camera_roll_degrees",
+            "overlap_fraction",
+            "objective",
+            "target_environment",
+            "target_timescale",
+            "spatial_constraints",
+            "temporal_constraints",
+            "time_synchronisation",
+            "item_identification_scheme",
+            "curation_protocol",
+            "visual_constraints",
+        ]
+        image = {field: self.get_merged_field(field) for field in common_fields}
+        image["id"] = self.id
+        image["name"] = self.name
+        image["dataset_id"] = self.dataset_id
+        return image
 
     def __str__(self):
         return self.name

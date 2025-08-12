@@ -1,4 +1,4 @@
-"""Documentation about ifdo-api."""
+"""Ifdo-api."""
 
 import logging
 

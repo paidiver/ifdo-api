@@ -1,16 +1,43 @@
+from typing import Annotated
+from uuid import UUID
 from fastapi import APIRouter
+from fastapi import Depends
+from sqlalchemy.orm import Session
+from ifdo_api.api.deps import get_db
 from ifdo_api.api.generic_router import add_common_router
 from ifdo_api.api.generic_router import generate_crud_router
 from ifdo_api.crud.image import image_crud
+from ifdo_api.models.image import Image
 from ifdo_api.schemas.image import ImageSchema
 
 router: APIRouter = generate_crud_router(
-    model_crud=image_crud,
-    schema=ImageSchema,
-    schema_create=ImageSchema,
+    model_crud=image_crud, schema=ImageSchema, schema_create=ImageSchema, routes=["create", "delete", "update", "index"]
 )
 
 router = add_common_router(model_crud=image_crud, schema=ImageSchema, router=router)
+
+
+@router.get("/{item_id}", response_model=ImageSchema, response_model_exclude_none=True)
+async def show(item_id: UUID, db: Annotated[Session, Depends(get_db)], replace_dataset: bool = False) -> Image:
+    """Get an item by its ID.
+
+    Args:
+        item_id (UUID): The ID of the item to retrieve.
+        db (Session): The database session.
+        replace_dataset (bool): Whether to replace the image field with the existing dataset field. Defaults to False.
+
+    Raises:
+        HTTPException: If the item is not found.
+
+    Returns:
+        schema: The item with the specified ID.
+    """
+    image = image_crud.show(db=db, id_pk=item_id)
+    if replace_dataset:
+        return image.to_merged_dict()
+    return image
+
+    # Handle the include_images parameter
 
 
 # @router.post("/{item_id}/annotations/{annotation_id}", response_model=ImageSchema)

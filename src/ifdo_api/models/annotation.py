@@ -3,7 +3,6 @@ from sqlalchemy import Column
 from sqlalchemy import Enum
 from sqlalchemy import Float
 from sqlalchemy import ForeignKey
-from sqlalchemy import Integer
 from sqlalchemy import String
 from sqlalchemy import Table
 from sqlalchemy import Text
@@ -69,14 +68,13 @@ class AnnotationLabel(DefaultColumns, Base):
     __tablename__ = "annotation_labels"
 
     label_id = Column(
-        Integer,
-        ForeignKey("labels.id"),
+        ForeignKey("labels.id", ondelete="CASCADE"),
         nullable=False,
         info={"help": "A unique identifier to a semantic label"},
     )
+
     annotator_id = Column(
-        Integer,
-        ForeignKey("annotators.id"),
+        ForeignKey("annotators.id", ondelete="SET NULL"),
         nullable=False,
         info={"help": "A unique identifier to an annotation creator, e.g. orcid URL or handle to ML model"},
     )
@@ -125,8 +123,7 @@ class Annotation(DefaultColumns, Base):
     creators = association_proxy("annotation_labels", "creator")
 
     image_id = Column(
-        Integer,
-        ForeignKey("images.id"),
+        ForeignKey("images.id", ondelete="CASCADE"),
         nullable=False,
         info={"help": "A unique identifier to the image this annotation belongs to"},
     )

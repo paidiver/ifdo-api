@@ -9,22 +9,25 @@ services:
       - "5433:5432"
     volumes:
       - pg_data:/var/lib/postgresql/data
-
+    networks:
+      - shared_network
   api:
     build:
       context: ../
-      dockerfile: docker/Dockerfile
+      dockerfile: dockerfiles/Dockerfile
     command:
       bash -c "bash /tmp/scripts/wait-for-it.sh db:5432 --timeout=30 && poetry run uvicorn ifdo_api.api.app:app --host 0.0.0.0 --port 8081  --workers 5 --reload"
     restart: always
     volumes:
       - ../:/code:Z
-      - ../docker/scripts:/tmp/scripts
+      - ../dockerfiles/scripts:/tmp/scripts
     ports:
       - "8081:8081"
     image: api:latest
     depends_on:
       - redis
+    networks:
+      - shared_network
 
     # network_mode: "host"  # Use the host network
   redis:
@@ -34,7 +37,12 @@ services:
       - "6380:6379"
     volumes:
       - redis_data:/data
+    networks:
+      - shared_network
 
 volumes:
   redis_data:
   pg_data:
+networks:
+  shared_network:
+    external: true

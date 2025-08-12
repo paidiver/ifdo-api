@@ -11,7 +11,6 @@ from pydantic import BaseModel
 from pydantic import EmailStr
 from pydantic import HttpUrl
 from sqlalchemy import desc
-from sqlalchemy import func
 from sqlalchemy.orm import Session
 from sqlalchemy.sql import text
 from ifdo_api.api.exceptions import NotFoundException
@@ -34,25 +33,17 @@ class CRUDBase(Generic[ModelType]):
     def __init__(self, model: ModelType):
         self.model = model
 
-    def show(self, db: Session, id_pk: int | None = None, uuid: UUID | None = None) -> ModelType | None:
+    def show(self, db: Session, id_pk: int) -> ModelType | None:
         """Retrieve an object from the database by its primary key.
 
         Args:
             db (Session): Database session.
-            id_pk (int | None): Primary key of the object to retrieve.
-            uuid (UUID | None): UUID of the object to retrieve.
+            id_pk (UUID): Primary key of the object to retrieve.
 
         Returns:
             ModelType | None: The object if found, otherwise None.
         """
-        if id_pk is None and uuid is None:
-            detail = "Either id_pk or uuid must be provided"
-            raise ValueErrorException(detail)
-        db_item = None
-        if uuid is not None:
-            db_item = db.query(self.model).filter(self.model.uuid == uuid).one_or_none()
-        else:
-            db_item = db.query(self.model).filter(self.model.id == id_pk).one_or_none()
+        db_item = db.query(self.model).filter(self.model.id == id_pk).one_or_none()
         if not db_item:
             raise NotFoundException(self.model.__name__)
         return db_item
@@ -102,38 +93,23 @@ class CRUDBase(Generic[ModelType]):
 
         db_obj = self.model(**obj_in)
 
-        max_id = db.query(func.max(self.model.id)).first()
-
-        if max_id[0]:
-            db_obj.id = max_id[0] + 1
-        else:
-            db_obj.id = 1
-
         db.add(db_obj)
         db.commit()
         db.refresh(db_obj)
         return db_obj
 
-    def update(self, db: Session, *, id_pk: int | None = None, uuid: UUID | None = None, obj_in: ModelType | dict[str, Any]) -> ModelType:
+    def update(self, db: Session, *, id_pk: int, obj_in: ModelType | dict[str, Any]) -> ModelType:
         """Update an existing object in the database.
 
         Args:
             db (Session): Database session.
-            id_pk (int | None): Primary key of the object to be updated.
-            uuid (UUID | None): UUID of the object to be updated.
+            id_pk (UUID): Primary key of the object to be updated.
             obj_in (ModelType | dict[str, Any]): Object data to update.
 
         Returns:
             ModelType: The updated object.
         """
-        if id_pk is None and uuid is None:
-            detail = "Either id_pk or uuid must be provided"
-            raise ValueErrorException(detail)
-
-        if uuid is not None:
-            obj_old = db.query(self.model).filter(self.model.uuid == uuid)
-        else:
-            obj_old = db.query(self.model).filter(self.model.id == id_pk).first()
+        obj_old = db.query(self.model).filter(self.model.id == id_pk).first()
         if not obj_old:
             raise NotFoundException(self.model.__name__)
         update_data = obj_in if isinstance(obj_in, dict) else obj_in.dict(exclude_unset=True)
@@ -148,24 +124,23 @@ class CRUDBase(Generic[ModelType]):
         db.refresh(obj_old)
         return obj_old
 
-    def delete(self, db: Session, *, id_pk: int | None = None, uuid: UUID | None = None) -> ModelType:
+    def delete(self, db: Session, *, id_pk: int) -> ModelType:
         """Delete an object from the database.
 
         Args:
             db (Session): Database session.
-            id_pk (int | None): Primary key of the object to be deleted.
-            uuid (UUID | None): UUID of the object to be deleted.
+            id_pk (UUID): Primary key of the object to be deleted.
 
         Returns:
             ModelType: The deleted object.
         """
-        obj = db.query(self.model).filter(self.model.uuid == uuid) if uuid is not None else db.query(self.model).get(id_pk)
-        obj = obj.one_or_none() if obj else None
+        obj = db.query(self.model).get(id_pk)
+        # obj = obj.one_or_none() if obj else None
         if not obj:
             raise NotFoundException(self.model.__name__)
         db.delete(obj)
         db.commit()
-        return obj
+        return {"message": f"{self.model.__name__} Object with id {id_pk} deleted successfully."}
 
     def create_query(self, kwargs: dict) -> str:
         """Create a SQL query string based on the provided keyword arguments.
@@ -246,10 +221,10 @@ class CRUDBase(Generic[ModelType]):
             creator = jsonable_encoder_exclude_none_and_empty(creator)
             db_creator = self.get_or_create(db, crud, "name", creator)
         else:
-            db_creator = crud.show(db, uuid=creator_id)
+            db_creator = crud.show(db, id_pk=creator_id)
         if not db_creator:
             raise NotFoundException(ImageCreator.__name__)
-        db_item = self.show(db=db, uuid=item_id)
+        db_item = self.show(db=db, id_pk=item_id)
         if not db_item:
             raise NotFoundException(self.model.__name__)
         if db_creator in db_item.creators:
