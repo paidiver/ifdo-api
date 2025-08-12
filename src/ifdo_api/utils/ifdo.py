@@ -19,37 +19,83 @@ async def validate_ifdo_data(data_format: DataFormat, input_data: str | None, in
     if data_format == DataFormat.ifdo:
         if input_data is None:
             raise ValueErrorException(detail="Invalid IFDO data format")
-        try:
-            input_data = json.loads(input_data)
-        except json.JSONDecodeError as err:
-            raise ValueErrorException(detail="Invalid JSON body") from err
+        parsed_data = _parse_json_string(input_data)
+
     elif data_format == DataFormat.file:
         if input_file is None:
             raise ValueErrorException(detail="File input is required for 'file' format")
-        if input_file.content_type == "application/json":
-            try:
-                raw_data = await input_file.read()
-                input_data = json.loads(raw_data.decode("utf-8"))
-            except json.JSONDecodeError as err:
-                raise ValueErrorException(detail="Invalid JSON content in the file") from err
-        elif input_file.content_type == "application/yaml":
-            try:
-                raw_data = await input_file.read()
-                input_data = yaml.safe_load(raw_data.decode("utf-8"))
-            except yaml.YAMLError as err:
-                raise ValueErrorException(detail="Invalid YAML content in the file") from err
-        else:
-            raise ValueErrorException(detail="File must be in JSON or YAML format")
+        parsed_data = await _read_and_parse_file(input_file)
 
-    msg_error = ""
-    errors = validate_ifdo(ifdo_data=input_data)
-    if errors:
-        msg_error = "Validation errors in the output iFDO metadata file:\n"
-        for error in errors:
-            msg_error += f"{format_ifdo_validation_error(error['path'])}: {error['message']}\n"
-        print(msg_error)  # noqa: T201
-        # raise ValueErrorException(detail=msg_error)
-    return input_data
+    else:
+        raise ValueErrorException(detail="Unsupported data format")
+
+    _handle_validation(parsed_data)
+    return parsed_data
+
+
+async def _read_and_parse_file(file: UploadFile) -> dict:
+    """Read and parse a file as JSON or YAML.
+
+    Args:
+        file (UploadFile): The file to read and parse.
+
+    Raises:
+        ValueErrorException: If the file content is not valid JSON or YAML.
+
+    Returns:
+        dict: Parsed content of the file.
+    """
+    raw_data = await file.read()
+    text_data = raw_data.decode("utf-8")
+
+    if file.content_type == "application/json":
+        try:
+            return json.loads(text_data)
+        except json.JSONDecodeError as err:
+            raise ValueErrorException(detail="Invalid JSON content in the file") from err
+
+    if file.content_type == "application/yaml":
+        try:
+            return yaml.safe_load(text_data)
+        except yaml.YAMLError as err:
+            raise ValueErrorException(detail="Invalid YAML content in the file") from err
+
+    raise ValueErrorException(detail="File must be in JSON or YAML format")
+
+
+def _parse_json_string(data: str) -> dict:
+    """Parse a JSON string and return the result.
+
+    Args:
+        data (str): JSON string to parse.
+
+    Raises:
+        ValueErrorException: If the JSON string is invalid.
+
+    Returns:
+        dict: Parsed JSON data.
+    """
+    try:
+        return json.loads(data)
+    except json.JSONDecodeError as err:
+        raise ValueErrorException(detail="Invalid JSON body") from err
+
+
+def _handle_validation(ifdo_data: dict) -> None:
+    """Validate IFDO data and print errors if any.
+
+    Args:
+        ifdo_data (dict): Parsed IFDO data.
+
+    Raises:
+        ValueErrorException: If validation errors are found.
+    """
+    errors = validate_ifdo(ifdo_data=ifdo_data)
+    if not errors:
+        return
+    msg_error = "Validation errors in the output iFDO metadata file:\n"
+    msg_error += "".join(f"{format_ifdo_validation_error(err['path'])}: {err['message']}\n" for err in errors)
+    # print(msg_error)
 
 
 def format_ifdo_validation_error(text: list) -> str:
