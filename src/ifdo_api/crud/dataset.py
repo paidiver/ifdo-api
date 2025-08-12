@@ -1,6 +1,7 @@
 """This module implements the CRUD for the Dataset model."""
 
 from uuid import UUID
+from uuid import uuid4
 from sqlalchemy import desc
 from sqlalchemy.orm import Session
 from sqlalchemy.orm import noload
@@ -303,6 +304,8 @@ class CRUDDataset(CRUDBase[Dataset]):
                         if value.get("normalize"):
                             new_value = value["normalize"](new_value).value
                         model_dict[value["field_name"]] = new_value
+        if "id" not in model_dict:
+            model_dict["id"] = uuid4().hex
         return model_dict
 
     # def create_annotations(

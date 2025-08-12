@@ -4,6 +4,7 @@ from typing import ClassVar
 from uuid import UUID
 from pydantic import BaseModel
 from pydantic import Field
+from pydantic import HttpUrl
 from pydantic import conint
 from pydantic import conlist
 from ifdo_api.schemas.fields import ImageCameraCalibrationModelSchema
@@ -30,6 +31,7 @@ class CommonFieldsSchema(BaseModel):
     # Field(default_factory=uuid4, description="Unique UUID for the image/dataset")
 
     name: str = Field(..., max_length=255)
+    handle: HttpUrl | None = None
 
     sha256_hash: str | None = None
     date_time: datetime | None = None

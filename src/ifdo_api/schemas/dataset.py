@@ -1,7 +1,6 @@
 from typing import ClassVar
 from pydantic import BaseModel
 from pydantic import Field
-from pydantic import HttpUrl
 from ifdo_api.schemas.annotation import AnnotatorSchema
 from ifdo_api.schemas.annotation import LabelSchema
 from ifdo_api.schemas.common_fields import CommonFieldsSchema
@@ -20,7 +19,6 @@ class LocationSchema(BaseModel):
 class DatasetSchema(CommonFieldsSchema):
     """Schema for a dataset model, representing a collection of images and their metadata."""
 
-    handle: HttpUrl | None = None
     # handle: HttpUrl
 
     local_path: str = Field(default="../raw", max_length=500)
