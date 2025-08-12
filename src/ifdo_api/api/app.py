@@ -159,11 +159,11 @@ app.include_router(label.router, prefix="/v1/annotations/labels", tags=["Annotat
 
 
 ############## ADD Tipg endpoints here ##############
-endpoints_features = OGCFeaturesFactory(with_common=True)
-endpoints_tiles = OGCTilesFactory(with_common=True)
+endpoints_features = OGCFeaturesFactory(with_common=False, router_prefix="/v1/ogc-features")
+endpoints_tiles = OGCTilesFactory(with_common=False, router_prefix="/v1/ogc-tiles")
 
-app.include_router(endpoints_features.router, prefix="/v1/ogc-features", tags=["OGC Features"])
-app.include_router(endpoints_tiles.router, prefix="", tags=["OGC Tiles"])
+app.include_router(endpoints_features.router, prefix="/v1/ogc-features")
+app.include_router(endpoints_tiles.router, prefix="/v1/ogc-tiles")
 
 
 add_exception_handlers(app, DEFAULT_STATUS_CODES)
