@@ -1,23 +1,126 @@
-## How to use ifdo-api
+# iFDO API
 
-A REST API to deal with image metadata
+<div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+  <img src="docs/_static/logo_paidiver.png" alt="iFDO API Logo" style="width: 120px; min-width: 120px;"/>
+  <div>
+    <strong>iFDO API</strong> is an implementation of the <a href="https://www.ifdo-schema.org/">FAIR Digital Objects for Images (iFDO)</a> specification.
+    It provides a standardized way to access, manage, and share image metadata, enabling interoperability between platforms and tools.
+    <br><br>
+    <strong>Live demo:</strong> <a href="https://api.paidiver.site">https://api.paidiver.site</a>
+  </div>
+</div>
 
-The project setup is documented in [project_setup.md](project_setup.md). Feel free to remove this document (and/or the link to this document) if you don't need it.
+---
 
-## Installation
+> **Note:** iFDO API is under active development. Features, endpoints, and the API specification may change as improvements are made.
 
+---
 
-## Build and Run DB
-docker compose -f docker/docker-compose.yml build
+## Overview
 
-To install ifdo-api from GitHub repository, do:
+The iFDO API offers a standardized interface for creating, retrieving, updating, and managing metadata for images.
+It uses a **PostGIS** backend for spatial data handling and supports a range of operations that make it easy to integrate image metadata into workflows and applications.
 
-```console
-git clone git@github.com:paidiver/ifdo-api.git
+**Version:** 0.1.0 (compatible with all iFDO versions ≥ 2.0.0)
+
+---
+
+## Getting Started
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/paidiver/ifdo-api.git
 cd ifdo-api
-pip install -e .
+````
+
+### 2. Configure environment variables
+
+Create a `.env.local` file in the project root:
+
+```bash
+POSTGRES_USER=myuser
+POSTGRES_PASSWORD=mypassword
+POSTGRES_DB=paidiver_st3
+POSTGRES_PORT=5432
+POSTGRES_HOST=db
+REDIS_HOST=redis
+REDIS_PORT=6379
 ```
 
-## Documentation
+---
 
-Include a link to your project's full documentation here.
+## Running with Docker (recommended)
+
+Running with Docker automatically sets up PostgreSQL, Redis, and other dependencies.
+
+```bash
+docker compose -f dockerfiles/docker-compose.yml up -d
+```
+
+The API will be available at:
+`http://localhost:8081`
+
+**Run database migrations** to create tables and indexes:
+
+```bash
+docker compose -f dockerfiles/docker-compose.yml run --rm api poetry run alembic upgrade head
+```
+
+---
+
+## Running locally (without Docker)
+
+If you prefer to run the API directly:
+
+### 1. Install dependencies
+
+```bash
+pip install poetry
+poetry install
+```
+
+### 2. Start the database
+
+Use PostgreSQL locally or run it via Docker:
+
+```bash
+docker compose -f dockerfiles/docker-compose.yml up db
+```
+
+### 3. Start Redis
+
+```bash
+docker compose -f dockerfiles/docker-compose.yml up redis
+```
+
+### 4. Run migrations
+
+```bash
+poetry run alembic upgrade head
+```
+
+### 5. Start the API server
+
+```bash
+poetry run uvicorn ifdo_api.api.app:app --host 0.0.0.0 --port 8081 --reload
+```
+
+The API will be available at:
+`http://localhost:8081`
+
+> **Note:** When running locally, ensure PostgreSQL and Redis are running, and your `.env.local` matches your setup.
+
+---
+
+## Related Tools
+
+* [iFDO Browser](https://github.com/paidiver/ifdo-browser)
+* [STAC API Specification](https://github.com/radiantearth/stac-api-spec)
+
+---
+
+## Acknowledgements
+
+This project was supported by the UK Natural Environment Research Council (NERC) through the
+*Tools for automating image analysis for biodiversity monitoring (AIAB)* Funding Opportunity, reference code **UKRI052**.
