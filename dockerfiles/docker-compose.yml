@@ -28,7 +28,6 @@ services:
       - redis
     networks:
       - shared_network
-
     # network_mode: "host"  # Use the host network
   redis:
     image: redis:alpine
