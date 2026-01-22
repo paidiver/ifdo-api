@@ -2,7 +2,7 @@ from typing import ClassVar
 from pydantic import BaseModel
 from pydantic import Field
 from ifdo_api.schemas.annotations.annotation import AnnotatorSchema
-from ifdo_api.schemas.annotations.annotation import LabelSchema
+from ifdo_api.schemas.annotations.label import LabelSchema
 from ifdo_api.schemas.common_fields import CommonFieldsSchema
 from ifdo_api.schemas.fields import ImageSetRelatedMaterialSchema
 from ifdo_api.schemas.image import ImageSchema

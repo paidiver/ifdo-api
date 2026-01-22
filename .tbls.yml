@@ -1,0 +1,11 @@
+# .tbls.yml
+
+# DSN (Database Source Name) to connect database
+dsn: postgres://myuser:mypassword@localhost:5440/paidiver_st3?sslmode=disable
+
+# Path to generate document
+# Default is `dbdoc`
+docPath: doc/schema
+# doc:
+#   format: html
+#   output: docs/db

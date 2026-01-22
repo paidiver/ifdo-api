@@ -68,6 +68,12 @@ The API will be available at:
 docker compose -f dockerfiles/docker-compose.yml run --rm api poetry run alembic upgrade head
 ```
 
+**Generate new migration scripts** after modifying models:
+
+```bash
+docker compose -f dockerfiles/docker-compose.yml run --rm api poetry run alembic revision --autogenerate -m "Your message here"
+```
+
 ---
 
 ## Running locally (without Docker)
@@ -125,3 +131,14 @@ The API will be available at:
 
 This project was supported by the UK Natural Environment Research Council (NERC) through the
 *Tools for automating image analysis for biodiversity monitoring (AIAB)* Funding Opportunity, reference code **UKRI052**.
+
+<!--
+## Schemaspy
+
+sudo apt-get update
+sudo apt-get install -y graphviz
+dot -V
+
+curl -L https://jdbc.postgresql.org/download/postgresql-42.5.4.jar \\n    --output ~/Downloads/jdbc-driver.jar
+curl -L https://github.com/schemaspy/schemaspy/releases/download/v7.0.2/schemaspy-app.jar \\n    --output ~/Downloads/schemaspy.jar
+java -jar ~/Downloads/schemaspy.jar \\n    -t pgsql11 \\n    -dp ~/Downloads/jdbc-driver.jar \\n    -db paidiver_st3 \\n    -host localhost \\n    -port 5440 \\n    -u myuser \\n    -p mypassword \\n    -o docs -->
