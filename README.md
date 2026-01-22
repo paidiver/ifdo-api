@@ -55,6 +55,7 @@ REDIS_PORT=6379
 Running with Docker automatically sets up PostgreSQL, Redis, and other dependencies.
 
 ```bash
+docker network create shared_network
 docker compose -f dockerfiles/docker-compose.yml up -d
 ```
 

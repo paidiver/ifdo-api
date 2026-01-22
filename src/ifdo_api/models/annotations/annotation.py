@@ -5,7 +5,6 @@ from sqlalchemy import Float
 from sqlalchemy import ForeignKey
 from sqlalchemy import String
 from sqlalchemy import Table
-from sqlalchemy import Text
 from sqlalchemy.dialects.postgresql import ARRAY
 from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy.orm import relationship
@@ -31,23 +30,6 @@ image_annotation_labels = Table(
     Column("annotation_id", ForeignKey("annotations.id"), primary_key=True),
     Column("annotation_label_id", ForeignKey("annotation_labels.id"), primary_key=True),
 )
-
-
-class Label(DefaultColumns, Base):
-    """A semantic label that can be assigned to an annotation."""
-
-    __tablename__ = "labels"
-    name = Column(
-        String(255),
-        nullable=False,
-        unique=True,
-        info={"help": "A human-readable name for the semantic label"},
-    )
-    info = Column(
-        Text,
-        nullable=True,
-        info={"help": "A description on what this semantic label represents"},
-    )
 
 
 class Annotator(DefaultColumns, Base):

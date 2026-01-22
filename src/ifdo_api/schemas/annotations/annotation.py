@@ -6,14 +6,6 @@ from pydantic import Field
 ShapeType = Literal["single-pixel", "polyline", "polygon", "circle", "rectangle", "ellipse", "whole-image"]
 
 
-class LabelSchema(BaseModel):
-    """A semantic label that can be assigned to an annotation."""
-
-    id: str = Field(..., description="A unique identifier to a semantic label")
-    name: str = Field(..., description="A human-readable name for the semantic label")
-    info: str | None = Field(None, description="A description on what this semantic label represents")
-
-
 class AnnotatorSchema(BaseModel):
     """An annotator is a person or machine that creates annotations."""
 
