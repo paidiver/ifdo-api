@@ -10,7 +10,7 @@ services:
     volumes:
       - pg_data:/var/lib/postgresql/data
     networks:
-      - shared_network
+      - paidiver_st3_network
   api:
     build:
       context: ../
@@ -27,7 +27,7 @@ services:
     depends_on:
       - redis
     networks:
-      - shared_network
+      - paidiver_st3_network
     # network_mode: "host"  # Use the host network
   redis:
     image: redis:alpine
@@ -37,11 +37,11 @@ services:
     volumes:
       - redis_data:/data
     networks:
-      - shared_network
+      - paidiver_st3_network
 
 volumes:
   redis_data:
   pg_data:
 networks:
-  shared_network:
+  paidiver_st3_network:
     external: true

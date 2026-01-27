@@ -55,7 +55,7 @@ REDIS_PORT=6379
 Running with Docker automatically sets up PostgreSQL, Redis, and other dependencies.
 
 ```bash
-docker network create shared_network
+docker network create paidiver_st3_network
 docker compose -f dockerfiles/docker-compose.yml up -d
 ```
 
@@ -132,23 +132,20 @@ The API will be available at:
 This project was supported by the UK Natural Environment Research Council (NERC) through the
 *Tools for automating image analysis for biodiversity monitoring (AIAB)* Funding Opportunity, reference code **UKRI052**.
 
-<!--
-## Schemaspy
 
-sudo apt-get update
-sudo apt-get install -y graphviz
-dot -V
+<!-- curl -L https://jdbc.postgresql.org/download/postgresql-42.5.4.jar -o jdbc-driver.jar
 
-curl -L https://jdbc.postgresql.org/download/postgresql-42.5.4.jar \\n    --output ~/Downloads/jdbc-driver.jar
-curl -L https://github.com/schemaspy/schemaspy/releases/download/v7.0.2/schemaspy-app.jar \\n    --output ~/Downloads/schemaspy.jar
-java -jar ~/Downloads/schemaspy.jar \
+docker run --rm \
+  --network="paidiver_st3_network" \
+  -v "${PWD}/docs:/output" \
+  -v "${PWD}/jdbc-driver.jar:/drivers/jdbc-driver.jar" \
+  schemaspy/schemaspy:latest \
   -t pgsql11 \
-  -dp ~/Downloads/jdbc-driver.jar \
+  -dp /drivers/jdbc-driver.jar \
   -db paidiver_st3 \
-  -host localhost \
-  -port 5440 \
+  -host db \
+  -port 5432 \
   -u myuser \
   -p mypassword \
-  -o docs
-
+  -o /output
 -->

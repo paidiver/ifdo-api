@@ -197,7 +197,7 @@ class CRUDBase(Generic[ModelType]):
         return model_dict
 
     def add_creator(self, db: Session, crud: ModelType, item_id: UUID, creator_id: UUID | None = None, creator: CreatorSchema | None = None) -> Image:
-        """Add a creator to an image.
+        """Add a creator to a image, image_set or annotation_set.
 
         Args:
             db (Session): Database session.
