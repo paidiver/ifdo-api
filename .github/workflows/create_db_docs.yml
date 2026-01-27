@@ -20,6 +20,8 @@ jobs:
           echo POSTGRES_DB=paidiver_st3 >> .env
           echo POSTGRES_HOST=db >> .env
           echo POSTGRES_PORT=5432 >> .env
+          echo POSTGRES_PORT_ALEMBIC=5432 >> .env
+          echo POSTGRES_HOST_ALEMBIC=db >> .env
 
       - name: Create paidiver_st3_network network
         run: docker network create paidiver_st3_network || echo "Network already exists"
@@ -56,3 +58,12 @@ jobs:
             -port 5432 \
             -u "myuser" \
             -p "mypassword"
+
+      - name: Export schema SQL
+        run: |
+          docker compose -f dockerfiles/docker-compose.yml exec -T \
+            -e PGPASSWORD="mypassword" \
+            db \
+            pg_dump -U myuser -d paidiver_st3 \
+              --schema-only --no-owner --no-privileges \
+            > docs/schema.sql
