@@ -2,64 +2,62 @@ from .annotations import Annotation
 from .annotations import AnnotationLabel
 from .annotations import Annotator
 from .annotations import Label
-from .annotations import image_annotation_labels
-from .dataset import Dataset
-from .dataset import dataset_provenance_activities
-from .dataset import dataset_provenance_agents
-from .dataset import dataset_provenance_entities
-from .dataset import dataset_related_material
-from .dataset import datasets_creators
+from .fields import PI
+from .fields import Context
+from .fields import Creator
+from .fields import Event
 from .fields import ImageCameraCalibrationModel
 from .fields import ImageCameraHousingViewport
 from .fields import ImageCameraPose
-from .fields import ImageContext
-from .fields import ImageCreator
 from .fields import ImageDomeportParameter
-from .fields import ImageEvent
 from .fields import ImageFlatportParameter
-from .fields import ImageLicense
 from .fields import ImagePhotometricCalibration
-from .fields import ImagePI
-from .fields import ImagePlatform
-from .fields import ImageProject
-from .fields import ImageSensor
-from .fields import ImageSetRelatedMaterial
+from .fields import License
+from .fields import Platform
+from .fields import Project
+from .fields import RelatedMaterial
+from .fields import Sensor
 from .image import Image
-from .image import images_creators
+from .image import image_creators
+from .image_set import ImageSet
+from .image_set import image_set_creators
+from .image_set import image_set_provenance_activities
+from .image_set import image_set_provenance_agents
+from .image_set import image_set_provenance_entities
+from .image_set import image_set_related_materials
 from .provenance import ProvenanceActivity
 from .provenance import ProvenanceAgent
 from .provenance import ProvenanceEntity
 
 __all__ = [
+    "PI",
     "Annotation",
     "AnnotationLabel",
     "Annotator",
-    "Dataset",
+    "Context",
+    "Creator",
+    "Event",
     "Image",
     "ImageCameraCalibrationModel",
     "ImageCameraHousingViewport",
     "ImageCameraPose",
-    "ImageContext",
-    "ImageCreator",
     "ImageDomeportParameter",
-    "ImageEvent",
     "ImageFlatportParameter",
-    "ImageLicense",
-    "ImagePI",
     "ImagePhotometricCalibration",
-    "ImagePlatform",
-    "ImageProject",
-    "ImageSensor",
-    "ImageSetRelatedMaterial",
+    "ImageSet",
     "Label",
+    "License",
+    "Platform",
+    "Project",
     "ProvenanceActivity",
     "ProvenanceAgent",
     "ProvenanceEntity",
-    "dataset_provenance_activities",
-    "dataset_provenance_agents",
-    "dataset_provenance_entities",
-    "dataset_related_material",
-    "datasets_creators",
-    "image_annotation_labels",
-    "images_creators",
+    "RelatedMaterial",
+    "Sensor",
+    "image_creators",
+    "image_set_creators",
+    "image_set_provenance_activities",
+    "image_set_provenance_agents",
+    "image_set_provenance_entities",
+    "image_set_related_materials",
 ]

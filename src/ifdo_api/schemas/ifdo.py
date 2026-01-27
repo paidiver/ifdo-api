@@ -1,18 +1,18 @@
-from ifdo_api.crud.dataset import image_set_related_material_crud
+from ifdo_api.crud.fields import context_crud
+from ifdo_api.crud.fields import creator_crud
+from ifdo_api.crud.fields import event_crud
 from ifdo_api.crud.fields import image_camera_calibration_model_crud
 from ifdo_api.crud.fields import image_camera_housing_viewport_crud
 from ifdo_api.crud.fields import image_camera_pose_crud
-from ifdo_api.crud.fields import image_context_crud
-from ifdo_api.crud.fields import image_creator_crud
 from ifdo_api.crud.fields import image_domeport_parameter_crud
-from ifdo_api.crud.fields import image_event_crud
 from ifdo_api.crud.fields import image_flatport_parameter_crud
-from ifdo_api.crud.fields import image_license_crud
 from ifdo_api.crud.fields import image_photometric_calibration_crud
-from ifdo_api.crud.fields import image_pi_crud
-from ifdo_api.crud.fields import image_platform_crud
-from ifdo_api.crud.fields import image_project_crud
-from ifdo_api.crud.fields import image_sensor_crud
+from ifdo_api.crud.fields import license_crud
+from ifdo_api.crud.fields import pi_crud
+from ifdo_api.crud.fields import platform_crud
+from ifdo_api.crud.fields import project_crud
+from ifdo_api.crud.fields import related_material_crud
+from ifdo_api.crud.fields import sensor_crud
 from ifdo_api.models.base import AcquisitionEnum
 from ifdo_api.models.base import CaptureModeEnum
 from ifdo_api.models.base import DeploymentEnum
@@ -91,33 +91,33 @@ ifdo_mapping = {
     "image-handle": {"field_name": "handle", "location": "items"},
     "image-context": {
         "field_name": "context",
-        "crud": image_context_crud,
+        "crud": context_crud,
         "unique": "name",
     },
     "image-project": {
         "field_name": "project",
-        "crud": image_project_crud,
+        "crud": project_crud,
         "unique": "name",
     },
-    "image-event": {"field_name": "event", "crud": image_event_crud, "unique": "name"},
+    "image-event": {"field_name": "event", "crud": event_crud, "unique": "name"},
     "image-platform": {
         "field_name": "platform",
-        "crud": image_platform_crud,
+        "crud": platform_crud,
         "unique": "name",
     },
     "image-sensor": {
         "field_name": "sensor",
-        "crud": image_sensor_crud,
+        "crud": sensor_crud,
         "unique": "name",
     },
     "image-pi": {
         "field_name": "pi",
-        "crud": image_pi_crud,
+        "crud": pi_crud,
         "unique": "name",
     },
     "image-license": {
         "field_name": "license",
-        "crud": image_license_crud,
+        "crud": license_crud,
         "unique": "name",
     },
     "image-camera-pose": {"field_name": "camera_pose", "schema": ImageCameraPoseSchema, "crud": image_camera_pose_crud},
@@ -143,13 +143,13 @@ ifdo_mapping = {
     },
     "image-creators": {
         "field_name": "creators",
-        "crud": image_creator_crud,
+        "crud": creator_crud,
         "list": True,
         "unique": "name",
     },
     "image-set-related-materials": {
         "field_name": "related_materials",
-        "crud": image_set_related_material_crud,
+        "crud": related_material_crud,
         "list": True,
         "location": "header",
     },

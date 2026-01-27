@@ -1,35 +1,14 @@
-import enum
 from sqlalchemy import Column
 from sqlalchemy import Enum
 from sqlalchemy import Float
 from sqlalchemy import ForeignKey
 from sqlalchemy import String
-from sqlalchemy import Table
-from sqlalchemy.dialects.postgresql import ARRAY
+from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy.orm import relationship
 from ifdo_api.models.base import Base
 from ifdo_api.models.base import DefaultColumns
-
-
-class ShapeEnum(str, enum.Enum):
-    """Enumeration of possible annotation shapes."""
-
-    single_pixel = "single-pixel"
-    polyline = "polyline"
-    polygon = "polygon"
-    circle = "circle"
-    rectangle = "rectangle"
-    ellipse = "ellipse"
-    whole_image = "whole-image"
-
-
-image_annotation_labels = Table(
-    "image_annotation_labels",
-    Base.metadata,
-    Column("annotation_id", ForeignKey("annotations.id"), primary_key=True),
-    Column("annotation_label_id", ForeignKey("annotation_labels.id"), primary_key=True),
-)
+from ifdo_api.models.base import ShapeEnum
 
 
 class Annotator(DefaultColumns, Base):
@@ -43,31 +22,11 @@ class Annotator(DefaultColumns, Base):
         info={"help": "A human-readable name for the annotator (identifying the specific human or machine)"},
     )
 
-
-class AnnotationLabel(DefaultColumns, Base):
-    """A label assigned to an annotation by an annotator."""
-
-    __tablename__ = "annotation_labels"
-
-    label_id = Column(
-        ForeignKey("labels.id", ondelete="CASCADE"),
-        nullable=False,
-        info={"help": "A unique identifier to a semantic label"},
+    annotation_labels = relationship(
+        "AnnotationLabel",
+        back_populates="annotator",
+        info={"help_text": "The annotation labels created by this annotator"},
     )
-
-    annotator_id = Column(
-        ForeignKey("annotators.id", ondelete="SET NULL"),
-        nullable=False,
-        info={"help": "A unique identifier to an annotation creator, e.g. orcid URL or handle to ML model"},
-    )
-    confidence = Column(
-        Float,
-        nullable=True,
-        info={"help": "A numerical confidence estimate of the validity of the label between 0 (untrustworthy) and 1 (100% certainty)"},
-    )
-
-    label = relationship("Label", backref="annotation_labels")
-    annotator = relationship("Annotator", backref="annotation_labels")
 
 
 class Annotation(DefaultColumns, Base):
@@ -75,13 +34,32 @@ class Annotation(DefaultColumns, Base):
 
     __tablename__ = "annotations"
 
+    image_id = Column(
+        ForeignKey("images.id", ondelete="CASCADE"),
+        nullable=False,
+        info={"help": "A unique identifier to the image this annotation belongs to"},
+    )
+
+    image = relationship(
+        "Image",
+        back_populates="annotations",
+        info={"help": "The image this annotation belongs to"},
+    )
+
+    annotation_platform = Column(
+        String(255),
+        nullable=True,
+        info={"help": "The platform used to create the annotation, e.g., 'BIIGLE', 'VARS', 'SQUIDLE+', none"},
+    )
+
     shape = Column(
         Enum(ShapeEnum),
         nullable=False,
         info={"help": "The annotation shape is specified by a keyword."},
     )
+
     coordinates = Column(
-        ARRAY(Float, dimensions=2),
+        JSONB,
         nullable=False,
         info={
             "help": "The pixel coordinates of one annotation. The top-left corner of an image is the (0,0) coordinate. "
@@ -96,22 +74,58 @@ class Annotation(DefaultColumns, Base):
 
     annotation_labels = relationship(
         "AnnotationLabel",
-        secondary=image_annotation_labels,
-        backref="annotations",
-        info={"help": "The list of labels assigned to annotations by annotators"},
+        back_populates="annotation",
+        info={"help_text": "The annotation labels assigned to this annotation"},
     )
 
     labels = association_proxy("annotation_labels", "label")
-    creators = association_proxy("annotation_labels", "creator")
 
-    image_id = Column(
-        ForeignKey("images.id", ondelete="CASCADE"),
-        nullable=False,
-        info={"help": "A unique identifier to the image this annotation belongs to"},
+    annotation_set_id = Column(
+        ForeignKey("annotation_sets.id", ondelete="CASCADE"),
+        nullable=True,
+        info={"help": "The annotation set this annotation belongs to"},
     )
 
-    image = relationship(
-        "Image",
+    annotation_set = relationship(
+        "AnnotationSet",
         back_populates="annotations",
-        info={"help": "The image this annotation belongs to"},
+        info={"help": "The annotation set this annotation belongs to"},
     )
+
+
+class AnnotationLabel(DefaultColumns, Base):
+    """A label assigned to an annotation by an annotator."""
+
+    __tablename__ = "annotation_labels"
+
+    label_id = Column(
+        ForeignKey("labels.id", ondelete="CASCADE"),
+        nullable=False,
+        info={"help": "A unique identifier to a semantic label"},
+    )
+
+    annotation_id = Column(
+        ForeignKey("annotations.id", ondelete="CASCADE"),
+        nullable=False,
+        info={"help": "A unique identifier to the annotation this label is assigned to"},
+    )
+
+    annotator_id = Column(
+        ForeignKey("annotators.id", ondelete="SET NULL"),
+        nullable=False,
+        info={"help": "A unique identifier to an annotation creator, e.g. orcid URL or handle to ML model"},
+    )
+    confidence = Column(
+        Float,
+        nullable=True,
+        info={"help": "A numerical confidence estimate of the validity of the label between 0 (untrustworthy) and 1 (100% certainty)"},
+    )
+
+    creation_datetime = Column(
+        String,
+        nullable=False,
+        info={"help": "The date-time stamp of label creation"},
+    )
+
+    label = relationship("Label", backref="annotation_labels")
+    annotator = relationship("Annotator", backref="annotation_labels")

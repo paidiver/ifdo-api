@@ -7,20 +7,20 @@ from pydantic import Field
 from pydantic import HttpUrl
 from pydantic import conint
 from pydantic import conlist
+from ifdo_api.schemas.fields import ContextSchema
+from ifdo_api.schemas.fields import CreatorSchema
+from ifdo_api.schemas.fields import EventSchema
 from ifdo_api.schemas.fields import ImageCameraCalibrationModelSchema
 from ifdo_api.schemas.fields import ImageCameraHousingViewportSchema
 from ifdo_api.schemas.fields import ImageCameraPoseSchema
-from ifdo_api.schemas.fields import ImageContextSchema
-from ifdo_api.schemas.fields import ImageCreatorSchema
 from ifdo_api.schemas.fields import ImageDomeportParameterSchema
-from ifdo_api.schemas.fields import ImageEventSchema
 from ifdo_api.schemas.fields import ImageFlatportParameterSchema
-from ifdo_api.schemas.fields import ImageLicenseSchema
 from ifdo_api.schemas.fields import ImagePhotometricCalibrationSchema
-from ifdo_api.schemas.fields import ImagePISchema
-from ifdo_api.schemas.fields import ImagePlatformSchema
-from ifdo_api.schemas.fields import ImageProjectSchema
-from ifdo_api.schemas.fields import ImageSensorSchema
+from ifdo_api.schemas.fields import LicenseSchema
+from ifdo_api.schemas.fields import PISchema
+from ifdo_api.schemas.fields import PlatformSchema
+from ifdo_api.schemas.fields import ProjectSchema
+from ifdo_api.schemas.fields import SensorSchema
 
 
 # Main Pydantic model
@@ -28,7 +28,7 @@ class CommonFieldsSchema(BaseModel):
     """Schema for common fields shared across various models, representing metadata and associated information."""
 
     id: UUID | None = None
-    # Field(default_factory=uuid4, description="Unique UUID for the image/dataset")
+    # Field(default_factory=uuid4, description="Unique UUID for the image/image_set")
 
     name: str = Field(..., max_length=255)
     handle: HttpUrl | None = None
@@ -47,15 +47,15 @@ class CommonFieldsSchema(BaseModel):
     altitude_meters: float | None = None
     coordinate_uncertainty_m: float | None = None
 
-    context: ImageContextSchema | None = None
-    project: ImageProjectSchema | None = None
-    event: ImageEventSchema | None = None
-    platform: ImagePlatformSchema | None = None
-    sensor: ImageSensorSchema | None = None
-    pi: ImagePISchema | None = None
-    license: ImageLicenseSchema | None = None
+    context: ContextSchema | None = None
+    project: ProjectSchema | None = None
+    event: EventSchema | None = None
+    platform: PlatformSchema | None = None
+    sensor: SensorSchema | None = None
+    pi: PISchema | None = None
+    license: LicenseSchema | None = None
 
-    creators: list[ImageCreatorSchema] = Field(default_factory=list)
+    creators: list[CreatorSchema] = Field(default_factory=list)
 
     copyright: str | None = None
     abstract: str | None = None

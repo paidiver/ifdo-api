@@ -6,17 +6,18 @@ from sqlalchemy import Table
 from sqlalchemy.orm import relationship
 from ifdo_api.models.base import Base
 from ifdo_api.models.base import DefaultColumns
-from ifdo_api.models.common_fields import CommonFields
+from ifdo_api.models.common_fields import CommonFieldsAll
+from ifdo_api.models.common_fields import CommonFieldsImagesImageSets
 
-images_creators = Table(
-    "images_creators",
+image_creators = Table(
+    "image_creators",
     Base.metadata,
     Column("image_id", ForeignKey("images.id", ondelete="CASCADE"), primary_key=True),
-    Column("creator_id", ForeignKey("image_creators.id", ondelete="CASCADE"), primary_key=True),
+    Column("creator_id", ForeignKey("creators.id", ondelete="CASCADE"), primary_key=True),
 )
 
 
-class Image(DefaultColumns, CommonFields, Base):
+class Image(DefaultColumns, CommonFieldsAll, CommonFieldsImagesImageSets, Base):
     """This class represents an image in the database."""
 
     def __init__(self, **kwargs):  # noqa: ANN003
@@ -25,52 +26,52 @@ class Image(DefaultColumns, CommonFields, Base):
 
     __tablename__ = "images"
     context_id = Column(
-        ForeignKey("image_contexts.id", onupdate="CASCADE", ondelete="SET NULL"),
+        ForeignKey("contexts.id", onupdate="CASCADE", ondelete="SET NULL"),
         nullable=True,
         info={"help_text": "The overarching project context within which the image set was created"},
     )
     project_id = Column(
-        ForeignKey("image_projects.id", onupdate="CASCADE", ondelete="SET NULL"),
+        ForeignKey("projects.id", onupdate="CASCADE", ondelete="SET NULL"),
         nullable=True,
         info={"help_text": "The more specific project or expedition or cruise or experiment or ... within which the image set was created."},
     )
     event_id = Column(
-        ForeignKey("image_events.id", onupdate="CASCADE", ondelete="SET NULL"),
+        ForeignKey("events.id", onupdate="CASCADE", ondelete="SET NULL"),
         nullable=True,
         info={"help_text": "One event of a project or expedition or cruise or experiment or ... that led to the creation of this image set."},
     )
     platform_id = Column(
-        ForeignKey("image_platforms.id", onupdate="CASCADE", ondelete="SET NULL"),
+        ForeignKey("platforms.id", onupdate="CASCADE", ondelete="SET NULL"),
         nullable=True,
         info={"help_text": "A URI pointing to a description of the camera platform used to create this image set"},
     )
     sensor_id = Column(
-        ForeignKey("image_sensors.id", onupdate="CASCADE", ondelete="SET NULL"),
+        ForeignKey("sensors.id", onupdate="CASCADE", ondelete="SET NULL"),
         nullable=True,
         info={"help_text": "A URI pointing to a description of the sensor used to create this image set."},
     )
     pi_id = Column(
-        ForeignKey("image_pis.id", onupdate="CASCADE", ondelete="SET NULL"),
+        ForeignKey("pis.id", onupdate="CASCADE", ondelete="SET NULL"),
         nullable=True,
         info={"help_text": "A URI pointing to a description of the principal investigator of the image set"},
     )
     license_id = Column(
-        ForeignKey("image_licenses.id", onupdate="CASCADE", ondelete="SET NULL"),
+        ForeignKey("licenses.id", onupdate="CASCADE", ondelete="SET NULL"),
         nullable=True,
         info={"help_text": "A URI pointing to the license to use the data (should be FAIR, e.g. **CC-BY** or CC-0)"},
     )
 
-    context = relationship("ImageContext", foreign_keys=[context_id], back_populates="images", passive_deletes=True)
-    project = relationship("ImageProject", foreign_keys=[project_id], back_populates="images", passive_deletes=True)
-    event = relationship("ImageEvent", foreign_keys=[event_id], back_populates="images", passive_deletes=True)
-    platform = relationship("ImagePlatform", foreign_keys=[platform_id], back_populates="images", passive_deletes=True)
-    sensor = relationship("ImageSensor", foreign_keys=[sensor_id], back_populates="images", passive_deletes=True)
-    pi = relationship("ImagePI", foreign_keys=[pi_id], back_populates="images", passive_deletes=True)
-    license = relationship("ImageLicense", foreign_keys=[license_id], back_populates="images", passive_deletes=True)
+    context = relationship("Context", foreign_keys=[context_id], back_populates="images", passive_deletes=True)
+    project = relationship("Project", foreign_keys=[project_id], back_populates="images", passive_deletes=True)
+    event = relationship("Event", foreign_keys=[event_id], back_populates="images", passive_deletes=True)
+    platform = relationship("Platform", foreign_keys=[platform_id], back_populates="images", passive_deletes=True)
+    sensor = relationship("Sensor", foreign_keys=[sensor_id], back_populates="images", passive_deletes=True)
+    pi = relationship("PI", foreign_keys=[pi_id], back_populates="images", passive_deletes=True)
+    license = relationship("License", foreign_keys=[license_id], back_populates="images", passive_deletes=True)
 
     creators = relationship(
-        "ImageCreator",
-        secondary=images_creators,
+        "Creator",
+        secondary=image_creators,
         back_populates="images",
         info={"help_text": "Information to identify the creators of the image set"},
     )
@@ -96,16 +97,16 @@ class Image(DefaultColumns, CommonFields, Base):
         "ImagePhotometricCalibration", back_populates="images", foreign_keys=[photometric_calibration_id], passive_deletes=True
     )
 
-    dataset_id = Column(
-        ForeignKey("datasets.id", onupdate="CASCADE", ondelete="CASCADE"),
+    image_set_id = Column(
+        ForeignKey("image_sets.id", onupdate="CASCADE", ondelete="CASCADE"),
         nullable=False,
-        info={"help_text": "The dataset this image belongs to. A dataset can have multiple images."},
+        info={"help_text": "The image_set this image belongs to. A image_set can have multiple images."},
     )
 
-    dataset = relationship(
-        "Dataset",
+    image_set = relationship(
+        "ImageSet",
         back_populates="images",
-        info={"help_text": "The dataset this image belongs to. A dataset can have multiple images."},
+        info={"help_text": "The image_set this image belongs to. A image_set can have multiple images."},
         passive_deletes=True,
     )
 
@@ -113,51 +114,51 @@ class Image(DefaultColumns, CommonFields, Base):
         "Annotation",
         back_populates="image",
         cascade="all, delete-orphan",
-        info={"help_text": "All the annotations in this image set. Each annotation has a shape, coordinates, and a list of labels assigned to it."},
+        info={"help_text": "All the annotations in this image. Each annotation has a shape, coordinates, and a list of labels assigned to it."},
     )
 
-    @property
-    def annotation_labels(self) -> list:
-        """Retrieve all unique labels from all annotations in the dataset."""
-        return list(
-            {
-                label
-                for image in self.images
-                for annotation in getattr(image, "annotations", [])
-                for label in getattr(annotation, "annotation_labels", [])
-            }
-        )
+    # @property
+    # def annotation_labels(self) -> list:
+    #     """Retrieve all unique labels from all annotations in the image_set."""
+    #     return list(
+    #         {
+    #             label
+    #             for image in self.images
+    #             for annotation in getattr(image, "annotations", [])
+    #             for label in getattr(annotation, "annotation_labels", [])
+    #         }
+    #     )
 
-    @property
-    def annotation_creators(self) -> list:
-        """Retrieve all unique creators from all annotations in the dataset."""
-        return list(
-            {
-                creator
-                for image in self.images
-                for annotation in getattr(image, "annotations", [])
-                for creator in getattr(annotation, "annotation_creators", [])
-            }
-        )
+    # @property
+    # def annotation_set_creators(self) -> list:
+    #     """Retrieve all unique creators from all annotations in the image_set."""
+    #     return list(
+    #         {
+    #             creator
+    #             for image in self.images
+    #             for annotation in getattr(image, "annotations", [])
+    #             for creator in getattr(annotation, "annotation_set_creators", [])
+    #         }
+    #     )
 
     def _update_geom(self) -> None:
         if self.latitude is not None and self.longitude is not None:
             self.geom = from_shape(Point(self.longitude, self.latitude), srid=4326)
 
     def get_merged_field(self, field_name: str) -> any:
-        """Returns image.field or dataset.field if image.field is None.
+        """Returns image.field or image_set.field if image.field is None.
 
         Args:
             field_name (str): The name of the field to retrieve.
 
         Returns:
-            any: The value of the field from the image or dataset, or None if not found.
+            any: The value of the field from the image or image_set, or None if not found.
         """
         value = getattr(self, field_name)
         if value is not None and value not in ([], {}, ""):
             return value
-        if self.dataset and hasattr(self.dataset, field_name):
-            value = getattr(self.dataset, field_name)
+        if self.image_set and hasattr(self.image_set, field_name):
+            value = getattr(self.image_set, field_name)
             # if isinstance(value, Base):
             #     return value.to_dict()
         return value
@@ -234,7 +235,7 @@ class Image(DefaultColumns, CommonFields, Base):
         image = {field: self.get_merged_field(field) for field in common_fields}
         image["id"] = self.id
         image["name"] = self.name
-        image["dataset_id"] = self.dataset_id
+        image["image_set_id"] = self.image_set_id
         return image
 
     def __str__(self):

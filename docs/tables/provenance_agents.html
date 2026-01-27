@@ -152,8 +152,8 @@
                                     <td>
                                         <table border='0' cellspacing='0' cellpadding='0'>
                                             <tr>
-                                                <td title="dataset_provenance_agents.agent_id references provenance_agents.id via dataset_provenance_agents_agent_id_fkey"><a href='dataset_provenance_agents.html'>dataset_provenance_agents</a><span class='relatedKey'>.agent_id</span></td>
-                                                <td class="constraint detail">dataset_provenance_agents_agent_id_fkey</td>
+                                                <td title="image_set_provenance_agents.agent_id references provenance_agents.id via image_set_provenance_agents_agent_id_fkey"><a href='image_set_provenance_agents.html'>image_set_provenance_agents</a><span class='relatedKey'>.agent_id</span></td>
+                                                <td class="constraint detail">image_set_provenance_agents_agent_id_fkey</td>
                                                 <td class="constraint detail"><span title='Cascade on delete:&#10;Deletion of parent deletes child'>C</span></td>
                                             </tr>
                                             <tr>
@@ -245,12 +245,6 @@
                                     <td>id</td>
                                 </tr>
                                 <tr>
-                                    <td class='uniqueKey' title='Unique Key'><i class='icon ion-key iconkey'></i> provenance_agents_id_key</td>
-                                    <td>Must be unique</td>
-                                    <td><span title='Ascending'>Asc</span></td>
-                                    <td>id</td>
-                                </tr>
-                                <tr>
                                     <td class='uniqueKey' title='Unique Key'><i class='icon ion-key iconkey'></i> provenance_agents_unique_id_key</td>
                                     <td>Must be unique</td>
                                     <td><span title='Ascending'>Asc</span></td>
@@ -279,21 +273,21 @@
                                 <div class="tab-content no-padding">
                                     <div class="chart tab-pane active" id="oneDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
-<area shape="rect" id="node1" href="dataset_provenance_agents.html" target="_top" title="dataset_provenance_agents" alt="" coords="413,5,739,128">
+<area shape="rect" id="node1" href="image_set_provenance_agents.html" target="_top" title="image_set_provenance_agents" alt="" coords="413,5,760,128">
 <area shape="rect" id="node2" href="provenance_agents.html" target="_top" title="provenance_agents" alt="" coords="5,113,369,329">
-<area shape="rect" id="node3" href="provenanceactivity_agent.html" target="_top" title="provenanceactivity_agent" alt="" coords="422,145,730,268">
-<area shape="rect" id="node4" href="provenanceentity_agent.html" target="_top" title="provenanceentity_agent" alt="" coords="429,285,723,408">
+<area shape="rect" id="node3" href="provenanceactivity_agent.html" target="_top" title="provenanceactivity_agent" alt="" coords="433,145,741,268">
+<area shape="rect" id="node4" href="provenanceentity_agent.html" target="_top" title="provenanceentity_agent" alt="" coords="439,285,734,408">
 </map>
                                         <a name='diagram'><img id="oneDegreeImg" src="../diagrams/tables/provenance_agents.1degree.png" usemap="#oneDegreeRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>
                                     <div class="chart tab-pane " id="twodegreesDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
-<area shape="rect" id="node1" href="dataset_provenance_agents.html" target="_top" title="dataset_provenance_agents" alt="" coords="413,196,739,319">
+<area shape="rect" id="node1" href="image_set_provenance_agents.html" target="_top" title="image_set_provenance_agents" alt="" coords="413,196,760,319">
 <area shape="rect" id="node2" href="provenance_agents.html" target="_top" title="provenance_agents" alt="" coords="5,216,369,432">
-<area shape="rect" id="node3" href="datasets.html" target="_top" title="datasets" alt="" coords="109,111,266,199">
-<area shape="rect" id="node4" href="provenanceactivity_agent.html" target="_top" title="provenanceactivity_agent" alt="" coords="422,29,730,152">
+<area shape="rect" id="node3" href="image_sets.html" target="_top" title="image_sets" alt="" coords="97,111,277,199">
+<area shape="rect" id="node4" href="provenanceactivity_agent.html" target="_top" title="provenanceactivity_agent" alt="" coords="433,29,741,152">
 <area shape="rect" id="node5" href="provenance_activities.html" target="_top" title="provenance_activities" alt="" coords="51,5,323,93">
-<area shape="rect" id="node6" href="provenanceentity_agent.html" target="_top" title="provenanceentity_agent" alt="" coords="429,392,723,515">
+<area shape="rect" id="node6" href="provenanceentity_agent.html" target="_top" title="provenanceentity_agent" alt="" coords="439,392,734,515">
 <area shape="rect" id="node7" href="provenance_entities.html" target="_top" title="provenance_entities" alt="" coords="58,449,317,537">
 </map>
                                         <a name='diagram'><img id="twodegreesDegreeImg" src="../diagrams/tables/provenance_agents.2degrees.png" usemap="#twoDegreesRelationshipsDiagram" class="diagram" border="0" align="left"></a>

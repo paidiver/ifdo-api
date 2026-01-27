@@ -8,8 +8,8 @@ from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from ifdo_api.api.deps import get_db
 from ifdo_api.api.exceptions import NotFoundException
-from ifdo_api.crud.fields import image_creator_crud
-from ifdo_api.schemas.fields import ImageCreatorSchema
+from ifdo_api.crud.fields import creator_crud
+from ifdo_api.schemas.fields import CreatorSchema
 
 T = TypeVar("T")
 
@@ -159,21 +159,21 @@ def add_common_router(
     # model = model_crud.model
 
     @router.post("/{item_id}/creators/", response_model=schema)
-    async def add_creator_with_body(item_id: UUID, creator: ImageCreatorSchema | None, db: Annotated[Session, Depends(get_db)]) -> BaseModel:
+    async def add_creator_with_body(item_id: UUID, creator: CreatorSchema | None, db: Annotated[Session, Depends(get_db)]) -> BaseModel:
         """Add a creator to an image.
 
         Args:
             item_id (UUID): The ID of the item to which the creator is being added.
-            creator (ImageCreatorSchema | None): The creator data to be added.
+            creator (CreatorSchema | None): The creator data to be added.
             db (Session): The database session.
 
         Raises:
             HTTPException: If the creation fails.
 
         Returns:
-            ImageSchema: The created item.
+            CreatorSchema: The created item.
         """
-        return model_crud.add_creator(db=db, crud=image_creator_crud, item_id=item_id, creator=creator)
+        return model_crud.add_creator(db=db, crud=creator_crud, item_id=item_id, creator=creator)
 
     @router.post("/{item_id}/creators/{creator_id}", response_model=schema)
     async def add_creator(item_id: UUID, creator_id: UUID, db: Annotated[Session, Depends(get_db)]) -> BaseModel:
@@ -190,6 +190,6 @@ def add_common_router(
         Returns:
             ImageSchema: The created item.
         """
-        return model_crud.add_creator(db=db, crud=image_creator_crud, item_id=item_id, creator_id=creator_id)
+        return model_crud.add_creator(db=db, crud=creator_crud, item_id=item_id, creator_id=creator_id)
 
     return router

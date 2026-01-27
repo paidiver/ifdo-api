@@ -18,13 +18,13 @@ router = add_common_router(model_crud=image_crud, schema=ImageSchema, router=rou
 
 
 @router.get("/{item_id}", response_model=ImageSchema, response_model_exclude_none=True)
-async def show(item_id: UUID, db: Annotated[Session, Depends(get_db)], replace_dataset: bool = False) -> Image:
+async def show(item_id: UUID, db: Annotated[Session, Depends(get_db)], replace_image_set: bool = False) -> Image:
     """Get an item by its ID.
 
     Args:
         item_id (UUID): The ID of the item to retrieve.
         db (Session): The database session.
-        replace_dataset (bool): Whether to replace the image field with the existing dataset field. Defaults to False.
+        replace_image_set (bool): Whether to replace the image field with the existing image_set field. Defaults to False.
 
     Raises:
         HTTPException: If the item is not found.
@@ -33,7 +33,7 @@ async def show(item_id: UUID, db: Annotated[Session, Depends(get_db)], replace_d
         schema: The item with the specified ID.
     """
     image = image_crud.show(db=db, id_pk=item_id)
-    if replace_dataset:
+    if replace_image_set:
         return image.to_merged_dict()
     return image
 

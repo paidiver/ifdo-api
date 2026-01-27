@@ -4,13 +4,14 @@ from sqlalchemy import String
 from sqlalchemy import Text
 from sqlalchemy.dialects.postgresql import ARRAY
 from sqlalchemy.orm import relationship
+from ifdo_api.models.annotations.annotation_set import annotation_set_creators
 from ifdo_api.models.base import Base
 from ifdo_api.models.base import DefaultColumns
-from ifdo_api.models.dataset import Dataset
-from ifdo_api.models.dataset import dataset_related_material
-from ifdo_api.models.dataset import datasets_creators
 from ifdo_api.models.image import Image
-from ifdo_api.models.image import images_creators
+from ifdo_api.models.image import image_creators
+from ifdo_api.models.image_set import ImageSet
+from ifdo_api.models.image_set import image_set_creators
+from ifdo_api.models.image_set import image_set_related_materials
 
 
 class NamedURI:
@@ -20,145 +21,159 @@ class NamedURI:
     uri = Column(String, nullable=True)
 
 
-class ImageContext(DefaultColumns, NamedURI, Base):
+class Context(DefaultColumns, NamedURI, Base):
     """Represents a context in which an image was captured."""
 
-    __tablename__ = "image_contexts"
+    __tablename__ = "contexts"
     images = relationship(
         "Image",
         foreign_keys=[Image.context_id],
         back_populates="context",
         passive_deletes=True,
     )
-    datasets = relationship(
-        "Dataset",
-        foreign_keys=[Dataset.context_id],
+    image_sets = relationship(
+        "ImageSet",
+        foreign_keys=[ImageSet.context_id],
         back_populates="context",
         passive_deletes=True,
     )
 
 
-class ImageProject(DefaultColumns, NamedURI, Base):
+class Project(DefaultColumns, NamedURI, Base):
     """Represents a project related to an image."""
 
-    __tablename__ = "image_projects"
+    __tablename__ = "projects"
     images = relationship(
         "Image",
         foreign_keys=[Image.project_id],
         back_populates="project",
     )
-    datasets = relationship(
-        "Dataset",
-        foreign_keys=[Dataset.project_id],
+    image_sets = relationship(
+        "ImageSet",
+        foreign_keys=[ImageSet.project_id],
         back_populates="project",
         passive_deletes=True,
     )
 
 
-class ImageEvent(DefaultColumns, NamedURI, Base):
+class Event(DefaultColumns, NamedURI, Base):
     """Represents an event related to an image."""
 
-    __tablename__ = "image_events"
+    __tablename__ = "events"
     images = relationship(
         "Image",
         foreign_keys=[Image.event_id],
         back_populates="event",
         passive_deletes=True,
     )
-    datasets = relationship(
-        "Dataset",
-        foreign_keys=[Dataset.event_id],
+    image_sets = relationship(
+        "ImageSet",
+        foreign_keys=[ImageSet.event_id],
         back_populates="event",
         passive_deletes=True,
     )
 
 
-class ImagePlatform(DefaultColumns, NamedURI, Base):
+class Platform(DefaultColumns, NamedURI, Base):
     """Represents a platform on which an image was captured."""
 
-    __tablename__ = "image_platforms"
+    __tablename__ = "platforms"
     images = relationship(
         "Image",
         foreign_keys=[Image.platform_id],
         back_populates="platform",
         passive_deletes=True,
     )
-    datasets = relationship(
-        "Dataset",
-        foreign_keys=[Dataset.platform_id],
+    image_sets = relationship(
+        "ImageSet",
+        foreign_keys=[ImageSet.platform_id],
         back_populates="platform",
         passive_deletes=True,
     )
 
 
-class ImageSensor(DefaultColumns, NamedURI, Base):
+class Sensor(DefaultColumns, NamedURI, Base):
     """Represents a sensor used to capture an image."""
 
-    __tablename__ = "image_sensors"
+    __tablename__ = "sensors"
     images = relationship(
         "Image",
         foreign_keys=[Image.sensor_id],
         back_populates="sensor",
         passive_deletes=True,
     )
-    datasets = relationship(
-        "Dataset",
-        foreign_keys=[Dataset.sensor_id],
+    image_sets = relationship(
+        "ImageSet",
+        foreign_keys=[ImageSet.sensor_id],
         back_populates="sensor",
         passive_deletes=True,
     )
 
 
-class ImagePI(DefaultColumns, NamedURI, Base):
+class PI(DefaultColumns, NamedURI, Base):
     """Represents a principal investigator related to an image."""
 
-    __tablename__ = "image_pis"
+    __tablename__ = "pis"
     images = relationship(
         "Image",
         foreign_keys=[Image.pi_id],
         back_populates="pi",
         passive_deletes=True,
     )
-    datasets = relationship(
-        "Dataset",
-        foreign_keys=[Dataset.pi_id],
+    image_sets = relationship(
+        "ImageSet",
+        foreign_keys=[ImageSet.pi_id],
         back_populates="pi",
         passive_deletes=True,
     )
 
 
-class ImageCreator(DefaultColumns, NamedURI, Base):
+class Creator(DefaultColumns, NamedURI, Base):
     """Represents a creator of an image."""
 
-    __tablename__ = "image_creators"
+    __tablename__ = "creators"
     images = relationship(
         "Image",
-        secondary=images_creators,
+        secondary=image_creators,
         back_populates="creators",
         passive_deletes=True,
     )
 
-    datasets = relationship(
-        "Dataset",
-        secondary=datasets_creators,
+    image_sets = relationship(
+        "ImageSet",
+        secondary=image_set_creators,
+        back_populates="creators",
+        passive_deletes=True,
+    )
+
+    annotation_sets = relationship(
+        "AnnotationSet",
+        secondary=annotation_set_creators,
         back_populates="creators",
         passive_deletes=True,
     )
 
 
-class ImageLicense(DefaultColumns, NamedURI, Base):
+class License(DefaultColumns, NamedURI, Base):
     """Represents a license under which an image is shared."""
 
-    __tablename__ = "image_licenses"
+    __tablename__ = "licenses"
     images = relationship(
         "Image",
         foreign_keys=[Image.license_id],
         back_populates="license",
         passive_deletes=True,
     )
-    datasets = relationship(
-        "Dataset",
-        foreign_keys=[Dataset.license_id],
+    image_sets = relationship(
+        "ImageSet",
+        foreign_keys=[ImageSet.license_id],
+        back_populates="license",
+        passive_deletes=True,
+    )
+
+    annotation_sets = relationship(
+        "AnnotationSet",
+        foreign_keys="[AnnotationSet.license_id]",
         back_populates="license",
         passive_deletes=True,
     )
@@ -190,9 +205,9 @@ class ImageCameraPose(DefaultColumns, Base):
         back_populates="camera_pose",
         passive_deletes=True,
     )
-    datasets = relationship(
-        "Dataset",
-        foreign_keys=[Dataset.camera_pose_id],
+    image_sets = relationship(
+        "ImageSet",
+        foreign_keys=[ImageSet.camera_pose_id],
         back_populates="camera_pose",
         passive_deletes=True,
     )
@@ -212,9 +227,9 @@ class ImageCameraHousingViewport(DefaultColumns, Base):
         back_populates="camera_housing_viewport",
         passive_deletes=True,
     )
-    datasets = relationship(
-        "Dataset",
-        foreign_keys=[Dataset.camera_housing_viewport_id],
+    image_sets = relationship(
+        "ImageSet",
+        foreign_keys=[ImageSet.camera_housing_viewport_id],
         back_populates="camera_housing_viewport",
         passive_deletes=True,
     )
@@ -245,9 +260,9 @@ class ImageFlatportParameter(DefaultColumns, Base):
         back_populates="flatport_parameter",
         passive_deletes=True,
     )
-    datasets = relationship(
-        "Dataset",
-        foreign_keys=[Dataset.flatport_parameter_id],
+    image_sets = relationship(
+        "ImageSet",
+        foreign_keys=[ImageSet.flatport_parameter_id],
         back_populates="flatport_parameter",
         passive_deletes=True,
     )
@@ -272,9 +287,9 @@ class ImageDomeportParameter(DefaultColumns, Base):
         back_populates="domeport_parameter",
         passive_deletes=True,
     )
-    datasets = relationship(
-        "Dataset",
-        foreign_keys=[Dataset.domeport_parameter_id],
+    image_sets = relationship(
+        "ImageSet",
+        foreign_keys=[ImageSet.domeport_parameter_id],
         back_populates="domeport_parameter",
         passive_deletes=True,
     )
@@ -306,9 +321,9 @@ class ImageCameraCalibrationModel(DefaultColumns, Base):
         back_populates="camera_calibration_model",
         passive_deletes=True,
     )
-    datasets = relationship(
-        "Dataset",
-        foreign_keys=[Dataset.camera_calibration_model_id],
+    image_sets = relationship(
+        "ImageSet",
+        foreign_keys=[ImageSet.camera_calibration_model_id],
         back_populates="camera_calibration_model",
         passive_deletes=True,
     )
@@ -342,25 +357,25 @@ class ImagePhotometricCalibration(DefaultColumns, Base):
         back_populates="photometric_calibration",
         passive_deletes=True,
     )
-    datasets = relationship(
-        "Dataset",
-        foreign_keys=[Dataset.photometric_calibration_id],
+    image_sets = relationship(
+        "ImageSet",
+        foreign_keys=[ImageSet.photometric_calibration_id],
         back_populates="photometric_calibration",
         passive_deletes=True,
     )
 
 
-class ImageSetRelatedMaterial(DefaultColumns, Base):
+class RelatedMaterial(DefaultColumns, Base):
     """Represents a related material for an image set."""
 
-    __tablename__ = "image_set_related_materials"
+    __tablename__ = "related_materials"
     uri = Column(String, info={"help_text": "The URI pointing to a related resource"})
     title = Column(String(255), info={"help_text": "A name characterising the resource that is pointed to"})
     relation = Column(Text, info={"help_text": "A textual explanation how this material is related to this image set"})
 
-    datasets = relationship(
-        "Dataset",
-        secondary=dataset_related_material,
+    image_sets = relationship(
+        "ImageSet",
+        secondary=image_set_related_materials,
         back_populates="related_materials",
         passive_deletes=True,
     )

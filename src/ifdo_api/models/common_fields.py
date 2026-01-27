@@ -21,25 +21,9 @@ from ifdo_api.models.base import ScaleReferenceEnum
 from ifdo_api.models.base import SpectralResEnum
 
 
-class CommonFields:
-    """Common fields for datasets and images."""
+class CommonFieldsImagesImageSets:
+    """Common fields for image_sets and images."""
 
-    name = Column(
-        String(255),
-        nullable=False,
-        unique=True,
-        info={
-            "help_text": (
-                "A unique name for the image set, should include image-project, image-event, image-sensor and optionally the purpose of imaging"
-            )
-        },
-    )
-    handle = Column(
-        String,
-        nullable=True,
-        # nullable=False,
-        info={"help_text": "A Handle URL to point to the landing page of the dataset or image"},
-    )
     sha256_hash = Column(
         String(64),
         nullable=True,
@@ -80,24 +64,7 @@ class CommonFields:
     coordinate_uncertainty_meters = Column(
         Float,
         nullable=True,
-        info={"help_text": "The average/static uncertainty of coordinates in this dataset, in meters."},
-    )
-
-    copyright = Column(
-        String(500),
-        nullable=True,
-        info={"help_text": "Copyright statement or contact person or office"},
-    )
-    abstract = Column(
-        Text,
-        nullable=True,
-        info={
-            "help_text": (
-                "500 - 2000 characters describing what, when, where, why and how the data was collected. "
-                "Includes general information on the event (aka station, experiment), e.g. overlap between "
-                "images/frames, parameters on platform movement, aims, purpose of image capture etc."
-            )
-        },
+        info={"help_text": "The average/static uncertainty of coordinates in this image_set, in meters."},
     )
 
     entropy = Column(
@@ -337,7 +304,6 @@ class CommonFields:
             )
         },
     )
-
     overlap_fraction = Column(
         Float,
         nullable=True,
@@ -353,3 +319,41 @@ class CommonFields:
     item_identification_scheme = Column(Text, info={"help_text": "How the images file names are constructed..."})
     curation_protocol = Column(Text, info={"help_text": "A description of the image and metadata curation..."})
     visual_constraints = Column(Text, info={"help_text": "An explanation how the images might be degraded..."})
+
+
+class CommonFieldsAll:
+    """Common fields for image_sets and images."""
+
+    name = Column(
+        String(255),
+        nullable=False,
+        unique=True,
+        info={
+            "help_text": (
+                "A unique name for the image set, should include image-project, image-event, image-sensor and optionally the purpose of imaging"
+            )
+        },
+    )
+    handle = Column(
+        String,
+        nullable=True,
+        # nullable=False,
+        info={"help_text": "A Handle URL to point to the landing page of the image_set or image"},
+    )
+
+    copyright = Column(
+        String(500),
+        nullable=True,
+        info={"help_text": "Copyright statement or contact person or office"},
+    )
+    abstract = Column(
+        Text,
+        nullable=True,
+        info={
+            "help_text": (
+                "500 - 2000 characters describing what, when, where, why and how the data was collected. "
+                "Includes general information on the event (aka station, experiment), e.g. overlap between "
+                "images/frames, parameters on platform movement, aims, purpose of image capture etc."
+            )
+        },
+    )

@@ -169,8 +169,8 @@
                                     <td>
                                         <table border='0' cellspacing='0' cellpadding='0'>
                                             <tr>
-                                                <td title="datasets.flatport_parameter_id references image_flatport_parameters.id via datasets_flatport_parameter_id_fkey"><a href='datasets.html'>datasets</a><span class='relatedKey'>.flatport_parameter_id</span></td>
-                                                <td class="constraint detail">datasets_flatport_parameter_id_fkey</td>
+                                                <td title="image_sets.flatport_parameter_id references image_flatport_parameters.id via image_sets_flatport_parameter_id_fkey"><a href='image_sets.html'>image_sets</a><span class='relatedKey'>.flatport_parameter_id</span></td>
+                                                <td class="constraint detail">image_sets_flatport_parameter_id_fkey</td>
                                                 <td class="constraint detail"><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
                                             </tr>
                                             <tr>
@@ -256,12 +256,6 @@
                                     <td><span title='Ascending'>Asc</span></td>
                                     <td>id</td>
                                 </tr>
-                                <tr>
-                                    <td class='uniqueKey' title='Unique Key'><i class='icon ion-key iconkey'></i> image_flatport_parameters_id_key</td>
-                                    <td>Must be unique</td>
-                                    <td><span title='Ascending'>Asc</span></td>
-                                    <td>id</td>
-                                </tr>
                                 </tbody>
                             </table>
                         </div><!-- /.box-body -->
@@ -285,7 +279,7 @@
                                 <div class="tab-content no-padding">
                                     <div class="chart tab-pane active" id="oneDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
-<area shape="rect" id="node1" href="datasets.html" target="_top" title="datasets" alt="" coords="512,116,832,732">
+<area shape="rect" id="node1" href="image_sets.html" target="_top" title="image_sets" alt="" coords="512,116,832,732">
 <area shape="rect" id="node2" href="image_flatport_parameters.html" target="_top" title="image_flatport_parameters" alt="" coords="5,120,468,365">
 <area shape="rect" id="node3" href="images.html" target="_top" title="images" alt="" coords="876,5,1196,621">
 </map>
@@ -293,28 +287,29 @@
                                     </div>
                                     <div class="chart tab-pane " id="twodegreesDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
-<area shape="rect" id="node1" href="annotations.html" target="_top" title="annotations" alt="" coords="1119,845,1309,933">
-<area shape="rect" id="node2" href="images.html" target="_top" title="images" alt="" coords="813,901,958,989">
-<area shape="rect" id="node4" href="datasets.html" target="_top" title="datasets" alt="" coords="512,693,669,781">
-<area shape="rect" id="node8" href="image_camera_calibration_models.html" target="_top" title="image_camera_calibration_models" alt="" coords="46,479,427,567">
-<area shape="rect" id="node9" href="image_camera_housing_viewports.html" target="_top" title="image_camera_housing_viewports" alt="" coords="47,584,427,672">
-<area shape="rect" id="node10" href="image_camera_poses.html" target="_top" title="image_camera_poses" alt="" coords="104,795,369,883">
-<area shape="rect" id="node11" href="image_contexts.html" target="_top" title="image_contexts" alt="" coords="127,1005,347,1093">
-<area shape="rect" id="node12" href="image_domeport_parameters.html" target="_top" title="image_domeport_parameters" alt="" coords="67,1216,406,1304">
-<area shape="rect" id="node13" href="image_events.html" target="_top" title="image_events" alt="" coords="135,1321,338,1409">
-<area shape="rect" id="node14" href="image_flatport_parameters.html" target="_top" title="image_flatport_parameters" alt="" coords="5,5,468,251">
-<area shape="rect" id="node15" href="image_licenses.html" target="_top" title="image_licenses" alt="" coords="130,689,343,777">
-<area shape="rect" id="node16" href="image_photometric_calibrations.html" target="_top" title="image_photometric_calibrations" alt="" coords="55,268,418,356">
-<area shape="rect" id="node17" href="image_pis.html" target="_top" title="image_pis" alt="" coords="152,900,321,988">
-<area shape="rect" id="node18" href="image_platforms.html" target="_top" title="image_platforms" alt="" coords="122,373,351,461">
-<area shape="rect" id="node19" href="image_projects.html" target="_top" title="image_projects" alt="" coords="129,1111,344,1199">
-<area shape="rect" id="node20" href="image_sensors.html" target="_top" title="image_sensors" alt="" coords="131,1427,342,1515">
-<area shape="rect" id="node3" href="dataset_provenance_activities.html" target="_top" title="dataset_provenance_activities" alt="" coords="713,691,1057,779">
-<area shape="rect" id="node5" href="dataset_provenance_agents.html" target="_top" title="dataset_provenance_agents" alt="" coords="723,796,1048,884">
-<area shape="rect" id="node6" href="dataset_provenance_entities.html" target="_top" title="dataset_provenance_entities" alt="" coords="719,375,1051,463">
-<area shape="rect" id="node7" href="dataset_related_materials.html" target="_top" title="dataset_related_materials" alt="" coords="731,480,1040,568">
-<area shape="rect" id="node21" href="datasets_creators.html" target="_top" title="datasets_creators" alt="" coords="767,585,1004,673">
-<area shape="rect" id="node22" href="images_creators.html" target="_top" title="images_creators" alt="" coords="1101,951,1327,1039">
+<area shape="rect" id="node1" href="annotation_set_image_sets.html" target="_top" title="annotation_set_image_sets" alt="" coords="1408,793,1725,881">
+<area shape="rect" id="node2" href="annotations.html" target="_top" title="annotations" alt="" coords="1161,705,1350,793">
+<area shape="rect" id="node3" href="image_sets.html" target="_top" title="image_sets" alt="" coords="512,905,692,993">
+<area shape="rect" id="node4" href="images.html" target="_top" title="images" alt="" coords="847,708,992,796">
+<area shape="rect" id="node11" href="image_camera_calibration_models.html" target="_top" title="image_camera_calibration_models" alt="" coords="46,795,427,883">
+<area shape="rect" id="node12" href="image_camera_housing_viewports.html" target="_top" title="image_camera_housing_viewports" alt="" coords="47,900,427,988">
+<area shape="rect" id="node13" href="image_camera_poses.html" target="_top" title="image_camera_poses" alt="" coords="104,1005,369,1093">
+<area shape="rect" id="node14" href="contexts.html" target="_top" title="contexts" alt="" coords="157,1111,316,1199">
+<area shape="rect" id="node15" href="image_domeport_parameters.html" target="_top" title="image_domeport_parameters" alt="" coords="67,1216,406,1304">
+<area shape="rect" id="node16" href="events.html" target="_top" title="events" alt="" coords="166,1321,307,1409">
+<area shape="rect" id="node17" href="image_flatport_parameters.html" target="_top" title="image_flatport_parameters" alt="" coords="5,5,468,251">
+<area shape="rect" id="node18" href="licenses.html" target="_top" title="licenses" alt="" coords="161,268,313,356">
+<area shape="rect" id="node19" href="image_photometric_calibrations.html" target="_top" title="image_photometric_calibrations" alt="" coords="55,373,418,461">
+<area shape="rect" id="node20" href="pis.html" target="_top" title="pis" alt="" coords="183,479,291,567">
+<area shape="rect" id="node21" href="platforms.html" target="_top" title="platforms" alt="" coords="153,584,321,672">
+<area shape="rect" id="node22" href="projects.html" target="_top" title="projects" alt="" coords="160,689,313,777">
+<area shape="rect" id="node23" href="sensors.html" target="_top" title="sensors" alt="" coords="162,1427,311,1515">
+<area shape="rect" id="node5" href="image_creators.html" target="_top" title="image_creators" alt="" coords="1147,811,1364,899">
+<area shape="rect" id="node6" href="image_set_creators.html" target="_top" title="image_set_creators" alt="" coords="794,1060,1045,1148">
+<area shape="rect" id="node7" href="image_set_provenance_activities.html" target="_top" title="image_set_provenance_activities" alt="" coords="736,1165,1103,1253">
+<area shape="rect" id="node8" href="image_set_provenance_agents.html" target="_top" title="image_set_provenance_agents" alt="" coords="746,1271,1093,1359">
+<area shape="rect" id="node9" href="image_set_provenance_entities.html" target="_top" title="image_set_provenance_entities" alt="" coords="743,813,1096,901">
+<area shape="rect" id="node10" href="image_set_related_materials.html" target="_top" title="image_set_related_materials" alt="" coords="754,955,1085,1043">
 </map>
                                         <a name='diagram'><img id="twodegreesDegreeImg" src="../diagrams/tables/image_flatport_parameters.2degrees.png" usemap="#twoDegreesRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>

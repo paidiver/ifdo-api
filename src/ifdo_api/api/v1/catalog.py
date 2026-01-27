@@ -25,6 +25,6 @@ async def show(db: Annotated[Session, Depends(get_db)]) -> list[BaseModel]:
     _ = db
     return {
         "name": "National Oceanography Centre Catalog",
-        "description": "This catalog contains datasets related to oceanography managed by the National Oceanography Centre.",
+        "description": "This catalog contains image_sets related to oceanography managed by the National Oceanography Centre.",
         "url": "https://www.bodc.ac.uk/data/published_data_library/",
     }

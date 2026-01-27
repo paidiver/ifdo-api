@@ -6,9 +6,9 @@ from sqlalchemy import Table
 from sqlalchemy.orm import relationship
 from ifdo_api.models.base import Base
 from ifdo_api.models.base import DefaultColumns
-from ifdo_api.models.dataset import dataset_provenance_activities
-from ifdo_api.models.dataset import dataset_provenance_agents
-from ifdo_api.models.dataset import dataset_provenance_entities
+from ifdo_api.models.image_set import image_set_provenance_activities
+from ifdo_api.models.image_set import image_set_provenance_agents
+from ifdo_api.models.image_set import image_set_provenance_entities
 
 # Association tables for many-to-many relationships
 provenanceentity_agent = Table(
@@ -48,7 +48,7 @@ class ProvenanceAgent(DefaultColumns, Base):
     name = Column(String(255), nullable=False, info={"help_text": "A human-readable identifier of the agent"})
     unique_id = Column(String(500), unique=True, nullable=False, info={"help_text": "A unique identifier for the agent. Could be a URI."})
 
-    datasets = relationship("Dataset", secondary=dataset_provenance_agents, back_populates="provenance_agents")
+    image_sets = relationship("ImageSet", secondary=image_set_provenance_agents, back_populates="provenance_agents")
 
     def __str__(self):
         return self.name
@@ -77,7 +77,7 @@ class ProvenanceEntity(DefaultColumns, Base):
         info={"help_text": "A list of activities that created this entity"},
     )
 
-    datasets = relationship("Dataset", secondary=dataset_provenance_entities, back_populates="provenance_entities")
+    image_sets = relationship("ImageSet", secondary=image_set_provenance_entities, back_populates="provenance_entities")
 
     def __str__(self):
         return self.name
@@ -105,7 +105,7 @@ class ProvenanceActivity(DefaultColumns, Base):
         info={"help_text": "The entities that are associated to this activity"},
     )
 
-    datasets = relationship("Dataset", secondary=dataset_provenance_activities, back_populates="provenance_activities")
+    image_sets = relationship("ImageSet", secondary=image_set_provenance_activities, back_populates="provenance_activities")
 
     def __str__(self):
         start = self.start_time.isoformat() if self.start_time else "unknown start"

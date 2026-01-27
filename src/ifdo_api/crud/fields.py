@@ -1,24 +1,24 @@
 """This module implements the CRUD for the Fields model."""
 
 from ifdo_api.crud.base import CRUDBase
+from ifdo_api.models.fields import PI
+from ifdo_api.models.fields import Context
+from ifdo_api.models.fields import Creator
+from ifdo_api.models.fields import Event
 from ifdo_api.models.fields import ImageCameraCalibrationModel
 from ifdo_api.models.fields import ImageCameraHousingViewport
 from ifdo_api.models.fields import ImageCameraPose
-from ifdo_api.models.fields import ImageContext
-from ifdo_api.models.fields import ImageCreator
 from ifdo_api.models.fields import ImageDomeportParameter
-from ifdo_api.models.fields import ImageEvent
 from ifdo_api.models.fields import ImageFlatportParameter
-from ifdo_api.models.fields import ImageLicense
 from ifdo_api.models.fields import ImagePhotometricCalibration
-from ifdo_api.models.fields import ImagePI
-from ifdo_api.models.fields import ImagePlatform
-from ifdo_api.models.fields import ImageProject
-from ifdo_api.models.fields import ImageSensor
-from ifdo_api.models.fields import ImageSetRelatedMaterial
+from ifdo_api.models.fields import License
+from ifdo_api.models.fields import Platform
+from ifdo_api.models.fields import Project
+from ifdo_api.models.fields import RelatedMaterial
+from ifdo_api.models.fields import Sensor
 
 
-class CRUDImageContext(CRUDBase[ImageContext]):
+class CRUDImageContext(CRUDBase[Context]):
     """CRUD object with default methods to Create, Read, Update, Delete (CRUD).
 
     Args:
@@ -26,7 +26,7 @@ class CRUDImageContext(CRUDBase[ImageContext]):
     """
 
 
-class CRUDImageProject(CRUDBase[ImageProject]):
+class CRUDImageProject(CRUDBase[Project]):
     """CRUD object with default methods to Create, Read, Update, Delete (CRUD).
 
     Args:
@@ -34,7 +34,7 @@ class CRUDImageProject(CRUDBase[ImageProject]):
     """
 
 
-class CRUDImageEvent(CRUDBase[ImageEvent]):
+class CRUDImageEvent(CRUDBase[Event]):
     """CRUD object with default methods to Create, Read, Update, Delete (CRUD).
 
     Args:
@@ -42,7 +42,7 @@ class CRUDImageEvent(CRUDBase[ImageEvent]):
     """
 
 
-class CRUDImagePlatform(CRUDBase[ImagePlatform]):
+class CRUDImagePlatform(CRUDBase[Platform]):
     """CRUD object with default methods to Create, Read, Update, Delete (CRUD).
 
     Args:
@@ -50,7 +50,7 @@ class CRUDImagePlatform(CRUDBase[ImagePlatform]):
     """
 
 
-class CRUDImageSensor(CRUDBase[ImageSensor]):
+class CRUDImageSensor(CRUDBase[Sensor]):
     """CRUD object with default methods to Create, Read, Update, Delete (CRUD).
 
     Args:
@@ -58,7 +58,7 @@ class CRUDImageSensor(CRUDBase[ImageSensor]):
     """
 
 
-class CRUDImagePI(CRUDBase[ImagePI]):
+class CRUDImagePI(CRUDBase[PI]):
     """CRUD object with default methods to Create, Read, Update, Delete (CRUD).
 
     Args:
@@ -66,7 +66,7 @@ class CRUDImagePI(CRUDBase[ImagePI]):
     """
 
 
-class CRUDImageCreator(CRUDBase[ImageCreator]):
+class CRUDImageCreator(CRUDBase[Creator]):
     """CRUD object with default methods to Create, Read, Update, Delete (CRUD).
 
     Args:
@@ -74,7 +74,7 @@ class CRUDImageCreator(CRUDBase[ImageCreator]):
     """
 
 
-class CRUDImageLicense(CRUDBase[ImageLicense]):
+class CRUDImageLicense(CRUDBase[License]):
     """CRUD object with default methods to Create, Read, Update, Delete (CRUD).
 
     Args:
@@ -130,7 +130,7 @@ class CRUDImagePhotometricCalibration(CRUDBase[ImagePhotometricCalibration]):
     """
 
 
-class CRUDImageSetRelatedMaterial(CRUDBase[ImageSetRelatedMaterial]):
+class CRUDRelatedMaterial(CRUDBase[RelatedMaterial]):
     """CRUD object with default methods to Create, Read, Update, Delete (CRUD).
 
     Args:
@@ -138,18 +138,18 @@ class CRUDImageSetRelatedMaterial(CRUDBase[ImageSetRelatedMaterial]):
     """
 
 
-image_context_crud = CRUDImageContext(ImageContext)
-image_project_crud = CRUDImageProject(ImageProject)
-image_event_crud = CRUDImageEvent(ImageEvent)
-image_platform_crud = CRUDImagePlatform(ImagePlatform)
-image_sensor_crud = CRUDImageSensor(ImageSensor)
-image_pi_crud = CRUDImagePI(ImagePI)
-image_creator_crud = CRUDImageCreator(ImageCreator)
-image_license_crud = CRUDImageLicense(ImageLicense)
+context_crud = CRUDImageContext(Context)
+project_crud = CRUDImageProject(Project)
+event_crud = CRUDImageEvent(Event)
+platform_crud = CRUDImagePlatform(Platform)
+sensor_crud = CRUDImageSensor(Sensor)
+pi_crud = CRUDImagePI(PI)
+creator_crud = CRUDImageCreator(Creator)
+license_crud = CRUDImageLicense(License)
 image_camera_pose_crud = CRUDImageCameraPose(ImageCameraPose)
 image_camera_housing_viewport_crud = CRUDImageCameraHousingViewport(ImageCameraHousingViewport)
 image_flatport_parameter_crud = CRUDImageFlatportParameter(ImageFlatportParameter)
 image_domeport_parameter_crud = CRUDImageDomeportParameter(ImageDomeportParameter)
 image_camera_calibration_model_crud = CRUDImageCameraCalibrationModel(ImageCameraCalibrationModel)
 image_photometric_calibration_crud = CRUDImagePhotometricCalibration(ImagePhotometricCalibration)
-image_set_related_material_crud = CRUDImageSetRelatedMaterial(ImageSetRelatedMaterial)
+related_material_crud = CRUDRelatedMaterial(RelatedMaterial)

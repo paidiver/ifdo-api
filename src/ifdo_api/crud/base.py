@@ -16,9 +16,9 @@ from sqlalchemy.sql import text
 from ifdo_api.api.exceptions import NotFoundException
 from ifdo_api.api.exceptions import ValueErrorException
 from ifdo_api.models.base import Base
-from ifdo_api.models.fields import ImageCreator
+from ifdo_api.models.fields import Creator
 from ifdo_api.models.image import Image
-from ifdo_api.schemas.fields import ImageCreatorSchema
+from ifdo_api.schemas.fields import CreatorSchema
 
 ModelType = TypeVar("ModelType", bound=Base)  # type: ignore[name-defined]
 
@@ -167,15 +167,15 @@ class CRUDBase(Generic[ModelType]):
         return query
 
     def create_fields(self, db: Session, model_dict: dict, models_info: dict) -> dict:
-        """Create fields for the dataset.
+        """Create fields for the image_set.
 
         Args:
             db (Session): Database session.
-            model_dict (dict): The dataset dictionary to update.
+            model_dict (dict): The image_set dictionary to update.
             models_info (dict): Dictionary containing the CRUD and schema information for each field.
 
         Returns:
-            dict: Updated dataset dictionary with fields created.
+            dict: Updated image_set dictionary with fields created.
         """
         for key, value in models_info.items():
             if key in model_dict:
@@ -196,9 +196,7 @@ class CRUDBase(Generic[ModelType]):
 
         return model_dict
 
-    def add_creator(
-        self, db: Session, crud: ModelType, item_id: UUID, creator_id: UUID | None = None, creator: ImageCreatorSchema | None = None
-    ) -> Image:
+    def add_creator(self, db: Session, crud: ModelType, item_id: UUID, creator_id: UUID | None = None, creator: CreatorSchema | None = None) -> Image:
         """Add a creator to an image.
 
         Args:
@@ -206,7 +204,7 @@ class CRUDBase(Generic[ModelType]):
             crud (ModelType): The CRUD object for image creators.
             item_id (UUID): The ID of the image.
             creator_id (UUID): The ID of the creator to add.
-            creator (ImageCreatorSchema): The creator object to add.
+            creator (CreatorSchema): The creator object to add.
 
         Returns:
             ModelType: The updated model with the new creator.
@@ -223,7 +221,7 @@ class CRUDBase(Generic[ModelType]):
         else:
             db_creator = crud.show(db, id_pk=creator_id)
         if not db_creator:
-            raise NotFoundException(ImageCreator.__name__)
+            raise NotFoundException(Creator.__name__)
         db_item = self.show(db=db, id_pk=item_id)
         if not db_item:
             raise NotFoundException(self.model.__name__)
@@ -274,7 +272,7 @@ def convert_pydantic_types(data: dict[str, Any]) -> dict[str, Any]:
         elif isinstance(value, Decimal):
             converted[key] = float(value)
         elif isinstance(value, datetime.datetime):
-            converted[key] = value  # SQLAlchemy supports native datetime
+            converted[key] = value
         elif isinstance(value, BaseModel):
             converted[key] = convert_pydantic_types(value.dict())
         else:

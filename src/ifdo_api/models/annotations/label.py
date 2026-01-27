@@ -34,7 +34,26 @@ class Label(DefaultColumns, Base):
         info={"help": "A description on what this semantic label represents"},
     )
 
-    parent = relationship("Label", remote_side=[DefaultColumns.id], backref="children")
+    parent = relationship(
+        "Label",
+        remote_side="Label.id",
+        foreign_keys=[parent_id],
+        back_populates="childrens",
+    )
+
+    annotation_sets = relationship(
+        "AnnotationSet",
+        secondary="annotation_set_labels",
+        back_populates="labels",
+        info={"help_text": "Annotation sets that include this label"},
+    )
+
+    childrens = relationship(
+        "Label",
+        foreign_keys=[parent_id],
+        back_populates="parent",
+        cascade="all, delete-orphan",
+    )
 
 
 class LabelSource(DefaultColumns, Base):

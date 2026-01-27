@@ -126,6 +126,50 @@
                                     <td></td>
                                 </tr>
                                 <tr>
+                                    <td class='foreignKey' title='Foreign Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i><span id="parent_id">parent_id</span></td>
+                                    <td>uuid</td>
+                                    <td>2147483647</td>
+                                    <td title='nullable'>√</td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                            <tr>
+                                                <td title="labels.parent_id references labels.id via labels_parent_id_fkey"><a href='labels.html'>labels</a><span class='relatedKey'>.id</span></td>
+                                                <td class="constraint detail">labels_parent_id_fkey</td>
+                                                <td class="constraint detail"><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td class='foreignKey' title='Foreign Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i><span id="label_source_id">label_source_id</span></td>
+                                    <td>uuid</td>
+                                    <td>2147483647</td>
+                                    <td title='nullable'>√</td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                            <tr>
+                                                <td title="labels.label_source_id references label_sources.id via labels_label_source_id_fkey"><a href='label_sources.html'>label_sources</a><span class='relatedKey'>.id</span></td>
+                                                <td class="constraint detail">labels_label_source_id_fkey</td>
+                                                <td class="constraint detail"><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
                                     <td><span id="info">info</span></td>
                                     <td>text</td>
                                     <td>2147483647</td>
@@ -154,6 +198,11 @@
                                             <tr>
                                                 <td title="annotation_labels.label_id references labels.id via annotation_labels_label_id_fkey"><a href='annotation_labels.html'>annotation_labels</a><span class='relatedKey'>.label_id</span></td>
                                                 <td class="constraint detail">annotation_labels_label_id_fkey</td>
+                                                <td class="constraint detail"><span title='Cascade on delete:&#10;Deletion of parent deletes child'>C</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td title="annotation_set_labels.label_id references labels.id via annotation_set_labels_label_id_fkey"><a href='annotation_set_labels.html'>annotation_set_labels</a><span class='relatedKey'>.label_id</span></td>
+                                                <td class="constraint detail">annotation_set_labels_label_id_fkey</td>
                                                 <td class="constraint detail"><span title='Cascade on delete:&#10;Deletion of parent deletes child'>C</span></td>
                                             </tr>
                                             <tr>
@@ -203,50 +252,6 @@
                                     </td>
                                     <td></td>
                                 </tr>
-                                <tr>
-                                    <td class='foreignKey' title='Foreign Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i><span id="parent_id">parent_id</span></td>
-                                    <td>uuid</td>
-                                    <td>2147483647</td>
-                                    <td title='nullable'>√</td>
-                                    <td title=''></td>
-                                    <td>null</td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                            <tr>
-                                                <td title="labels.parent_id references labels.id via labels_parent_id_fkey"><a href='labels.html'>labels</a><span class='relatedKey'>.id</span></td>
-                                                <td class="constraint detail">labels_parent_id_fkey</td>
-                                                <td class="constraint detail"><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
-                                            </tr>
-                                        </table>
-                                    </td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td class='foreignKey' title='Foreign Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i><span id="label_source_id">label_source_id</span></td>
-                                    <td>uuid</td>
-                                    <td>2147483647</td>
-                                    <td title='nullable'>√</td>
-                                    <td title=''></td>
-                                    <td>null</td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                            <tr>
-                                                <td title="labels.label_source_id references label_sources.id via labels_label_source_id_fkey"><a href='label_sources.html'>label_sources</a><span class='relatedKey'>.id</span></td>
-                                                <td class="constraint detail">labels_label_source_id_fkey</td>
-                                                <td class="constraint detail"><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
-                                            </tr>
-                                        </table>
-                                    </td>
-                                    <td></td>
-                                </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -284,12 +289,6 @@
                                     <td>id</td>
                                 </tr>
                                 <tr>
-                                    <td class='uniqueKey' title='Unique Key'><i class='icon ion-key iconkey'></i> labels_id_key</td>
-                                    <td>Must be unique</td>
-                                    <td><span title='Ascending'>Asc</span></td>
-                                    <td>id</td>
-                                </tr>
-                                <tr>
                                     <td class='uniqueKey' title='Unique Key'><i class='icon ion-key iconkey'></i> labels_name_key</td>
                                     <td>Must be unique</td>
                                     <td><span title='Ascending'>Asc</span></td>
@@ -318,19 +317,22 @@
                                 <div class="tab-content no-padding">
                                     <div class="chart tab-pane active" id="oneDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
-<area shape="rect" id="node1" href="annotation_labels.html" target="_top" title="annotation_labels" alt="" coords="617,91,856,267">
+<area shape="rect" id="node1" href="annotation_labels.html" target="_top" title="annotation_labels" alt="" coords="634,23,873,228">
 <area shape="rect" id="node2" href="labels.html" target="_top" title="labels" alt="" coords="248,29,573,304">
-<area shape="rect" id="node3" href="label_sources.html" target="_top" title="label_sources" alt="" coords="5,179,204,325">
+<area shape="rect" id="node4" href="label_sources.html" target="_top" title="label_sources" alt="" coords="5,61,204,208">
+<area shape="rect" id="node3" href="annotation_set_labels.html" target="_top" title="annotation_set_labels" alt="" coords="617,245,889,368">
 </map>
                                         <a name='diagram'><img id="oneDegreeImg" src="../diagrams/tables/labels.1degree.png" usemap="#oneDegreeRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>
                                     <div class="chart tab-pane " id="twodegreesDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
-<area shape="rect" id="node1" href="annotation_labels.html" target="_top" title="annotation_labels" alt="" coords="617,191,856,367">
-<area shape="rect" id="node2" href="annotators.html" target="_top" title="annotators" alt="" coords="321,321,501,409">
-<area shape="rect" id="node3" href="labels.html" target="_top" title="labels" alt="" coords="248,29,573,304">
-<area shape="rect" id="node5" href="label_sources.html" target="_top" title="label_sources" alt="" coords="5,179,204,325">
-<area shape="rect" id="node4" href="image_annotation_labels.html" target="_top" title="image_annotation_labels" alt="" coords="900,252,1200,340">
+<area shape="rect" id="node1" href="annotation_labels.html" target="_top" title="annotation_labels" alt="" coords="658,351,897,556">
+<area shape="rect" id="node2" href="annotations.html" target="_top" title="annotations" alt="" coords="340,383,529,471">
+<area shape="rect" id="node3" href="annotators.html" target="_top" title="annotators" alt="" coords="345,488,525,576">
+<area shape="rect" id="node4" href="labels.html" target="_top" title="labels" alt="" coords="272,91,597,365">
+<area shape="rect" id="node6" href="annotation_sets.html" target="_top" title="annotation_sets" alt="" coords="5,5,228,93">
+<area shape="rect" id="node7" href="label_sources.html" target="_top" title="label_sources" alt="" coords="17,123,216,269">
+<area shape="rect" id="node5" href="annotation_set_labels.html" target="_top" title="annotation_set_labels" alt="" coords="641,87,913,209">
 </map>
                                         <a name='diagram'><img id="twodegreesDegreeImg" src="../diagrams/tables/labels.2degrees.png" usemap="#twoDegreesRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>

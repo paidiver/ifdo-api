@@ -7,7 +7,7 @@ from ifdo_api.schemas.common_fields import CommonFieldsSchema
 class ImageSchema(CommonFieldsSchema):
     """Schema for an image, representing its metadata and associated information."""
 
-    dataset_id: UUID | None = None
+    image_set_id: UUID | None = None
 
     # annotations_labels: list[LabelSchema] = Field(default_factory=list)
     # annotations_creators: list[AnnotatorSchema] = Field(default_factory=list)

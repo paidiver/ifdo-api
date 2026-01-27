@@ -21,27 +21,27 @@ from tipg.factory import OGCTilesFactory
 from tipg.settings import PostgresSettings
 from ifdo_api.api.exceptions import AppException
 from ifdo_api.api.v1 import catalog
-from ifdo_api.api.v1 import dataset
 from ifdo_api.api.v1 import image
+from ifdo_api.api.v1 import image_set
 from ifdo_api.api.v1.annotation import annotation
 from ifdo_api.api.v1.annotation import annotation_label
 from ifdo_api.api.v1.annotation import annotator
 from ifdo_api.api.v1.annotation import label
+from ifdo_api.api.v1.fields import context
+from ifdo_api.api.v1.fields import creator
+from ifdo_api.api.v1.fields import event
 from ifdo_api.api.v1.fields import image_camera_calibration_model
 from ifdo_api.api.v1.fields import image_camera_housing_viewport
 from ifdo_api.api.v1.fields import image_camera_pose
-from ifdo_api.api.v1.fields import image_context
-from ifdo_api.api.v1.fields import image_creator
 from ifdo_api.api.v1.fields import image_domeport_parameter
-from ifdo_api.api.v1.fields import image_event
 from ifdo_api.api.v1.fields import image_flatport_parameter
-from ifdo_api.api.v1.fields import image_license
 from ifdo_api.api.v1.fields import image_photometric_calibration
-from ifdo_api.api.v1.fields import image_pi
-from ifdo_api.api.v1.fields import image_platform
-from ifdo_api.api.v1.fields import image_project
-from ifdo_api.api.v1.fields import image_sensor
-from ifdo_api.api.v1.fields import image_set_related_material
+from ifdo_api.api.v1.fields import license_info
+from ifdo_api.api.v1.fields import pi
+from ifdo_api.api.v1.fields import platform
+from ifdo_api.api.v1.fields import project
+from ifdo_api.api.v1.fields import related_material
+from ifdo_api.api.v1.fields import sensor
 
 # from ifdo_api.api.v1.provenance import provenance_activity
 # from ifdo_api.api.v1.provenance import provenance_agent
@@ -128,23 +128,23 @@ def main() -> RedirectResponse:
 
 app.include_router(catalog.router, prefix="/v1/catalogs", tags=["Catalog"])
 app.include_router(image.router, prefix="/v1/images", tags=["Image"])
-app.include_router(dataset.router, prefix="/v1/datasets", tags=["Dataset"])
+app.include_router(image_set.router, prefix="/v1/image_sets", tags=["ImageSet"])
 
-app.include_router(image_context.router, prefix="/v1/fields/image_contexts", tags=["Fields"])
-app.include_router(image_project.router, prefix="/v1/fields/image_projects", tags=["Fields"])
-app.include_router(image_event.router, prefix="/v1/fields/image_events", tags=["Fields"])
-app.include_router(image_platform.router, prefix="/v1/fields/image_platforms", tags=["Fields"])
-app.include_router(image_sensor.router, prefix="/v1/fields/image_sensors", tags=["Fields"])
-app.include_router(image_pi.router, prefix="/v1/fields/image_pis", tags=["Fields"])
-app.include_router(image_creator.router, prefix="/v1/fields/image_creators", tags=["Fields"])
-app.include_router(image_license.router, prefix="/v1/fields/image_licenses", tags=["Fields"])
+app.include_router(context.router, prefix="/v1/fields/contexts", tags=["Fields"])
+app.include_router(project.router, prefix="/v1/fields/projects", tags=["Fields"])
+app.include_router(event.router, prefix="/v1/fields/events", tags=["Fields"])
+app.include_router(platform.router, prefix="/v1/fields/platforms", tags=["Fields"])
+app.include_router(sensor.router, prefix="/v1/fields/sensors", tags=["Fields"])
+app.include_router(pi.router, prefix="/v1/fields/pis", tags=["Fields"])
+app.include_router(creator.router, prefix="/v1/fields/creators", tags=["Fields"])
+app.include_router(license_info.router, prefix="/v1/fields/license", tags=["Fields"])
 app.include_router(image_camera_pose.router, prefix="/v1/fields/image_camera_poses", tags=["Fields"])
 app.include_router(image_camera_housing_viewport.router, prefix="/v1/fields/image_camera_housing_viewports", tags=["Fields"])
 app.include_router(image_flatport_parameter.router, prefix="/v1/fields/image_flatport_parameters", tags=["Fields"])
 app.include_router(image_domeport_parameter.router, prefix="/v1/fields/image_domeport_parameters", tags=["Fields"])
 app.include_router(image_camera_calibration_model.router, prefix="/v1/fields/image_camera_calibration_models", tags=["Fields"])
 app.include_router(image_photometric_calibration.router, prefix="/v1/fields/image_photometric_calibrations", tags=["Fields"])
-app.include_router(image_set_related_material.router, prefix="/v1/fields/image_set_related_materials", tags=["Fields"])
+app.include_router(related_material.router, prefix="/v1/fields/related_materials", tags=["Fields"])
 
 
 app.include_router(annotation_label.router, prefix="/v1/annotations/annotation_labels", tags=["Annotation"])

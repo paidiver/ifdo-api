@@ -12,36 +12,36 @@ class NamedURISchema(BaseModel):
     uri: HttpUrl | None = None
 
 
-class ImageContextSchema(NamedURISchema):
-    """Schema for image context information."""
+class ContextSchema(NamedURISchema):
+    """Schema for context information."""
 
 
-class ImageProjectSchema(NamedURISchema):
-    """Schema for image project information."""
+class ProjectSchema(NamedURISchema):
+    """Schema for project information."""
 
 
-class ImageEventSchema(NamedURISchema):
-    """Schema for image event information."""
+class EventSchema(NamedURISchema):
+    """Schema for event information."""
 
 
-class ImagePlatformSchema(NamedURISchema):
-    """Schema for image platform information."""
+class PlatformSchema(NamedURISchema):
+    """Schema for platform information."""
 
 
-class ImageSensorSchema(NamedURISchema):
-    """Schema for image sensor information."""
+class SensorSchema(NamedURISchema):
+    """Schema for sensor information."""
 
 
-class ImagePISchema(NamedURISchema):
-    """Schema for image principal investigator information."""
+class PISchema(NamedURISchema):
+    """Schema for principal investigator information."""
 
 
-class ImageCreatorSchema(NamedURISchema):
-    """Schema for image creator information."""
+class CreatorSchema(NamedURISchema):
+    """Schema for creator information."""
 
 
-class ImageLicenseSchema(NamedURISchema):
-    """Schema for image license information."""
+class LicenseSchema(NamedURISchema):
+    """Schema for license information."""
 
 
 class ImageCameraPoseSchema(BaseModel):
@@ -100,7 +100,7 @@ class ImagePhotometricCalibrationSchema(BaseModel):
     water_properties_description: str | None = None
 
 
-class ImageSetRelatedMaterialSchema(BaseModel):
+class RelatedMaterialSchema(BaseModel):
     """Schema for related materials in an image set."""
 
     uri: HttpUrl

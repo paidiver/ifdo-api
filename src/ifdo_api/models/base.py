@@ -41,6 +41,18 @@ class CaseInsensitiveEnum(str, enum.Enum):
         return None
 
 
+class ShapeEnum(str, enum.Enum):
+    """Enumeration of possible annotation shapes."""
+
+    single_pixel = "single-pixel"
+    polyline = "polyline"
+    polygon = "polygon"
+    circle = "circle"
+    rectangle = "rectangle"
+    ellipse = "ellipse"
+    whole_image = "whole-image"
+
+
 class AcquisitionEnum(CaseInsensitiveEnum):
     """Enumeration for acquisition types in the system."""
 
