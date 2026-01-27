@@ -109,29 +109,7 @@
                                 </thead>
                                 <tbody>
                                 <tr>
-                                    <td class='primaryKey' title='Primary Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i><span id="annotation_id">annotation_id</span></td>
-                                    <td>uuid</td>
-                                    <td>2147483647</td>
-                                    <td title=''></td>
-                                    <td title=''></td>
-                                    <td>null</td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                            <tr>
-                                                <td title="annotation_set_image_sets.annotation_id references annotations.id via annotation_set_image_sets_annotation_id_fkey"><a href='annotations.html'>annotations</a><span class='relatedKey'>.id</span></td>
-                                                <td class="constraint detail">annotation_set_image_sets_annotation_id_fkey</td>
-                                                <td class="constraint detail"><span title='Cascade on delete:&#10;Deletion of parent deletes child'>C</span></td>
-                                            </tr>
-                                        </table>
-                                    </td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td class='primaryKey' title='Primary Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i><span id="image_set_id">image_set_id</span></td>
+                                    <td class='foreignKey' title='Foreign Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i><span id="image_set_id">image_set_id</span></td>
                                     <td>uuid</td>
                                     <td>2147483647</td>
                                     <td title=''></td>
@@ -152,45 +130,31 @@
                                     </td>
                                     <td></td>
                                 </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    <div class="box box-primary">
-                        <div class="box-header with-border">
-                            <i class="fa fa-sitemap"></i>
-                            <h3 id="Indexes" class="box-title">Indexes</h3>
-                            <div class="box-tools pull-right">
-                                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-                                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
-                            </div>
-                        </div>
-                        <div class="box-body">
-                            <table
-                                    id="indexes_table"
-                                    class="table table-bordered table-striped dataTable"
-                                    role="grid"
-                                    data-paging="true"
-                                    data-page-length="10"
-                                    data-length-change="false">
-                                <thead>
                                 <tr>
-                                    <th>Constraint Name</th>
-                                    <th>Type</th>
-                                    <th>Sort</th>
-                                    <th>Column(s)</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr>
-                                    <td class='primaryKey' title='Primary Key'><i class='icon ion-key iconkey'></i> annotation_set_image_sets_pkey</td>
-                                    <td>Primary key</td>
-                                    <td><span title='Ascending'>Asc</span>/<span title='Ascending'>Asc</span></td>
-                                    <td>annotation_id + image_set_id</td>
+                                    <td class='foreignKey' title='Foreign Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i><span id="annotation_set_id">annotation_set_id</span></td>
+                                    <td>uuid</td>
+                                    <td>2147483647</td>
+                                    <td title=''></td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                            <tr>
+                                                <td title="annotation_set_image_sets.annotation_set_id references annotation_sets.id via annotation_set_image_sets_annotation_set_id_fkey"><a href='annotation_sets.html'>annotation_sets</a><span class='relatedKey'>.id</span></td>
+                                                <td class="constraint detail">annotation_set_image_sets_annotation_set_id_fkey</td>
+                                                <td class="constraint detail"><span title='Cascade on delete:&#10;Deletion of parent deletes child'>C</span></td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                    <td></td>
                                 </tr>
                                 </tbody>
                             </table>
-                        </div><!-- /.box-body -->
+                        </div>
                     </div>
                     <div class="box box-primary">
                         <div class="box-header with-border">
@@ -211,39 +175,39 @@
                                 <div class="tab-content no-padding">
                                     <div class="chart tab-pane active" id="oneDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
-<area shape="rect" id="node1" href="annotation_set_image_sets.html" target="_top" title="annotation_set_image_sets" alt="" coords="403,364,861,492">
-<area shape="rect" id="node2" href="annotations.html" target="_top" title="annotations" alt="" coords="58,5,306,181">
-<area shape="rect" id="node3" href="image_sets.html" target="_top" title="image_sets" alt="" coords="5,199,359,815">
+<area shape="rect" id="node1" href="annotation_set_image_sets.html" target="_top" title="annotation_set_image_sets" alt="" coords="403,628,861,756">
+<area shape="rect" id="node2" href="annotation_sets.html" target="_top" title="annotation_sets" alt="" coords="61,639,303,903">
+<area shape="rect" id="node3" href="image_sets.html" target="_top" title="image_sets" alt="" coords="5,5,359,621">
 </map>
                                         <a name='diagram'><img id="oneDegreeImg" src="../diagrams/tables/annotation_set_image_sets.1degree.png" usemap="#oneDegreeRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>
                                     <div class="chart tab-pane " id="twodegreesDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
-<area shape="rect" id="node1" href="annotation_labels.html" target="_top" title="annotation_labels" alt="" coords="1703,1052,1961,1140">
-<area shape="rect" id="node2" href="annotations.html" target="_top" title="annotations" alt="" coords="1311,939,1559,1115">
-<area shape="rect" id="node6" href="annotation_sets.html" target="_top" title="annotation_sets" alt="" coords="522,1115,762,1203">
-<area shape="rect" id="node11" href="images.html" target="_top" title="images" alt="" coords="988,941,1141,1029">
-<area shape="rect" id="node3" href="annotation_set_creators.html" target="_top" title="annotation_set_creators" alt="" coords="1673,947,1991,1035">
-<area shape="rect" id="node4" href="annotation_set_image_sets.html" target="_top" title="annotation_set_image_sets" alt="" coords="1603,555,2061,683">
-<area shape="rect" id="node5" href="image_sets.html" target="_top" title="image_sets" alt="" coords="465,229,819,845">
-<area shape="rect" id="node7" href="contexts.html" target="_top" title="contexts" alt="" coords="129,953,297,1041">
-<area shape="rect" id="node8" href="licenses.html" target="_top" title="licenses" alt="" coords="133,1269,294,1357">
-<area shape="rect" id="node9" href="pis.html" target="_top" title="pis" alt="" coords="157,1164,269,1252">
-<area shape="rect" id="node10" href="projects.html" target="_top" title="projects" alt="" coords="132,1059,295,1147">
-<area shape="rect" id="node17" href="image_camera_calibration_models.html" target="_top" title="image_camera_calibration_models" alt="" coords="5,848,421,936">
-<area shape="rect" id="node18" href="image_camera_housing_viewports.html" target="_top" title="image_camera_housing_viewports" alt="" coords="6,427,421,515">
-<area shape="rect" id="node19" href="image_camera_poses.html" target="_top" title="image_camera_poses" alt="" coords="69,321,358,409">
-<area shape="rect" id="node20" href="image_domeport_parameters.html" target="_top" title="image_domeport_parameters" alt="" coords="29,637,398,725">
-<area shape="rect" id="node21" href="events.html" target="_top" title="events" alt="" coords="139,5,288,93">
-<area shape="rect" id="node22" href="image_flatport_parameters.html" target="_top" title="image_flatport_parameters" alt="" coords="39,532,387,620">
-<area shape="rect" id="node23" href="image_photometric_calibrations.html" target="_top" title="image_photometric_calibrations" alt="" coords="15,743,411,831">
-<area shape="rect" id="node24" href="platforms.html" target="_top" title="platforms" alt="" coords="124,111,303,199">
-<area shape="rect" id="node25" href="sensors.html" target="_top" title="sensors" alt="" coords="134,216,293,304">
-<area shape="rect" id="node12" href="image_set_creators.html" target="_top" title="image_set_creators" alt="" coords="929,415,1201,503">
-<area shape="rect" id="node13" href="image_set_provenance_activities.html" target="_top" title="image_set_provenance_activities" alt="" coords="863,520,1267,608">
-<area shape="rect" id="node14" href="image_set_provenance_agents.html" target="_top" title="image_set_provenance_agents" alt="" coords="874,625,1255,713">
-<area shape="rect" id="node15" href="image_set_provenance_entities.html" target="_top" title="image_set_provenance_entities" alt="" coords="871,731,1259,819">
-<area shape="rect" id="node16" href="image_set_related_materials.html" target="_top" title="image_set_related_materials" alt="" coords="883,836,1246,924">
+<area shape="rect" id="node1" href="annotation_set_creators.html" target="_top" title="annotation_set_creators" alt="" coords="933,121,1251,209">
+<area shape="rect" id="node2" href="annotation_sets.html" target="_top" title="annotation_sets" alt="" coords="521,5,763,269">
+<area shape="rect" id="node5" href="contexts.html" target="_top" title="contexts" alt="" coords="129,91,297,179">
+<area shape="rect" id="node6" href="licenses.html" target="_top" title="licenses" alt="" coords="133,407,294,495">
+<area shape="rect" id="node7" href="pis.html" target="_top" title="pis" alt="" coords="157,301,269,389">
+<area shape="rect" id="node8" href="projects.html" target="_top" title="projects" alt="" coords="132,196,295,284">
+<area shape="rect" id="node3" href="annotation_set_image_sets.html" target="_top" title="annotation_set_image_sets" alt="" coords="863,417,1321,545">
+<area shape="rect" id="node4" href="image_sets.html" target="_top" title="image_sets" alt="" coords="465,431,819,1047">
+<area shape="rect" id="node16" href="image_camera_calibration_models.html" target="_top" title="image_camera_calibration_models" alt="" coords="5,1355,421,1443">
+<area shape="rect" id="node17" href="image_camera_housing_viewports.html" target="_top" title="image_camera_housing_viewports" alt="" coords="6,933,421,1021">
+<area shape="rect" id="node18" href="image_camera_poses.html" target="_top" title="image_camera_poses" alt="" coords="69,828,358,916">
+<area shape="rect" id="node19" href="image_domeport_parameters.html" target="_top" title="image_domeport_parameters" alt="" coords="29,1144,398,1232">
+<area shape="rect" id="node20" href="events.html" target="_top" title="events" alt="" coords="139,512,288,600">
+<area shape="rect" id="node21" href="image_flatport_parameters.html" target="_top" title="image_flatport_parameters" alt="" coords="39,1039,387,1127">
+<area shape="rect" id="node22" href="image_photometric_calibrations.html" target="_top" title="image_photometric_calibrations" alt="" coords="15,1249,411,1337">
+<area shape="rect" id="node23" href="platforms.html" target="_top" title="platforms" alt="" coords="124,617,303,705">
+<area shape="rect" id="node24" href="sensors.html" target="_top" title="sensors" alt="" coords="134,723,293,811">
+<area shape="rect" id="node9" href="annotations.html" target="_top" title="annotations" alt="" coords="1365,672,1565,760">
+<area shape="rect" id="node10" href="images.html" target="_top" title="images" alt="" coords="1015,1120,1169,1208">
+<area shape="rect" id="node11" href="image_set_creators.html" target="_top" title="image_set_creators" alt="" coords="956,593,1228,681">
+<area shape="rect" id="node12" href="image_set_provenance_activities.html" target="_top" title="image_set_provenance_activities" alt="" coords="890,699,1294,787">
+<area shape="rect" id="node13" href="image_set_provenance_agents.html" target="_top" title="image_set_provenance_agents" alt="" coords="901,804,1283,892">
+<area shape="rect" id="node14" href="image_set_provenance_entities.html" target="_top" title="image_set_provenance_entities" alt="" coords="898,909,1286,997">
+<area shape="rect" id="node15" href="image_set_related_materials.html" target="_top" title="image_set_related_materials" alt="" coords="911,1015,1273,1103">
+<area shape="rect" id="node25" href="labels.html" target="_top" title="labels" alt="" coords="1021,263,1163,351">
 </map>
                                         <a name='diagram'><img id="twodegreesDegreeImg" src="../diagrams/tables/annotation_set_image_sets.2degrees.png" usemap="#twoDegreesRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>

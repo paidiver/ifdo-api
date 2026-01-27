@@ -15,7 +15,7 @@
          <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="annotation_id" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
             <parent column="id" foreignKey="annotation_labels_annotation_id_fkey" implied="false" onDeleteCascade="true" schema="public" table="annotations"/>
          </column>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="annotator_id" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
+         <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="annotator_id" nullable="true" remarks="" size="2147483647" type="uuid" typeCode="1111">
             <parent column="id" foreignKey="annotation_labels_annotator_id_fkey" implied="false" onDeleteCascade="false" schema="public" table="annotators"/>
          </column>
          <column autoUpdated="false" defaultValue="null" digits="17" id="3" name="confidence" nullable="true" remarks="" size="17" type="float8" typeCode="8"/>
@@ -27,34 +27,25 @@
          <index name="annotation_labels_pkey" unique="true">
             <column ascending="true" name="id"/>
          </index>
+         <index name="annotation_labels_id_key" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
       </table>
       <table name="annotation_set_creators" remarks="" schema="public" type="TABLE">
-         <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="annotation_id" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
-            <parent column="id" foreignKey="annotation_set_creators_annotation_id_fkey" implied="false" onDeleteCascade="true" schema="public" table="annotations"/>
-         </column>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="creator_id" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
+         <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="creator_id" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
             <parent column="id" foreignKey="annotation_set_creators_creator_id_fkey" implied="false" onDeleteCascade="true" schema="public" table="creators"/>
          </column>
-         <primaryKey column="annotation_id" sequenceNumberInPK="1"/>
-         <primaryKey column="creator_id" sequenceNumberInPK="2"/>
-         <index name="annotation_set_creators_pkey" unique="true">
-            <column ascending="true" name="annotation_id"/>
-            <column ascending="true" name="creator_id"/>
-         </index>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="annotation_set_id" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
+            <parent column="id" foreignKey="annotation_set_creators_annotation_set_id_fkey" implied="false" onDeleteCascade="true" schema="public" table="annotation_sets"/>
+         </column>
       </table>
       <table name="annotation_set_image_sets" remarks="" schema="public" type="TABLE">
-         <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="annotation_id" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
-            <parent column="id" foreignKey="annotation_set_image_sets_annotation_id_fkey" implied="false" onDeleteCascade="true" schema="public" table="annotations"/>
-         </column>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="image_set_id" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
+         <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="image_set_id" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
             <parent column="id" foreignKey="annotation_set_image_sets_image_set_id_fkey" implied="false" onDeleteCascade="true" schema="public" table="image_sets"/>
          </column>
-         <primaryKey column="annotation_id" sequenceNumberInPK="1"/>
-         <primaryKey column="image_set_id" sequenceNumberInPK="2"/>
-         <index name="annotation_set_image_sets_pkey" unique="true">
-            <column ascending="true" name="annotation_id"/>
-            <column ascending="true" name="image_set_id"/>
-         </index>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="annotation_set_id" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
+            <parent column="id" foreignKey="annotation_set_image_sets_annotation_set_id_fkey" implied="false" onDeleteCascade="true" schema="public" table="annotation_sets"/>
+         </column>
       </table>
       <table name="annotation_sets" remarks="" schema="public" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="context_id" nullable="true" remarks="" size="2147483647" type="uuid" typeCode="1111">
@@ -79,6 +70,8 @@
          <column autoUpdated="false" defaultValue="null" digits="0" id="11" name="target_timescale" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="12" name="curation_protocol" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="13" name="id" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
+            <child column="annotation_set_id" foreignKey="annotation_set_creators_annotation_set_id_fkey" implied="false" onDeleteCascade="true" schema="public" table="annotation_set_creators"/>
+            <child column="annotation_set_id" foreignKey="annotation_set_image_sets_annotation_set_id_fkey" implied="false" onDeleteCascade="true" schema="public" table="annotation_set_image_sets"/>
             <child column="annotation_set_id" foreignKey="annotations_annotation_set_id_fkey" implied="false" onDeleteCascade="true" schema="public" table="annotations"/>
             <child column="annotation_set_id" foreignKey="labels_annotation_set_id_fkey" implied="false" onDeleteCascade="true" schema="public" table="labels"/>
          </column>
@@ -86,6 +79,9 @@
          <column autoUpdated="false" defaultValue="null" digits="6" id="15" name="updated_at" nullable="false" remarks="" size="29" type="timestamp" typeCode="93"/>
          <primaryKey column="id" sequenceNumberInPK="1"/>
          <index name="annotation_sets_pkey" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="annotation_sets_id_key" unique="true">
             <column ascending="true" name="id"/>
          </index>
          <index name="annotation_sets_name_key" unique="true">
@@ -99,18 +95,19 @@
          <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="annotation_platform" nullable="true" remarks="" size="255" type="varchar" typeCode="12"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="shape" nullable="false" remarks="" size="2147483647" type="shapeenum" typeCode="12"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="coordinates" nullable="false" remarks="" size="2147483647" type="jsonb" typeCode="1111"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="annotation_set_id" nullable="true" remarks="" size="2147483647" type="uuid" typeCode="1111">
+         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="annotation_set_id" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
             <parent column="id" foreignKey="annotations_annotation_set_id_fkey" implied="false" onDeleteCascade="true" schema="public" table="annotation_sets"/>
          </column>
          <column autoUpdated="false" defaultValue="null" digits="0" id="5" name="id" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
             <child column="annotation_id" foreignKey="annotation_labels_annotation_id_fkey" implied="false" onDeleteCascade="true" schema="public" table="annotation_labels"/>
-            <child column="annotation_id" foreignKey="annotation_set_creators_annotation_id_fkey" implied="false" onDeleteCascade="true" schema="public" table="annotation_set_creators"/>
-            <child column="annotation_id" foreignKey="annotation_set_image_sets_annotation_id_fkey" implied="false" onDeleteCascade="true" schema="public" table="annotation_set_image_sets"/>
          </column>
          <column autoUpdated="false" defaultValue="null" digits="6" id="6" name="created_at" nullable="false" remarks="" size="29" type="timestamp" typeCode="93"/>
          <column autoUpdated="false" defaultValue="null" digits="6" id="7" name="updated_at" nullable="false" remarks="" size="29" type="timestamp" typeCode="93"/>
          <primaryKey column="id" sequenceNumberInPK="1"/>
          <index name="annotations_pkey" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="annotations_id_key" unique="true">
             <column ascending="true" name="id"/>
          </index>
       </table>
@@ -123,6 +120,9 @@
          <column autoUpdated="false" defaultValue="null" digits="6" id="3" name="updated_at" nullable="false" remarks="" size="29" type="timestamp" typeCode="93"/>
          <primaryKey column="id" sequenceNumberInPK="1"/>
          <index name="annotators_pkey" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="annotators_id_key" unique="true">
             <column ascending="true" name="id"/>
          </index>
          <index name="annotators_name_key" unique="true">
@@ -143,6 +143,9 @@
          <index name="contexts_pkey" unique="true">
             <column ascending="true" name="id"/>
          </index>
+         <index name="contexts_id_key" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
          <index name="contexts_name_key" unique="true">
             <column ascending="true" name="name"/>
          </index>
@@ -161,6 +164,9 @@
          <index name="creators_pkey" unique="true">
             <column ascending="true" name="id"/>
          </index>
+         <index name="creators_id_key" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
          <index name="creators_name_key" unique="true">
             <column ascending="true" name="name"/>
          </index>
@@ -176,6 +182,9 @@
          <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="uri" nullable="true" remarks="" size="2147483647" type="varchar" typeCode="12"/>
          <primaryKey column="id" sequenceNumberInPK="1"/>
          <index name="events_pkey" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="events_id_key" unique="true">
             <column ascending="true" name="id"/>
          </index>
          <index name="events_name_key" unique="true">
@@ -221,6 +230,9 @@
          <index name="image_camera_calibration_models_pkey" unique="true">
             <column ascending="true" name="id"/>
          </index>
+         <index name="image_camera_calibration_models_id_key" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
       </table>
       <table name="image_camera_housing_viewports" remarks="" schema="public" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="viewport_type" nullable="true" remarks="" size="100" type="varchar" typeCode="12"/>
@@ -237,6 +249,9 @@
          <index name="image_camera_housing_viewports_pkey" unique="true">
             <column ascending="true" name="id"/>
          </index>
+         <index name="image_camera_housing_viewports_id_key" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
       </table>
       <table name="image_camera_poses" remarks="" schema="public" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="utm_zone" nullable="true" remarks="" size="10" type="varchar" typeCode="12"/>
@@ -251,6 +266,9 @@
          <column autoUpdated="false" defaultValue="null" digits="6" id="6" name="updated_at" nullable="false" remarks="" size="29" type="timestamp" typeCode="93"/>
          <primaryKey column="id" sequenceNumberInPK="1"/>
          <index name="image_camera_poses_pkey" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="image_camera_poses_id_key" unique="true">
             <column ascending="true" name="id"/>
          </index>
       </table>
@@ -282,6 +300,9 @@
          <index name="image_domeport_parameters_pkey" unique="true">
             <column ascending="true" name="id"/>
          </index>
+         <index name="image_domeport_parameters_id_key" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
       </table>
       <table name="image_flatport_parameters" remarks="" schema="public" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="17" id="0" name="lens_port_distance_millimeters" nullable="true" remarks="" size="17" type="float8" typeCode="8"/>
@@ -295,6 +316,9 @@
          <column autoUpdated="false" defaultValue="null" digits="6" id="5" name="updated_at" nullable="false" remarks="" size="29" type="timestamp" typeCode="93"/>
          <primaryKey column="id" sequenceNumberInPK="1"/>
          <index name="image_flatport_parameters_pkey" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="image_flatport_parameters_id_key" unique="true">
             <column ascending="true" name="id"/>
          </index>
       </table>
@@ -313,6 +337,9 @@
          <column autoUpdated="false" defaultValue="null" digits="6" id="8" name="updated_at" nullable="false" remarks="" size="29" type="timestamp" typeCode="93"/>
          <primaryKey column="id" sequenceNumberInPK="1"/>
          <index name="image_photometric_calibrations_pkey" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="image_photometric_calibrations_id_key" unique="true">
             <column ascending="true" name="id"/>
          </index>
       </table>
@@ -501,6 +528,9 @@
          <index name="idx_image_sets_limits" unique="false">
             <column ascending="true" name="limits"/>
          </index>
+         <index name="image_sets_id_key" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
          <index name="image_sets_name_key" unique="true">
             <column ascending="true" name="name"/>
          </index>
@@ -612,6 +642,9 @@
          <index name="idx_images_geom" unique="false">
             <column ascending="true" name="geom"/>
          </index>
+         <index name="images_id_key" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
          <index name="images_name_key" unique="true">
             <column ascending="true" name="name"/>
          </index>
@@ -638,6 +671,9 @@
          <index name="labels_pkey" unique="true">
             <column ascending="true" name="id"/>
          </index>
+         <index name="labels_id_key" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
          <index name="labels_name_key" unique="true">
             <column ascending="true" name="name"/>
          </index>
@@ -654,6 +690,9 @@
          <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="uri" nullable="true" remarks="" size="2147483647" type="varchar" typeCode="12"/>
          <primaryKey column="id" sequenceNumberInPK="1"/>
          <index name="licenses_pkey" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="licenses_id_key" unique="true">
             <column ascending="true" name="id"/>
          </index>
          <index name="licenses_name_key" unique="true">
@@ -674,6 +713,9 @@
          <index name="pis_pkey" unique="true">
             <column ascending="true" name="id"/>
          </index>
+         <index name="pis_id_key" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
          <index name="pis_name_key" unique="true">
             <column ascending="true" name="name"/>
          </index>
@@ -689,6 +731,9 @@
          <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="uri" nullable="true" remarks="" size="2147483647" type="varchar" typeCode="12"/>
          <primaryKey column="id" sequenceNumberInPK="1"/>
          <index name="platforms_pkey" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="platforms_id_key" unique="true">
             <column ascending="true" name="id"/>
          </index>
          <index name="platforms_name_key" unique="true">
@@ -707,6 +752,9 @@
          <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="uri" nullable="true" remarks="" size="2147483647" type="varchar" typeCode="12"/>
          <primaryKey column="id" sequenceNumberInPK="1"/>
          <index name="projects_pkey" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="projects_id_key" unique="true">
             <column ascending="true" name="id"/>
          </index>
          <index name="projects_name_key" unique="true">
@@ -728,6 +776,9 @@
          <index name="provenance_activities_pkey" unique="true">
             <column ascending="true" name="id"/>
          </index>
+         <index name="provenance_activities_id_key" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
       </table>
       <table name="provenance_agents" remarks="" schema="public" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="name" nullable="false" remarks="" size="255" type="varchar" typeCode="12"/>
@@ -741,6 +792,9 @@
          <column autoUpdated="false" defaultValue="null" digits="6" id="4" name="updated_at" nullable="false" remarks="" size="29" type="timestamp" typeCode="93"/>
          <primaryKey column="id" sequenceNumberInPK="1"/>
          <index name="provenance_agents_pkey" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="provenance_agents_id_key" unique="true">
             <column ascending="true" name="id"/>
          </index>
          <index name="provenance_agents_unique_id_key" unique="true">
@@ -760,6 +814,9 @@
          <column autoUpdated="false" defaultValue="null" digits="6" id="4" name="updated_at" nullable="false" remarks="" size="29" type="timestamp" typeCode="93"/>
          <primaryKey column="id" sequenceNumberInPK="1"/>
          <index name="provenance_entities_pkey" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="provenance_entities_id_key" unique="true">
             <column ascending="true" name="id"/>
          </index>
          <index name="provenance_entities_unique_id_key" unique="true">
@@ -835,6 +892,9 @@
          <index name="related_materials_pkey" unique="true">
             <column ascending="true" name="id"/>
          </index>
+         <index name="related_materials_id_key" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
       </table>
       <table name="sensors" remarks="" schema="public" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="id" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
@@ -847,6 +907,9 @@
          <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="uri" nullable="true" remarks="" size="2147483647" type="varchar" typeCode="12"/>
          <primaryKey column="id" sequenceNumberInPK="1"/>
          <index name="sensors_pkey" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="sensors_id_key" unique="true">
             <column ascending="true" name="id"/>
          </index>
          <index name="sensors_name_key" unique="true">

@@ -359,6 +359,16 @@
                                     <td>
                                         <table border='0' cellspacing='0' cellpadding='0'>
                                             <tr>
+                                                <td title="annotation_set_creators.annotation_set_id references annotation_sets.id via annotation_set_creators_annotation_set_id_fkey"><a href='annotation_set_creators.html'>annotation_set_creators</a><span class='relatedKey'>.annotation_set_id</span></td>
+                                                <td class="constraint detail">annotation_set_creators_annotation_set_id_fkey</td>
+                                                <td class="constraint detail"><span title='Cascade on delete:&#10;Deletion of parent deletes child'>C</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td title="annotation_set_image_sets.annotation_set_id references annotation_sets.id via annotation_set_image_sets_annotation_set_id_fkey"><a href='annotation_set_image_sets.html'>annotation_set_image_sets</a><span class='relatedKey'>.annotation_set_id</span></td>
+                                                <td class="constraint detail">annotation_set_image_sets_annotation_set_id_fkey</td>
+                                                <td class="constraint detail"><span title='Cascade on delete:&#10;Deletion of parent deletes child'>C</span></td>
+                                            </tr>
+                                            <tr>
                                                 <td title="annotations.annotation_set_id references annotation_sets.id via annotations_annotation_set_id_fkey"><a href='annotations.html'>annotations</a><span class='relatedKey'>.annotation_set_id</span></td>
                                                 <td class="constraint detail">annotations_annotation_set_id_fkey</td>
                                                 <td class="constraint detail"><span title='Cascade on delete:&#10;Deletion of parent deletes child'>C</span></td>
@@ -447,6 +457,12 @@
                                     <td>id</td>
                                 </tr>
                                 <tr>
+                                    <td class='uniqueKey' title='Unique Key'><i class='icon ion-key iconkey'></i> annotation_sets_id_key</td>
+                                    <td>Must be unique</td>
+                                    <td><span title='Ascending'>Asc</span></td>
+                                    <td>id</td>
+                                </tr>
+                                <tr>
                                     <td class='uniqueKey' title='Unique Key'><i class='icon ion-key iconkey'></i> annotation_sets_name_key</td>
                                     <td>Must be unique</td>
                                     <td><span title='Ascending'>Asc</span></td>
@@ -475,30 +491,33 @@
                                 <div class="tab-content no-padding">
                                     <div class="chart tab-pane active" id="oneDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
-<area shape="rect" id="node1" href="annotation_sets.html" target="_top" title="annotation_sets" alt="" coords="217,205,632,744">
-<area shape="rect" id="node2" href="contexts.html" target="_top" title="contexts" alt="" coords="5,5,173,152">
-<area shape="rect" id="node3" href="licenses.html" target="_top" title="licenses" alt="" coords="9,497,170,644">
-<area shape="rect" id="node4" href="pis.html" target="_top" title="pis" alt="" coords="10,333,169,480">
-<area shape="rect" id="node5" href="projects.html" target="_top" title="projects" alt="" coords="8,169,171,316">
-<area shape="rect" id="node6" href="annotations.html" target="_top" title="annotations" alt="" coords="695,463,943,639">
-<area shape="rect" id="node7" href="labels.html" target="_top" title="labels" alt="" coords="676,656,961,832">
+<area shape="rect" id="node1" href="annotation_set_creators.html" target="_top" title="annotation_set_creators" alt="" coords="690,349,1009,472">
+<area shape="rect" id="node2" href="annotation_sets.html" target="_top" title="annotation_sets" alt="" coords="217,205,632,744">
+<area shape="rect" id="node4" href="contexts.html" target="_top" title="contexts" alt="" coords="5,5,173,152">
+<area shape="rect" id="node5" href="licenses.html" target="_top" title="licenses" alt="" coords="9,497,170,644">
+<area shape="rect" id="node6" href="pis.html" target="_top" title="pis" alt="" coords="10,333,169,480">
+<area shape="rect" id="node7" href="projects.html" target="_top" title="projects" alt="" coords="8,169,171,316">
+<area shape="rect" id="node3" href="annotation_set_image_sets.html" target="_top" title="annotation_set_image_sets" alt="" coords="676,489,1023,612">
+<area shape="rect" id="node8" href="annotations.html" target="_top" title="annotations" alt="" coords="725,629,973,805">
+<area shape="rect" id="node9" href="labels.html" target="_top" title="labels" alt="" coords="707,823,992,999">
 </map>
                                         <a name='diagram'><img id="oneDegreeImg" src="../diagrams/tables/annotation_sets.1degree.png" usemap="#oneDegreeRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>
                                     <div class="chart tab-pane " id="twodegreesDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
-<area shape="rect" id="node1" href="annotation_labels.html" target="_top" title="annotation_labels" alt="" coords="1247,548,1505,636">
-<area shape="rect" id="node2" href="annotations.html" target="_top" title="annotations" alt="" coords="892,279,1140,455">
-<area shape="rect" id="node3" href="labels.html" target="_top" title="labels" alt="" coords="873,588,1159,764">
-<area shape="rect" id="node7" href="annotation_sets.html" target="_top" title="annotation_sets" alt="" coords="217,292,632,831">
-<area shape="rect" id="node12" href="images.html" target="_top" title="images" alt="" coords="676,221,829,309">
-<area shape="rect" id="node4" href="annotation_set_creators.html" target="_top" title="annotation_set_creators" alt="" coords="1217,340,1535,428">
-<area shape="rect" id="node5" href="annotation_set_image_sets.html" target="_top" title="annotation_set_image_sets" alt="" coords="1203,220,1549,308">
-<area shape="rect" id="node6" href="image_sets.html" target="_top" title="image_sets" alt="" coords="329,151,521,239">
-<area shape="rect" id="node8" href="contexts.html" target="_top" title="contexts" alt="" coords="5,5,173,152">
-<area shape="rect" id="node9" href="licenses.html" target="_top" title="licenses" alt="" coords="9,497,170,644">
-<area shape="rect" id="node10" href="pis.html" target="_top" title="pis" alt="" coords="10,333,169,480">
-<area shape="rect" id="node11" href="projects.html" target="_top" title="projects" alt="" coords="8,169,171,316">
+<area shape="rect" id="node1" href="annotation_labels.html" target="_top" title="annotation_labels" alt="" coords="1396,680,1653,768">
+<area shape="rect" id="node2" href="annotations.html" target="_top" title="annotations" alt="" coords="1085,521,1333,697">
+<area shape="rect" id="node3" href="labels.html" target="_top" title="labels" alt="" coords="1067,715,1352,891">
+<area shape="rect" id="node5" href="annotation_sets.html" target="_top" title="annotation_sets" alt="" coords="217,360,632,899">
+<area shape="rect" id="node13" href="images.html" target="_top" title="images" alt="" coords="773,183,926,271">
+<area shape="rect" id="node4" href="annotation_set_creators.html" target="_top" title="annotation_set_creators" alt="" coords="690,867,1009,989">
+<area shape="rect" id="node6" href="creators.html" target="_top" title="creators" alt="" coords="342,916,507,1004">
+<area shape="rect" id="node9" href="contexts.html" target="_top" title="contexts" alt="" coords="5,5,173,152">
+<area shape="rect" id="node10" href="licenses.html" target="_top" title="licenses" alt="" coords="9,497,170,644">
+<area shape="rect" id="node11" href="pis.html" target="_top" title="pis" alt="" coords="10,333,169,480">
+<area shape="rect" id="node12" href="projects.html" target="_top" title="projects" alt="" coords="8,169,171,316">
+<area shape="rect" id="node7" href="annotation_set_image_sets.html" target="_top" title="annotation_set_image_sets" alt="" coords="676,391,1023,513">
+<area shape="rect" id="node8" href="image_sets.html" target="_top" title="image_sets" alt="" coords="329,219,521,307">
 </map>
                                         <a name='diagram'><img id="twodegreesDegreeImg" src="../diagrams/tables/annotation_sets.2degrees.png" usemap="#twoDegreesRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>

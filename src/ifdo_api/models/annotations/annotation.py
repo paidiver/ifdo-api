@@ -82,7 +82,7 @@ class Annotation(DefaultColumns, Base):
 
     annotation_set_id = Column(
         ForeignKey("annotation_sets.id", ondelete="CASCADE"),
-        nullable=True,
+        nullable=False,
         info={"help": "The annotation set this annotation belongs to"},
     )
 
@@ -112,7 +112,7 @@ class AnnotationLabel(DefaultColumns, Base):
 
     annotator_id = Column(
         ForeignKey("annotators.id", ondelete="SET NULL"),
-        nullable=False,
+        nullable=True,
         info={"help": "A unique identifier to an annotation creator, e.g. orcid URL or handle to ML model"},
     )
     confidence = Column(

@@ -156,7 +156,7 @@
                                     <td class='foreignKey' title='Foreign Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i><span id="annotator_id">annotator_id</span></td>
                                     <td>uuid</td>
                                     <td>2147483647</td>
-                                    <td title=''></td>
+                                    <td title='nullable'>√</td>
                                     <td title=''></td>
                                     <td>null</td>
                                     <td>
@@ -295,6 +295,12 @@
                                     <td><span title='Ascending'>Asc</span></td>
                                     <td>id</td>
                                 </tr>
+                                <tr>
+                                    <td class='uniqueKey' title='Unique Key'><i class='icon ion-key iconkey'></i> annotation_labels_id_key</td>
+                                    <td>Must be unique</td>
+                                    <td><span title='Ascending'>Asc</span></td>
+                                    <td>id</td>
+                                </tr>
                                 </tbody>
                             </table>
                         </div><!-- /.box-body -->
@@ -327,14 +333,12 @@
                                     </div>
                                     <div class="chart tab-pane " id="twodegreesDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
-<area shape="rect" id="node1" href="annotation_labels.html" target="_top" title="annotation_labels" alt="" coords="619,257,1017,561">
-<area shape="rect" id="node2" href="annotations.html" target="_top" title="annotations" alt="" coords="308,8,556,184">
-<area shape="rect" id="node3" href="annotators.html" target="_top" title="annotators" alt="" coords="337,395,527,541">
-<area shape="rect" id="node4" href="labels.html" target="_top" title="labels" alt="" coords="289,201,575,377">
-<area shape="rect" id="node7" href="annotation_sets.html" target="_top" title="annotation_sets" alt="" coords="5,175,245,263">
-<area shape="rect" id="node8" href="images.html" target="_top" title="images" alt="" coords="49,11,202,99">
-<area shape="rect" id="node5" href="annotation_set_creators.html" target="_top" title="annotation_set_creators" alt="" coords="659,5,977,93">
-<area shape="rect" id="node6" href="annotation_set_image_sets.html" target="_top" title="annotation_set_image_sets" alt="" coords="645,111,991,199">
+<area shape="rect" id="node1" href="annotation_labels.html" target="_top" title="annotation_labels" alt="" coords="619,225,1017,529">
+<area shape="rect" id="node2" href="annotations.html" target="_top" title="annotations" alt="" coords="308,199,556,375">
+<area shape="rect" id="node3" href="annotators.html" target="_top" title="annotators" alt="" coords="337,392,527,539">
+<area shape="rect" id="node4" href="labels.html" target="_top" title="labels" alt="" coords="289,5,575,181">
+<area shape="rect" id="node5" href="annotation_sets.html" target="_top" title="annotation_sets" alt="" coords="5,67,245,155">
+<area shape="rect" id="node6" href="images.html" target="_top" title="images" alt="" coords="49,201,202,289">
 </map>
                                         <a name='diagram'><img id="twodegreesDegreeImg" src="../diagrams/tables/annotation_labels.2degrees.png" usemap="#twoDegreesRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>

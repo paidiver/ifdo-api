@@ -122,18 +122,36 @@
                                         <td><span title='Cascade on delete:&#10;Deletion of parent deletes child'>Cascade on delete</span></td>
                                     </tr>
                                     <tr>
-                                        <td>annotation_set_creators_annotation_id_fkey</td>
+                                        <td>annotation_set_creators_annotation_set_id_fkey</td>
                                         <td>
                                             <table border='0' cellspacing='0' cellpadding='0'>
                                                 <tr>
-                                                    <td><a href='tables/annotation_set_creators.html'>annotation_set_creators</a><span>.annotation_id</span></td>
+                                                    <td><a href='tables/annotation_set_creators.html'>annotation_set_creators</a><span>.annotation_set_id</span></td>
                                                 </tr>
                                             </table>
                                         </td>
                                         <td>
                                             <table border='0' cellspacing='0' cellpadding='0'>
                                                 <tr>
-                                                    <td><a href='tables/annotations.html'>annotations</a><span>.id</span></td>
+                                                    <td><a href='tables/annotation_sets.html'>annotation_sets</a><span>.id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Cascade on delete:&#10;Deletion of parent deletes child'>Cascade on delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>annotation_set_image_sets_annotation_set_id_fkey</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/annotation_set_image_sets.html'>annotation_set_image_sets</a><span>.annotation_set_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/annotation_sets.html'>annotation_sets</a><span>.id</span></td>
                                                 </tr>
                                             </table>
                                         </td>
@@ -152,24 +170,6 @@
                                             <table border='0' cellspacing='0' cellpadding='0'>
                                                 <tr>
                                                     <td><a href='tables/image_sets.html'>image_sets</a><span>.id</span></td>
-                                                </tr>
-                                            </table>
-                                        </td>
-                                        <td><span title='Cascade on delete:&#10;Deletion of parent deletes child'>Cascade on delete</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>annotation_set_image_sets_annotation_id_fkey</td>
-                                        <td>
-                                            <table border='0' cellspacing='0' cellpadding='0'>
-                                                <tr>
-                                                    <td><a href='tables/annotation_set_image_sets.html'>annotation_set_image_sets</a><span>.annotation_id</span></td>
-                                                </tr>
-                                            </table>
-                                        </td>
-                                        <td>
-                                            <table border='0' cellspacing='0' cellpadding='0'>
-                                                <tr>
-                                                    <td><a href='tables/annotations.html'>annotations</a><span>.id</span></td>
                                                 </tr>
                                             </table>
                                         </td>

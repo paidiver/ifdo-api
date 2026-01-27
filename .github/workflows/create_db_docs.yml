@@ -57,7 +57,7 @@ jobs:
             -host db \
             -port 5432 \
             -u "myuser" \
-            -p "mypassword" -debug
+            -p "mypassword"
 
       - name: Export schema SQL
         run: |

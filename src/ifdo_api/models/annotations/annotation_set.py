@@ -10,7 +10,7 @@ from ifdo_api.models.common_fields import CommonFieldsAll
 annotation_set_creators = Table(
     "annotation_set_creators",
     Base.metadata,
-    Column("annotation_id", ForeignKey("annotations.id", ondelete="CASCADE"), primary_key=True),
+    Column("annotation_set_id", ForeignKey("annotation_sets.id", ondelete="CASCADE"), primary_key=True),
     Column("creator_id", ForeignKey("creators.id", ondelete="CASCADE"), primary_key=True),
 )
 
@@ -18,7 +18,7 @@ annotation_set_creators = Table(
 annotation_set_image_sets = Table(
     "annotation_set_image_sets",
     Base.metadata,
-    Column("annotation_id", ForeignKey("annotations.id", ondelete="CASCADE"), primary_key=True),
+    Column("annotation_set_id", ForeignKey("annotation_sets.id", ondelete="CASCADE"), primary_key=True),
     Column("image_set_id", ForeignKey("image_sets.id", ondelete="CASCADE"), primary_key=True),
 )
 

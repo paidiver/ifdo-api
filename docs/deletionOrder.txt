@@ -12,8 +12,8 @@ image_set_creators
 image_creators
 annotation_set_image_sets
 annotation_set_creators
-labels
 annotations
+labels
 images
 annotation_sets
 image_sets
