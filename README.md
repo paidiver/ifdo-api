@@ -30,7 +30,7 @@ It uses a **PostGIS** backend for spatial data handling and supports a range of 
 The database schema is documented in the following links:
 - [DATABASE.md](DATABASE.md): Detailed description of the core data model for image collections and annotations.
 - [Schemaspy database docs](https://paidiver.github.io/ifdo-api): Auto-generated database documentation using SchemaSpy.
-- [Schemas.sql](docs/schemas.sql): SQL script to create the database schema.
+- [Schema.sql](docs/schema.sql): SQL script to create the database schema.
 
 ---
 
