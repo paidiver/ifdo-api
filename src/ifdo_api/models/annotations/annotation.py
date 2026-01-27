@@ -1,6 +1,5 @@
 from sqlalchemy import Column
 from sqlalchemy import Enum
-from sqlalchemy import Float
 from sqlalchemy import ForeignKey
 from sqlalchemy import String
 from sqlalchemy.dialects.postgresql import JSONB
