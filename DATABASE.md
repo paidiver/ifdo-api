@@ -12,7 +12,6 @@ Supporting join tables included where relevant:
 
 * `annotation_set_image_sets`
 * `annotation_labels`
-* `annotation_set_creators`
 
 ---
 
@@ -20,21 +19,16 @@ Supporting join tables included where relevant:
 
 * [Overview](#overview)
 * [Core entities](#core-entities)
-
   * [image_sets](#image_sets)
   * [images](#images)
   * [annotation_sets](#annotation_sets)
   * [annotations](#annotations)
   * [labels](#labels)
 * [Join tables](#join-tables)
-
   * [annotation_set_image_sets](#annotation_set_image_sets)
   * [annotation_labels](#annotation_labels)
-  * [annotation_set_creators](#annotation_set_creators)
 * [Cardinality and relationship summary](#cardinality-and-relationship-summary)
-* [Cascade delete behavior](#cascade-delete-behavior)
-* [Common traversal patterns](#common-traversal-patterns)
-* [ER diagram (Mermaid)](#er-diagram-mermaid)
+* [ER diagram](#er-diagram)
 
 ---
 
@@ -129,17 +123,11 @@ A named, versioned annotation release/campaign. An annotation set defines:
 **Relationships**
 
 * **1-to-many:** `annotation_sets (1) → (N) annotations`
-
   * `annotations.annotation_set_id` → `annotation_sets.id`
-  * (nullable on `annotations`, allowing unassigned/draft annotations)
 * **1-to-many:** `annotation_sets (1) → (N) labels`
-
   * `labels.annotation_set_id` → `annotation_sets.id`
 * **many-to-many:** `annotation_sets (N) ↔ (N) image_sets` via `annotation_set_image_sets`
-
   * defines the image-set scope of the release
-* **many-to-many:** `annotation_sets (N) ↔ (N) creators` via `annotation_set_creators`
-
   * attribution/curation metadata
 
 ---
@@ -165,11 +153,9 @@ A geometric markup on an image (bounding box, polygon, point, etc.) stored as `s
 * **many-to-1:** `annotations (N) → (1) images`
 
   * `annotations.image_id` → `images.id`
-* **many-to-0..1:** `annotations (N) → (0..1) annotation_sets`
-
+* **many-to-1:** `annotations (N) → (1) annotation_sets`
   * `annotations.annotation_set_id` → `annotation_sets.id`
 * **many-to-many:** `annotations (N) ↔ (N) labels` via `annotation_labels`
-
   * an annotation can be assigned multiple labels; labels can appear on many annotations
 
 ---
@@ -190,14 +176,13 @@ Controlled vocabulary used for labeling annotations. Labels are *scoped to* an a
 **Core fields**
 
 * `name` (varchar)
-* `group` (varchar): label grouping/category
+* `parent_label_name` (varchar): label grouping/category
 * taxonomy fields (`lowest_taxonomic_name`, `lowest_aphia_id`, `name_is_lowest`, etc.)
-* `annotation_set_id` (uuid, nullable): owning annotation set / vocabulary
+* `annotation_set_id` (uuid, NOT NULL): owning annotation set / vocabulary
 
 **Relationships**
 
-* **many-to-0..1:** `labels (N) → (0..1) annotation_sets`
-
+* **many-to-1:** `labels (N) → (1) annotation_sets`
   * `labels.annotation_set_id` → `annotation_sets.id`
 * **many-to-many:** `labels (N) ↔ (N) annotations` via `annotation_labels`
 
@@ -248,86 +233,18 @@ Stores label assignments to annotations, with optional annotator and confidence.
 
 ---
 
-### `annotation_set_creators`
-
-**Purpose**
-Attribution/curation metadata: links annotation sets to their creators.
-
-**Primary key**
-
-* composite: (`annotation_set_id`, `creator_id`)
-
-**Foreign keys**
-
-* `annotation_set_id` → `annotation_sets.id` (**ON DELETE CASCADE**)
-* `creator_id` → `creators.id` (**ON DELETE CASCADE**)
-
----
-
 ## Cardinality and relationship summary
 
 * `image_sets (1) → (N) images`
 * `images (1) → (N) annotations`
-* `annotation_sets (1) → (N) annotations` *(nullable membership on annotations)*
-* `annotation_sets (1) → (N) labels` *(nullable membership on labels)*
+* `annotation_sets (1) → (N) annotations`
+* `annotation_sets (1) → (N) labels`
 * `annotation_sets (N) ↔ (N) image_sets` via `annotation_set_image_sets`
 * `annotations (N) ↔ (N) labels` via `annotation_labels`
 
 ---
 
-## Cascade delete behavior
-
-* Deleting an **image_set**:
-
-  * deletes its **images** (`images.image_set_id ON DELETE CASCADE`)
-  * deletes those images’ **annotations** (`annotations.image_id ON DELETE CASCADE`)
-  * deletes related **annotation_labels** rows (`annotation_labels.annotation_id ON DELETE CASCADE`)
-  * deletes its rows in **annotation_set_image_sets** (`ON DELETE CASCADE`)
-
-* Deleting an **annotation_set**:
-
-  * deletes its **annotations** (`annotations.annotation_set_id ON DELETE CASCADE`)
-  * deletes its **labels** (`labels.annotation_set_id ON DELETE CASCADE`)
-  * deletes its join rows in:
-
-    * `annotation_set_image_sets`
-    * `annotation_set_creators`
-  * cascades further into `annotation_labels` through deleted annotations/labels
-
-* Deleting an **annotator**:
-
-  * sets `annotation_labels.annotator_id` to NULL (`ON DELETE SET NULL`)
-
----
-
-## Common traversal patterns
-
-* **All images in an image set**
-
-  * `images WHERE image_set_id = :image_set_id`
-
-* **All annotations for an image set (across all releases)**
-
-  * `image_sets → images → annotations`
-
-* **All annotation releases for an image set**
-
-  * `annotation_set_image_sets WHERE image_set_id = :image_set_id → annotation_sets`
-
-* **All image sets covered by an annotation release**
-
-  * `annotation_set_image_sets WHERE annotation_set_id = :annotation_set_id → image_sets`
-
-* **All labels assigned to annotations in an image (with confidence and annotator)**
-
-  * `annotations WHERE image_id = :image_id`
-  * join `annotation_labels` on `annotation_id`
-  * join `labels` on `label_id`
-  * left join `annotators` on `annotator_id`
-
----
-
-## ER diagram (Mermaid)
+## ER diagram
 
 ```mermaid
 erDiagram
@@ -344,6 +261,9 @@ erDiagram
   LABELS ||--o{ ANNOTATION_LABELS : used_by
 
   ANNOTATORS ||--o{ ANNOTATION_LABELS : optionally_provided_by
+
+  IMAGE_SETS ||--o{ IMAGE_SET_CREATORS : attributed_to
+  CREATORS ||--o{IMAGE_SET_CREATORS : creates
 
   ANNOTATION_SETS ||--o{ ANNOTATION_SET_CREATORS : attributed_to
   CREATORS ||--o{ ANNOTATION_SET_CREATORS : creates
@@ -375,14 +295,16 @@ erDiagram
     uuid id PK
     uuid annotation_set_id FK
     varchar name
-    varchar group
+    varchar parent_label_name
+    varchar lowest_taxonomic_name
+    number lowest_aphia_id
+    boolean name_is_lowest
   }
   ANNOTATION_LABELS {
     uuid id PK
     uuid annotation_id FK
     uuid label_id FK
     uuid annotator_id FK
-    float confidence
   }
   ANNOTATION_SET_IMAGE_SETS {
     uuid annotation_set_id FK
@@ -394,6 +316,10 @@ erDiagram
   }
   ANNOTATION_SET_CREATORS {
     uuid annotation_set_id FK
+    uuid creator_id FK
+  }
+  IMAGE_SET_CREATORS {
+    uuid image_set_id FK
     uuid creator_id FK
   }
   CREATORS {

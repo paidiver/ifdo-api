@@ -19,12 +19,12 @@ class AnnotationLabelSchema(BaseModel):
     label_id: str = Field(..., description="A unique identifier to a semantic label")
     annotation_id: str = Field(..., description="A unique identifier to the annotation this label is assigned to")
     annotator_id: str = Field(..., description="A unique identifier to an annotation creator, e.g. orcid URL or handle to ML model")
-    confidence: float | None = Field(
-        None,
-        ge=0.0,
-        le=1.0,
-        description="A numerical confidence estimate of the validity of the label between 0 (untrustworthy) and 1 (100% certainty)",
-    )
+    # confidence: float | None = Field(
+    #     None,
+    #     ge=0.0,
+    #     le=1.0,
+    #     description="A numerical confidence estimate of the validity of the label between 0 (untrustworthy) and 1 (100% certainty)",
+    # )
     creation_datetime: str = Field(..., description="The date-time stamp of label creation")
 
 

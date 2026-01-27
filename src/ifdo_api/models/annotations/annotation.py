@@ -115,11 +115,11 @@ class AnnotationLabel(DefaultColumns, Base):
         nullable=True,
         info={"help": "A unique identifier to an annotation creator, e.g. orcid URL or handle to ML model"},
     )
-    confidence = Column(
-        Float,
-        nullable=True,
-        info={"help": "A numerical confidence estimate of the validity of the label between 0 (untrustworthy) and 1 (100% certainty)"},
-    )
+    # confidence = Column(
+    #     Float,
+    #     nullable=True,
+    #     info={"help": "A numerical confidence estimate of the validity of the label between 0 (untrustworthy) and 1 (100% certainty)"},
+    # )
 
     creation_datetime = Column(
         String,

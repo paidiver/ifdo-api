@@ -6,8 +6,8 @@ class LabelSchema(BaseModel):
     """A semantic label that can be assigned to an annotation."""
 
     id: str = Field(..., description="A unique identifier to a semantic label")
-    name: str = Field(..., description="A human-readable name for the semantic label")
-    group: str = Field(..., description="Grouping or higher taxonomic group of label")
+    name: str = Field(..., description="Name in BIIGLE label tree output; name of label as annotated")
+    parent_label_name: str = Field(..., description="Name of parent to label_name")
     lowest_taxonomic_name: str | None = Field(None, description="Most detailed taxonomic identification possible; scientificName field in DarwinCore")
     lowest_aphia_id: str | None = Field(None, description="The AphiaID corresponding to the lowest_taxonomic_name, if applicable")
     name_is_lowest: bool = Field(..., description="Indicates whether the name field represents the lowest taxonomic identification")

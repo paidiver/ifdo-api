@@ -15,13 +15,13 @@ class Label(DefaultColumns, Base):
         String(255),
         nullable=False,
         unique=True,
-        info={"help": "A human-readable name for the semantic label"},
+        info={"help": "Name in BIIGLE label tree output; name of label as annotated"},
     )
 
-    group = Column(
+    parent_label_name = Column(
         String(255),
         nullable=False,
-        info={"help": "Grouping or higher taxonomic group of label"},
+        info={"help": "Name of parent to label_name"},
     )
 
     lowest_taxonomic_name = Column(
@@ -51,7 +51,7 @@ class Label(DefaultColumns, Base):
 
     annotation_set_id = Column(
         ForeignKey("annotation_sets.id", onupdate="CASCADE", ondelete="CASCADE"),
-        nullable=True,
+        nullable=False,
         info={"help_text": "The annotation_set this label belongs to. A annotation_set can have multiple labels."},
     )
 
