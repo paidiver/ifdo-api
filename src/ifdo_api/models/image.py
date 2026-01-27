@@ -112,7 +112,7 @@ class Image(DefaultColumns, CommonFieldsAll, CommonFieldsImagesImageSets, Base):
 
     annotations = relationship(
         "Annotation",
-        back_populates="image",
+        back_populates="images",
         cascade="all, delete-orphan",
         info={"help_text": "All the annotations in this image. Each annotation has a shape, coordinates, and a list of labels assigned to it."},
     )

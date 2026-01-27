@@ -1,7 +1,7 @@
+from sqlalchemy import Boolean
 from sqlalchemy import Column
 from sqlalchemy import ForeignKey
 from sqlalchemy import String
-from sqlalchemy import Text
 from sqlalchemy.orm import relationship
 from ifdo_api.models.base import Base
 from ifdo_api.models.base import DefaultColumns
@@ -17,57 +17,87 @@ class Label(DefaultColumns, Base):
         unique=True,
         info={"help": "A human-readable name for the semantic label"},
     )
-    parent_id = Column(
-        ForeignKey("labels.id"),
-        nullable=True,
-        info={"help": "The ID of the parent label, if any"},
-    )
 
-    label_source_id = Column(
-        ForeignKey("label_sources.id"),
-        nullable=True,
-        info={"help": "The ID of the source from which this label originates"},
-    )
-    info = Column(
-        Text,
-        nullable=True,
-        info={"help": "A description on what this semantic label represents"},
-    )
-
-    parent = relationship(
-        "Label",
-        remote_side="Label.id",
-        foreign_keys=[parent_id],
-        back_populates="childrens",
-    )
-
-    annotation_sets = relationship(
-        "AnnotationSet",
-        secondary="annotation_set_labels",
-        back_populates="labels",
-        info={"help_text": "Annotation sets that include this label"},
-    )
-
-    childrens = relationship(
-        "Label",
-        foreign_keys=[parent_id],
-        back_populates="parent",
-        cascade="all, delete-orphan",
-    )
-
-
-class LabelSource(DefaultColumns, Base):
-    """A source or ontology from which labels are derived."""
-
-    __tablename__ = "label_sources"
-    name = Column(
+    group = Column(
         String(255),
         nullable=False,
-        unique=True,
-        info={"help": "A human-readable name for the label source"},
+        info={"help": "Grouping or higher taxonomic group of label"},
     )
-    description = Column(
-        Text,
+
+    lowest_taxonomic_name = Column(
+        String(255),
         nullable=True,
-        info={"help": "A description of the label source or ontology"},
+        info={"help": "Most detailed taxonomic identification possible; scientificName field in DarwinCore"},
     )
+
+    lowest_aphia_id = Column(
+        String(50),
+        nullable=True,
+        info={"help": "The AphiaID corresponding to the lowest_taxonomic_name, if applicable"},
+    )
+
+    name_is_lowest = Column(
+        Boolean,
+        nullable=False,
+        default=False,
+        info={"help": "Indicates whether the name field represents the lowest taxonomic identification"},
+    )
+
+    identification_qualifier = Column(
+        String(255),
+        nullable=True,
+        info={"help": "Open nomenclature signs (see Horton et al 2021); same field name in DarwinCore"},
+    )
+
+    annotation_set_id = Column(
+        ForeignKey("annotation_sets.id", onupdate="CASCADE", ondelete="CASCADE"),
+        nullable=True,
+        info={"help_text": "The annotation_set this label belongs to. A annotation_set can have multiple labels."},
+    )
+
+    annotation_set = relationship(
+        "AnnotationSet",
+        back_populates="labels",
+        info={"help_text": "Annotation sets that include this label"},
+        passive_deletes=True,
+    )
+
+    # label_source_id = Column(
+    #     ForeignKey("label_sources.id"),
+    #     nullable=True,
+    #     info={"help": "The ID of the source from which this label originates"},
+    # )
+    # parent_id = Column(
+    #     ForeignKey("labels.id"),
+    #     nullable=True,
+    #     info={"help": "The ID of the parent label, if any"},
+    # )
+    # parent = relationship(
+    #     "Label",
+    #     remote_side="Label.id",
+    #     foreign_keys=[parent_id],
+    #     back_populates="childrens",
+    # )
+    # childrens = relationship(
+    #     "Label",
+    #     foreign_keys=[parent_id],
+    #     back_populates="parent",
+    #     cascade="all, delete-orphan",
+    # )
+
+
+# class LabelSource(DefaultColumns, Base):
+#     """A source or ontology from which labels are derived."""
+
+#     __tablename__ = "label_sources"
+#     name = Column(
+#         String(255),
+#         nullable=False,
+#         unique=True,
+#         info={"help": "A human-readable name for the label source"},
+#     )
+#     description = Column(
+#         Text,
+#         nullable=True,
+#         info={"help": "A description of the label source or ontology"},
+#     )

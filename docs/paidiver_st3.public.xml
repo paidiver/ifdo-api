@@ -56,20 +56,6 @@
             <column ascending="true" name="image_set_id"/>
          </index>
       </table>
-      <table name="annotation_set_labels" remarks="" schema="public" type="TABLE">
-         <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="annotation_set_id" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
-            <parent column="id" foreignKey="annotation_set_labels_annotation_set_id_fkey" implied="false" onDeleteCascade="true" schema="public" table="annotation_sets"/>
-         </column>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="label_id" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
-            <parent column="id" foreignKey="annotation_set_labels_label_id_fkey" implied="false" onDeleteCascade="true" schema="public" table="labels"/>
-         </column>
-         <primaryKey column="annotation_set_id" sequenceNumberInPK="1"/>
-         <primaryKey column="label_id" sequenceNumberInPK="2"/>
-         <index name="annotation_set_labels_pkey" unique="true">
-            <column ascending="true" name="annotation_set_id"/>
-            <column ascending="true" name="label_id"/>
-         </index>
-      </table>
       <table name="annotation_sets" remarks="" schema="public" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="context_id" nullable="true" remarks="" size="2147483647" type="uuid" typeCode="1111">
             <parent column="id" foreignKey="annotation_sets_context_id_fkey" implied="false" onDeleteCascade="false" schema="public" table="contexts"/>
@@ -83,22 +69,21 @@
          <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="license_id" nullable="true" remarks="" size="2147483647" type="uuid" typeCode="1111">
             <parent column="id" foreignKey="annotation_sets_license_id_fkey" implied="false" onDeleteCascade="false" schema="public" table="licenses"/>
          </column>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="local_path" nullable="true" remarks="" size="500" type="varchar" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="5" name="objective" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="target" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="7" name="target_timescale" nullable="true" remarks="" size="100" type="varchar" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="8" name="curation_protocol" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="9" name="version" nullable="true" remarks="" size="50" type="varchar" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="10" name="name" nullable="false" remarks="" size="255" type="varchar" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="11" name="handle" nullable="true" remarks="" size="2147483647" type="varchar" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="12" name="copyright" nullable="true" remarks="" size="500" type="varchar" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="13" name="abstract" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="14" name="id" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
-            <child column="annotation_set_id" foreignKey="annotation_set_labels_annotation_set_id_fkey" implied="false" onDeleteCascade="true" schema="public" table="annotation_set_labels"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="version" nullable="true" remarks="" size="50" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="5" name="name" nullable="false" remarks="" size="255" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="handle" nullable="true" remarks="" size="2147483647" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="7" name="copyright" nullable="true" remarks="" size="500" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="8" name="abstract" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="9" name="objective" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="10" name="target_environment" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="11" name="target_timescale" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="12" name="curation_protocol" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="13" name="id" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
             <child column="annotation_set_id" foreignKey="annotations_annotation_set_id_fkey" implied="false" onDeleteCascade="true" schema="public" table="annotations"/>
+            <child column="annotation_set_id" foreignKey="labels_annotation_set_id_fkey" implied="false" onDeleteCascade="true" schema="public" table="labels"/>
          </column>
-         <column autoUpdated="false" defaultValue="null" digits="6" id="15" name="created_at" nullable="false" remarks="" size="29" type="timestamp" typeCode="93"/>
-         <column autoUpdated="false" defaultValue="null" digits="6" id="16" name="updated_at" nullable="false" remarks="" size="29" type="timestamp" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="14" name="created_at" nullable="false" remarks="" size="29" type="timestamp" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="15" name="updated_at" nullable="false" remarks="" size="29" type="timestamp" typeCode="93"/>
          <primaryKey column="id" sequenceNumberInPK="1"/>
          <index name="annotation_sets_pkey" unique="true">
             <column ascending="true" name="id"/>
@@ -451,49 +436,49 @@
          <column autoUpdated="false" defaultValue="null" digits="0" id="20" name="handle" nullable="true" remarks="" size="2147483647" type="varchar" typeCode="12"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="21" name="copyright" nullable="true" remarks="" size="500" type="varchar" typeCode="12"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="22" name="abstract" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="23" name="sha256_hash" nullable="true" remarks="" size="64" type="varchar" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="6" id="24" name="date_time" nullable="true" remarks="" size="29" type="timestamp" typeCode="93"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="25" name="geom" nullable="true" remarks="" size="2147483647" type="geometry" typeCode="1111"/>
-         <column autoUpdated="false" defaultValue="null" digits="17" id="26" name="latitude" nullable="true" remarks="" size="17" type="float8" typeCode="8"/>
-         <column autoUpdated="false" defaultValue="null" digits="17" id="27" name="longitude" nullable="true" remarks="" size="17" type="float8" typeCode="8"/>
-         <column autoUpdated="false" defaultValue="null" digits="17" id="28" name="altitude_meters" nullable="true" remarks="" size="17" type="float8" typeCode="8"/>
-         <column autoUpdated="false" defaultValue="null" digits="17" id="29" name="coordinate_uncertainty_meters" nullable="true" remarks="" size="17" type="float8" typeCode="8"/>
-         <column autoUpdated="false" defaultValue="null" digits="17" id="30" name="entropy" nullable="true" remarks="" size="17" type="float8" typeCode="8"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="31" name="particle_count" nullable="true" remarks="" size="10" type="int4" typeCode="4"/>
-         <column autoUpdated="false" defaultValue="null" digits="17" id="32" name="average_color" nullable="true" remarks="" size="17" type="_float8" typeCode="2003"/>
-         <column autoUpdated="false" defaultValue="null" digits="17" id="33" name="mpeg7_color_layout" nullable="true" remarks="" size="17" type="_float8" typeCode="2003"/>
-         <column autoUpdated="false" defaultValue="null" digits="17" id="34" name="mpeg7_color_statistic" nullable="true" remarks="" size="17" type="_float8" typeCode="2003"/>
-         <column autoUpdated="false" defaultValue="null" digits="17" id="35" name="mpeg7_color_structure" nullable="true" remarks="" size="17" type="_float8" typeCode="2003"/>
-         <column autoUpdated="false" defaultValue="null" digits="17" id="36" name="mpeg7_dominant_color" nullable="true" remarks="" size="17" type="_float8" typeCode="2003"/>
-         <column autoUpdated="false" defaultValue="null" digits="17" id="37" name="mpeg7_edge_histogram" nullable="true" remarks="" size="17" type="_float8" typeCode="2003"/>
-         <column autoUpdated="false" defaultValue="null" digits="17" id="38" name="mpeg7_homogeneous_texture" nullable="true" remarks="" size="17" type="_float8" typeCode="2003"/>
-         <column autoUpdated="false" defaultValue="null" digits="17" id="39" name="mpeg7_scalable_color" nullable="true" remarks="" size="17" type="_float8" typeCode="2003"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="40" name="acquisition" nullable="true" remarks="" size="2147483647" type="acquisitionenum" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="41" name="quality" nullable="true" remarks="" size="2147483647" type="qualityenum" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="42" name="deployment" nullable="true" remarks="" size="2147483647" type="deploymentenum" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="43" name="navigation" nullable="true" remarks="" size="2147483647" type="navigationenum" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="44" name="scale_reference" nullable="true" remarks="" size="2147483647" type="scalereferenceenum" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="45" name="illumination" nullable="true" remarks="" size="2147483647" type="illuminationenum" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="46" name="pixel_magnitude" nullable="true" remarks="" size="2147483647" type="pixelmagnitudeenum" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="47" name="marine_zone" nullable="true" remarks="" size="2147483647" type="marinezoneenum" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="48" name="spectral_resolution" nullable="true" remarks="" size="2147483647" type="spectralresenum" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="49" name="capture_mode" nullable="true" remarks="" size="2147483647" type="capturemodeenum" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="50" name="fauna_attraction" nullable="true" remarks="" size="2147483647" type="faunaattractionenum" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="17" id="51" name="area_square_meters" nullable="true" remarks="" size="17" type="float8" typeCode="8"/>
-         <column autoUpdated="false" defaultValue="null" digits="17" id="52" name="meters_above_ground" nullable="true" remarks="" size="17" type="float8" typeCode="8"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="53" name="acquisition_settings" nullable="true" remarks="" size="2147483647" type="jsonb" typeCode="1111"/>
-         <column autoUpdated="false" defaultValue="null" digits="17" id="54" name="camera_yaw_degrees" nullable="true" remarks="" size="17" type="float8" typeCode="8"/>
-         <column autoUpdated="false" defaultValue="null" digits="17" id="55" name="camera_pitch_degrees" nullable="true" remarks="" size="17" type="float8" typeCode="8"/>
-         <column autoUpdated="false" defaultValue="null" digits="17" id="56" name="camera_roll_degrees" nullable="true" remarks="" size="17" type="float8" typeCode="8"/>
-         <column autoUpdated="false" defaultValue="null" digits="17" id="57" name="overlap_fraction" nullable="true" remarks="" size="17" type="float8" typeCode="8"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="58" name="objective" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="59" name="target_environment" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="60" name="target_timescale" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="61" name="spatial_constraints" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="62" name="temporal_constraints" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="63" name="time_synchronisation" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="64" name="item_identification_scheme" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="65" name="curation_protocol" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="23" name="objective" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="24" name="target_environment" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="25" name="target_timescale" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="26" name="curation_protocol" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="27" name="sha256_hash" nullable="true" remarks="" size="64" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="28" name="date_time" nullable="true" remarks="" size="29" type="timestamp" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="29" name="geom" nullable="true" remarks="" size="2147483647" type="geometry" typeCode="1111"/>
+         <column autoUpdated="false" defaultValue="null" digits="17" id="30" name="latitude" nullable="true" remarks="" size="17" type="float8" typeCode="8"/>
+         <column autoUpdated="false" defaultValue="null" digits="17" id="31" name="longitude" nullable="true" remarks="" size="17" type="float8" typeCode="8"/>
+         <column autoUpdated="false" defaultValue="null" digits="17" id="32" name="altitude_meters" nullable="true" remarks="" size="17" type="float8" typeCode="8"/>
+         <column autoUpdated="false" defaultValue="null" digits="17" id="33" name="coordinate_uncertainty_meters" nullable="true" remarks="" size="17" type="float8" typeCode="8"/>
+         <column autoUpdated="false" defaultValue="null" digits="17" id="34" name="entropy" nullable="true" remarks="" size="17" type="float8" typeCode="8"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="35" name="particle_count" nullable="true" remarks="" size="10" type="int4" typeCode="4"/>
+         <column autoUpdated="false" defaultValue="null" digits="17" id="36" name="average_color" nullable="true" remarks="" size="17" type="_float8" typeCode="2003"/>
+         <column autoUpdated="false" defaultValue="null" digits="17" id="37" name="mpeg7_color_layout" nullable="true" remarks="" size="17" type="_float8" typeCode="2003"/>
+         <column autoUpdated="false" defaultValue="null" digits="17" id="38" name="mpeg7_color_statistic" nullable="true" remarks="" size="17" type="_float8" typeCode="2003"/>
+         <column autoUpdated="false" defaultValue="null" digits="17" id="39" name="mpeg7_color_structure" nullable="true" remarks="" size="17" type="_float8" typeCode="2003"/>
+         <column autoUpdated="false" defaultValue="null" digits="17" id="40" name="mpeg7_dominant_color" nullable="true" remarks="" size="17" type="_float8" typeCode="2003"/>
+         <column autoUpdated="false" defaultValue="null" digits="17" id="41" name="mpeg7_edge_histogram" nullable="true" remarks="" size="17" type="_float8" typeCode="2003"/>
+         <column autoUpdated="false" defaultValue="null" digits="17" id="42" name="mpeg7_homogeneous_texture" nullable="true" remarks="" size="17" type="_float8" typeCode="2003"/>
+         <column autoUpdated="false" defaultValue="null" digits="17" id="43" name="mpeg7_scalable_color" nullable="true" remarks="" size="17" type="_float8" typeCode="2003"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="44" name="acquisition" nullable="true" remarks="" size="2147483647" type="acquisitionenum" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="45" name="quality" nullable="true" remarks="" size="2147483647" type="qualityenum" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="46" name="deployment" nullable="true" remarks="" size="2147483647" type="deploymentenum" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="47" name="navigation" nullable="true" remarks="" size="2147483647" type="navigationenum" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="48" name="scale_reference" nullable="true" remarks="" size="2147483647" type="scalereferenceenum" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="49" name="illumination" nullable="true" remarks="" size="2147483647" type="illuminationenum" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="50" name="pixel_magnitude" nullable="true" remarks="" size="2147483647" type="pixelmagnitudeenum" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="51" name="marine_zone" nullable="true" remarks="" size="2147483647" type="marinezoneenum" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="52" name="spectral_resolution" nullable="true" remarks="" size="2147483647" type="spectralresenum" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="53" name="capture_mode" nullable="true" remarks="" size="2147483647" type="capturemodeenum" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="54" name="fauna_attraction" nullable="true" remarks="" size="2147483647" type="faunaattractionenum" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="17" id="55" name="area_square_meters" nullable="true" remarks="" size="17" type="float8" typeCode="8"/>
+         <column autoUpdated="false" defaultValue="null" digits="17" id="56" name="meters_above_ground" nullable="true" remarks="" size="17" type="float8" typeCode="8"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="57" name="acquisition_settings" nullable="true" remarks="" size="2147483647" type="jsonb" typeCode="1111"/>
+         <column autoUpdated="false" defaultValue="null" digits="17" id="58" name="camera_yaw_degrees" nullable="true" remarks="" size="17" type="float8" typeCode="8"/>
+         <column autoUpdated="false" defaultValue="null" digits="17" id="59" name="camera_pitch_degrees" nullable="true" remarks="" size="17" type="float8" typeCode="8"/>
+         <column autoUpdated="false" defaultValue="null" digits="17" id="60" name="camera_roll_degrees" nullable="true" remarks="" size="17" type="float8" typeCode="8"/>
+         <column autoUpdated="false" defaultValue="null" digits="17" id="61" name="overlap_fraction" nullable="true" remarks="" size="17" type="float8" typeCode="8"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="62" name="spatial_constraints" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="63" name="temporal_constraints" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="64" name="time_synchronisation" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="65" name="item_identification_scheme" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="66" name="visual_constraints" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="67" name="id" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
             <child column="image_set_id" foreignKey="annotation_set_image_sets_image_set_id_fkey" implied="false" onDeleteCascade="true" schema="public" table="annotation_set_image_sets"/>
@@ -576,49 +561,49 @@
          <column autoUpdated="false" defaultValue="null" digits="0" id="18" name="handle" nullable="true" remarks="" size="2147483647" type="varchar" typeCode="12"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="19" name="copyright" nullable="true" remarks="" size="500" type="varchar" typeCode="12"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="20" name="abstract" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="21" name="sha256_hash" nullable="true" remarks="" size="64" type="varchar" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="6" id="22" name="date_time" nullable="true" remarks="" size="29" type="timestamp" typeCode="93"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="23" name="geom" nullable="true" remarks="" size="2147483647" type="geometry" typeCode="1111"/>
-         <column autoUpdated="false" defaultValue="null" digits="17" id="24" name="latitude" nullable="true" remarks="" size="17" type="float8" typeCode="8"/>
-         <column autoUpdated="false" defaultValue="null" digits="17" id="25" name="longitude" nullable="true" remarks="" size="17" type="float8" typeCode="8"/>
-         <column autoUpdated="false" defaultValue="null" digits="17" id="26" name="altitude_meters" nullable="true" remarks="" size="17" type="float8" typeCode="8"/>
-         <column autoUpdated="false" defaultValue="null" digits="17" id="27" name="coordinate_uncertainty_meters" nullable="true" remarks="" size="17" type="float8" typeCode="8"/>
-         <column autoUpdated="false" defaultValue="null" digits="17" id="28" name="entropy" nullable="true" remarks="" size="17" type="float8" typeCode="8"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="29" name="particle_count" nullable="true" remarks="" size="10" type="int4" typeCode="4"/>
-         <column autoUpdated="false" defaultValue="null" digits="17" id="30" name="average_color" nullable="true" remarks="" size="17" type="_float8" typeCode="2003"/>
-         <column autoUpdated="false" defaultValue="null" digits="17" id="31" name="mpeg7_color_layout" nullable="true" remarks="" size="17" type="_float8" typeCode="2003"/>
-         <column autoUpdated="false" defaultValue="null" digits="17" id="32" name="mpeg7_color_statistic" nullable="true" remarks="" size="17" type="_float8" typeCode="2003"/>
-         <column autoUpdated="false" defaultValue="null" digits="17" id="33" name="mpeg7_color_structure" nullable="true" remarks="" size="17" type="_float8" typeCode="2003"/>
-         <column autoUpdated="false" defaultValue="null" digits="17" id="34" name="mpeg7_dominant_color" nullable="true" remarks="" size="17" type="_float8" typeCode="2003"/>
-         <column autoUpdated="false" defaultValue="null" digits="17" id="35" name="mpeg7_edge_histogram" nullable="true" remarks="" size="17" type="_float8" typeCode="2003"/>
-         <column autoUpdated="false" defaultValue="null" digits="17" id="36" name="mpeg7_homogeneous_texture" nullable="true" remarks="" size="17" type="_float8" typeCode="2003"/>
-         <column autoUpdated="false" defaultValue="null" digits="17" id="37" name="mpeg7_scalable_color" nullable="true" remarks="" size="17" type="_float8" typeCode="2003"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="38" name="acquisition" nullable="true" remarks="" size="2147483647" type="acquisitionenum" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="39" name="quality" nullable="true" remarks="" size="2147483647" type="qualityenum" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="40" name="deployment" nullable="true" remarks="" size="2147483647" type="deploymentenum" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="41" name="navigation" nullable="true" remarks="" size="2147483647" type="navigationenum" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="42" name="scale_reference" nullable="true" remarks="" size="2147483647" type="scalereferenceenum" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="43" name="illumination" nullable="true" remarks="" size="2147483647" type="illuminationenum" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="44" name="pixel_magnitude" nullable="true" remarks="" size="2147483647" type="pixelmagnitudeenum" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="45" name="marine_zone" nullable="true" remarks="" size="2147483647" type="marinezoneenum" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="46" name="spectral_resolution" nullable="true" remarks="" size="2147483647" type="spectralresenum" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="47" name="capture_mode" nullable="true" remarks="" size="2147483647" type="capturemodeenum" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="48" name="fauna_attraction" nullable="true" remarks="" size="2147483647" type="faunaattractionenum" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="17" id="49" name="area_square_meters" nullable="true" remarks="" size="17" type="float8" typeCode="8"/>
-         <column autoUpdated="false" defaultValue="null" digits="17" id="50" name="meters_above_ground" nullable="true" remarks="" size="17" type="float8" typeCode="8"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="51" name="acquisition_settings" nullable="true" remarks="" size="2147483647" type="jsonb" typeCode="1111"/>
-         <column autoUpdated="false" defaultValue="null" digits="17" id="52" name="camera_yaw_degrees" nullable="true" remarks="" size="17" type="float8" typeCode="8"/>
-         <column autoUpdated="false" defaultValue="null" digits="17" id="53" name="camera_pitch_degrees" nullable="true" remarks="" size="17" type="float8" typeCode="8"/>
-         <column autoUpdated="false" defaultValue="null" digits="17" id="54" name="camera_roll_degrees" nullable="true" remarks="" size="17" type="float8" typeCode="8"/>
-         <column autoUpdated="false" defaultValue="null" digits="17" id="55" name="overlap_fraction" nullable="true" remarks="" size="17" type="float8" typeCode="8"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="56" name="objective" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="57" name="target_environment" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="58" name="target_timescale" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="59" name="spatial_constraints" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="60" name="temporal_constraints" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="61" name="time_synchronisation" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="62" name="item_identification_scheme" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="63" name="curation_protocol" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="21" name="objective" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="22" name="target_environment" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="23" name="target_timescale" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="24" name="curation_protocol" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="25" name="sha256_hash" nullable="true" remarks="" size="64" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="26" name="date_time" nullable="true" remarks="" size="29" type="timestamp" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="27" name="geom" nullable="true" remarks="" size="2147483647" type="geometry" typeCode="1111"/>
+         <column autoUpdated="false" defaultValue="null" digits="17" id="28" name="latitude" nullable="true" remarks="" size="17" type="float8" typeCode="8"/>
+         <column autoUpdated="false" defaultValue="null" digits="17" id="29" name="longitude" nullable="true" remarks="" size="17" type="float8" typeCode="8"/>
+         <column autoUpdated="false" defaultValue="null" digits="17" id="30" name="altitude_meters" nullable="true" remarks="" size="17" type="float8" typeCode="8"/>
+         <column autoUpdated="false" defaultValue="null" digits="17" id="31" name="coordinate_uncertainty_meters" nullable="true" remarks="" size="17" type="float8" typeCode="8"/>
+         <column autoUpdated="false" defaultValue="null" digits="17" id="32" name="entropy" nullable="true" remarks="" size="17" type="float8" typeCode="8"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="33" name="particle_count" nullable="true" remarks="" size="10" type="int4" typeCode="4"/>
+         <column autoUpdated="false" defaultValue="null" digits="17" id="34" name="average_color" nullable="true" remarks="" size="17" type="_float8" typeCode="2003"/>
+         <column autoUpdated="false" defaultValue="null" digits="17" id="35" name="mpeg7_color_layout" nullable="true" remarks="" size="17" type="_float8" typeCode="2003"/>
+         <column autoUpdated="false" defaultValue="null" digits="17" id="36" name="mpeg7_color_statistic" nullable="true" remarks="" size="17" type="_float8" typeCode="2003"/>
+         <column autoUpdated="false" defaultValue="null" digits="17" id="37" name="mpeg7_color_structure" nullable="true" remarks="" size="17" type="_float8" typeCode="2003"/>
+         <column autoUpdated="false" defaultValue="null" digits="17" id="38" name="mpeg7_dominant_color" nullable="true" remarks="" size="17" type="_float8" typeCode="2003"/>
+         <column autoUpdated="false" defaultValue="null" digits="17" id="39" name="mpeg7_edge_histogram" nullable="true" remarks="" size="17" type="_float8" typeCode="2003"/>
+         <column autoUpdated="false" defaultValue="null" digits="17" id="40" name="mpeg7_homogeneous_texture" nullable="true" remarks="" size="17" type="_float8" typeCode="2003"/>
+         <column autoUpdated="false" defaultValue="null" digits="17" id="41" name="mpeg7_scalable_color" nullable="true" remarks="" size="17" type="_float8" typeCode="2003"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="42" name="acquisition" nullable="true" remarks="" size="2147483647" type="acquisitionenum" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="43" name="quality" nullable="true" remarks="" size="2147483647" type="qualityenum" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="44" name="deployment" nullable="true" remarks="" size="2147483647" type="deploymentenum" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="45" name="navigation" nullable="true" remarks="" size="2147483647" type="navigationenum" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="46" name="scale_reference" nullable="true" remarks="" size="2147483647" type="scalereferenceenum" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="47" name="illumination" nullable="true" remarks="" size="2147483647" type="illuminationenum" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="48" name="pixel_magnitude" nullable="true" remarks="" size="2147483647" type="pixelmagnitudeenum" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="49" name="marine_zone" nullable="true" remarks="" size="2147483647" type="marinezoneenum" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="50" name="spectral_resolution" nullable="true" remarks="" size="2147483647" type="spectralresenum" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="51" name="capture_mode" nullable="true" remarks="" size="2147483647" type="capturemodeenum" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="52" name="fauna_attraction" nullable="true" remarks="" size="2147483647" type="faunaattractionenum" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="17" id="53" name="area_square_meters" nullable="true" remarks="" size="17" type="float8" typeCode="8"/>
+         <column autoUpdated="false" defaultValue="null" digits="17" id="54" name="meters_above_ground" nullable="true" remarks="" size="17" type="float8" typeCode="8"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="55" name="acquisition_settings" nullable="true" remarks="" size="2147483647" type="jsonb" typeCode="1111"/>
+         <column autoUpdated="false" defaultValue="null" digits="17" id="56" name="camera_yaw_degrees" nullable="true" remarks="" size="17" type="float8" typeCode="8"/>
+         <column autoUpdated="false" defaultValue="null" digits="17" id="57" name="camera_pitch_degrees" nullable="true" remarks="" size="17" type="float8" typeCode="8"/>
+         <column autoUpdated="false" defaultValue="null" digits="17" id="58" name="camera_roll_degrees" nullable="true" remarks="" size="17" type="float8" typeCode="8"/>
+         <column autoUpdated="false" defaultValue="null" digits="17" id="59" name="overlap_fraction" nullable="true" remarks="" size="17" type="float8" typeCode="8"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="60" name="spatial_constraints" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="61" name="temporal_constraints" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="62" name="time_synchronisation" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="63" name="item_identification_scheme" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="64" name="visual_constraints" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
          <primaryKey column="id" sequenceNumberInPK="1"/>
          <index name="images_pkey" unique="true">
@@ -634,38 +619,21 @@
             <column ascending="true" name="sha256_hash"/>
          </index>
       </table>
-      <table name="label_sources" remarks="" schema="public" type="TABLE">
-         <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="name" nullable="false" remarks="" size="255" type="varchar" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="description" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="id" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
-            <child column="label_source_id" foreignKey="labels_label_source_id_fkey" implied="false" onDeleteCascade="false" schema="public" table="labels"/>
-         </column>
-         <column autoUpdated="false" defaultValue="null" digits="6" id="3" name="created_at" nullable="false" remarks="" size="29" type="timestamp" typeCode="93"/>
-         <column autoUpdated="false" defaultValue="null" digits="6" id="4" name="updated_at" nullable="false" remarks="" size="29" type="timestamp" typeCode="93"/>
-         <primaryKey column="id" sequenceNumberInPK="1"/>
-         <index name="label_sources_pkey" unique="true">
-            <column ascending="true" name="id"/>
-         </index>
-         <index name="label_sources_name_key" unique="true">
-            <column ascending="true" name="name"/>
-         </index>
-      </table>
       <table name="labels" remarks="" schema="public" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="name" nullable="false" remarks="" size="255" type="varchar" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="parent_id" nullable="true" remarks="" size="2147483647" type="uuid" typeCode="1111">
-            <parent column="id" foreignKey="labels_parent_id_fkey" implied="false" onDeleteCascade="false" schema="public" table="labels"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="group" nullable="false" remarks="" size="255" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="lowest_taxonomic_name" nullable="true" remarks="" size="255" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="lowest_aphia_id" nullable="true" remarks="" size="50" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="name_is_lowest" nullable="false" remarks="" size="1" type="bool" typeCode="-7"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="5" name="identification_qualifier" nullable="true" remarks="" size="255" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="annotation_set_id" nullable="true" remarks="" size="2147483647" type="uuid" typeCode="1111">
+            <parent column="id" foreignKey="labels_annotation_set_id_fkey" implied="false" onDeleteCascade="true" schema="public" table="annotation_sets"/>
          </column>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="label_source_id" nullable="true" remarks="" size="2147483647" type="uuid" typeCode="1111">
-            <parent column="id" foreignKey="labels_label_source_id_fkey" implied="false" onDeleteCascade="false" schema="public" table="label_sources"/>
-         </column>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="info" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="id" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
+         <column autoUpdated="false" defaultValue="null" digits="0" id="7" name="id" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
             <child column="label_id" foreignKey="annotation_labels_label_id_fkey" implied="false" onDeleteCascade="true" schema="public" table="annotation_labels"/>
-            <child column="label_id" foreignKey="annotation_set_labels_label_id_fkey" implied="false" onDeleteCascade="true" schema="public" table="annotation_set_labels"/>
-            <child column="parent_id" foreignKey="labels_parent_id_fkey" implied="false" onDeleteCascade="false" schema="public" table="labels"/>
          </column>
-         <column autoUpdated="false" defaultValue="null" digits="6" id="5" name="created_at" nullable="false" remarks="" size="29" type="timestamp" typeCode="93"/>
-         <column autoUpdated="false" defaultValue="null" digits="6" id="6" name="updated_at" nullable="false" remarks="" size="29" type="timestamp" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="8" name="created_at" nullable="false" remarks="" size="29" type="timestamp" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="9" name="updated_at" nullable="false" remarks="" size="29" type="timestamp" typeCode="93"/>
          <primaryKey column="id" sequenceNumberInPK="1"/>
          <index name="labels_pkey" unique="true">
             <column ascending="true" name="id"/>

@@ -10,16 +10,14 @@ image_set_provenance_agents
 image_set_provenance_activities
 image_set_creators
 image_creators
-annotation_set_labels
 annotation_set_image_sets
 annotation_set_creators
+labels
 annotations
 images
-labels
 annotation_sets
 image_sets
 related_materials
-label_sources
 annotators
 spatial_ref_sys
 sensors

@@ -1,8 +1,8 @@
 """Initial Migration
 
-Revision ID: 3a92a886f462
+Revision ID: 20eccb005e45
 Revises: 
-Create Date: 2026-01-27 11:38:57.490925
+Create Date: 2026-01-27 14:37:55.612982
 
 """
 from typing import Sequence, Union
@@ -13,7 +13,7 @@ from geoalchemy2 import Geometry
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision: str = '3a92a886f462'
+revision: str = '20eccb005e45'
 down_revision: Union[str, Sequence[str], None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -129,16 +129,6 @@ def upgrade() -> None:
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('id')
     )
-    op.create_table('label_sources',
-    sa.Column('name', sa.String(length=255), nullable=False),
-    sa.Column('description', sa.Text(), nullable=True),
-    sa.Column('id', sa.UUID(), nullable=False),
-    sa.Column('created_at', sa.DateTime(), nullable=False),
-    sa.Column('updated_at', sa.DateTime(), nullable=False),
-    sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('id'),
-    sa.UniqueConstraint('name')
-    )
     op.create_table('licenses',
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('created_at', sa.DateTime(), nullable=False),
@@ -233,16 +223,15 @@ def upgrade() -> None:
     sa.Column('project_id', sa.UUID(), nullable=True),
     sa.Column('pi_id', sa.UUID(), nullable=True),
     sa.Column('license_id', sa.UUID(), nullable=True),
-    sa.Column('local_path', sa.String(length=500), nullable=True),
-    sa.Column('objective', sa.Text(), nullable=True),
-    sa.Column('target', sa.Text(), nullable=True),
-    sa.Column('target_timescale', sa.String(length=100), nullable=True),
-    sa.Column('curation_protocol', sa.Text(), nullable=True),
     sa.Column('version', sa.String(length=50), nullable=True),
     sa.Column('name', sa.String(length=255), nullable=False),
     sa.Column('handle', sa.String(), nullable=True),
     sa.Column('copyright', sa.String(length=500), nullable=True),
     sa.Column('abstract', sa.Text(), nullable=True),
+    sa.Column('objective', sa.Text(), nullable=True),
+    sa.Column('target_environment', sa.Text(), nullable=True),
+    sa.Column('target_timescale', sa.Text(), nullable=True),
+    sa.Column('curation_protocol', sa.Text(), nullable=True),
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('created_at', sa.DateTime(), nullable=False),
     sa.Column('updated_at', sa.DateTime(), nullable=False),
@@ -278,6 +267,10 @@ def upgrade() -> None:
     sa.Column('handle', sa.String(), nullable=True),
     sa.Column('copyright', sa.String(length=500), nullable=True),
     sa.Column('abstract', sa.Text(), nullable=True),
+    sa.Column('objective', sa.Text(), nullable=True),
+    sa.Column('target_environment', sa.Text(), nullable=True),
+    sa.Column('target_timescale', sa.Text(), nullable=True),
+    sa.Column('curation_protocol', sa.Text(), nullable=True),
     sa.Column('sha256_hash', sa.String(length=64), nullable=True),
     sa.Column('date_time', sa.DateTime(), nullable=True),
     sa.Column('geom', Geometry(geometry_type='POINT', srid=4326, spatial_index=False, from_text='ST_GeomFromEWKT', name='geometry'), nullable=True),
@@ -313,14 +306,10 @@ def upgrade() -> None:
     sa.Column('camera_pitch_degrees', sa.Float(), nullable=True),
     sa.Column('camera_roll_degrees', sa.Float(), nullable=True),
     sa.Column('overlap_fraction', sa.Float(), nullable=True),
-    sa.Column('objective', sa.Text(), nullable=True),
-    sa.Column('target_environment', sa.Text(), nullable=True),
-    sa.Column('target_timescale', sa.Text(), nullable=True),
     sa.Column('spatial_constraints', sa.Text(), nullable=True),
     sa.Column('temporal_constraints', sa.Text(), nullable=True),
     sa.Column('time_synchronisation', sa.Text(), nullable=True),
     sa.Column('item_identification_scheme', sa.Text(), nullable=True),
-    sa.Column('curation_protocol', sa.Text(), nullable=True),
     sa.Column('visual_constraints', sa.Text(), nullable=True),
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('created_at', sa.DateTime(), nullable=False),
@@ -345,20 +334,6 @@ def upgrade() -> None:
     )
     op.create_geospatial_index('idx_image_sets_geom', 'image_sets', ['geom'], unique=False, postgresql_using='gist', postgresql_ops={})
     op.create_geospatial_index('idx_image_sets_limits', 'image_sets', ['limits'], unique=False, postgresql_using='gist', postgresql_ops={})
-    op.create_table('labels',
-    sa.Column('name', sa.String(length=255), nullable=False),
-    sa.Column('parent_id', sa.UUID(), nullable=True),
-    sa.Column('label_source_id', sa.UUID(), nullable=True),
-    sa.Column('info', sa.Text(), nullable=True),
-    sa.Column('id', sa.UUID(), nullable=False),
-    sa.Column('created_at', sa.DateTime(), nullable=False),
-    sa.Column('updated_at', sa.DateTime(), nullable=False),
-    sa.ForeignKeyConstraint(['label_source_id'], ['label_sources.id'], ),
-    sa.ForeignKeyConstraint(['parent_id'], ['labels.id'], ),
-    sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('id'),
-    sa.UniqueConstraint('name')
-    )
     op.create_table('provenanceactivity_agent',
     sa.Column('activity_id', sa.UUID(), nullable=False),
     sa.Column('agent_id', sa.UUID(), nullable=False),
@@ -386,13 +361,6 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['agent_id'], ['provenance_agents.id'], ),
     sa.ForeignKeyConstraint(['entity_id'], ['provenance_entities.id'], ),
     sa.PrimaryKeyConstraint('entity_id', 'agent_id')
-    )
-    op.create_table('annotation_set_labels',
-    sa.Column('annotation_set_id', sa.UUID(), nullable=False),
-    sa.Column('label_id', sa.UUID(), nullable=False),
-    sa.ForeignKeyConstraint(['annotation_set_id'], ['annotation_sets.id'], ondelete='CASCADE'),
-    sa.ForeignKeyConstraint(['label_id'], ['labels.id'], ondelete='CASCADE'),
-    sa.PrimaryKeyConstraint('annotation_set_id', 'label_id')
     )
     op.create_table('image_set_creators',
     sa.Column('image_set_id', sa.UUID(), nullable=False),
@@ -451,6 +419,10 @@ def upgrade() -> None:
     sa.Column('handle', sa.String(), nullable=True),
     sa.Column('copyright', sa.String(length=500), nullable=True),
     sa.Column('abstract', sa.Text(), nullable=True),
+    sa.Column('objective', sa.Text(), nullable=True),
+    sa.Column('target_environment', sa.Text(), nullable=True),
+    sa.Column('target_timescale', sa.Text(), nullable=True),
+    sa.Column('curation_protocol', sa.Text(), nullable=True),
     sa.Column('sha256_hash', sa.String(length=64), nullable=True),
     sa.Column('date_time', sa.DateTime(), nullable=True),
     sa.Column('geom', Geometry(geometry_type='POINT', srid=4326, spatial_index=False, from_text='ST_GeomFromEWKT', name='geometry'), nullable=True),
@@ -486,14 +458,10 @@ def upgrade() -> None:
     sa.Column('camera_pitch_degrees', sa.Float(), nullable=True),
     sa.Column('camera_roll_degrees', sa.Float(), nullable=True),
     sa.Column('overlap_fraction', sa.Float(), nullable=True),
-    sa.Column('objective', sa.Text(), nullable=True),
-    sa.Column('target_environment', sa.Text(), nullable=True),
-    sa.Column('target_timescale', sa.Text(), nullable=True),
     sa.Column('spatial_constraints', sa.Text(), nullable=True),
     sa.Column('temporal_constraints', sa.Text(), nullable=True),
     sa.Column('time_synchronisation', sa.Text(), nullable=True),
     sa.Column('item_identification_scheme', sa.Text(), nullable=True),
-    sa.Column('curation_protocol', sa.Text(), nullable=True),
     sa.Column('visual_constraints', sa.Text(), nullable=True),
     sa.ForeignKeyConstraint(['camera_calibration_model_id'], ['image_camera_calibration_models.id'], ),
     sa.ForeignKeyConstraint(['camera_housing_viewport_id'], ['image_camera_housing_viewports.id'], ),
@@ -515,6 +483,22 @@ def upgrade() -> None:
     sa.UniqueConstraint('sha256_hash')
     )
     op.create_geospatial_index('idx_images_geom', 'images', ['geom'], unique=False, postgresql_using='gist', postgresql_ops={})
+    op.create_table('labels',
+    sa.Column('name', sa.String(length=255), nullable=False),
+    sa.Column('group', sa.String(length=255), nullable=False),
+    sa.Column('lowest_taxonomic_name', sa.String(length=255), nullable=True),
+    sa.Column('lowest_aphia_id', sa.String(length=50), nullable=True),
+    sa.Column('name_is_lowest', sa.Boolean(), nullable=False),
+    sa.Column('identification_qualifier', sa.String(length=255), nullable=True),
+    sa.Column('annotation_set_id', sa.UUID(), nullable=True),
+    sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('created_at', sa.DateTime(), nullable=False),
+    sa.Column('updated_at', sa.DateTime(), nullable=False),
+    sa.ForeignKeyConstraint(['annotation_set_id'], ['annotation_sets.id'], onupdate='CASCADE', ondelete='CASCADE'),
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('id'),
+    sa.UniqueConstraint('name')
+    )
     op.create_table('annotations',
     sa.Column('image_id', sa.UUID(), nullable=False),
     sa.Column('annotation_platform', sa.String(length=255), nullable=True),
@@ -576,6 +560,7 @@ def downgrade() -> None:
     op.drop_table('annotation_labels')
     op.drop_table('image_creators')
     op.drop_table('annotations')
+    op.drop_table('labels')
     op.drop_geospatial_index('idx_images_geom', table_name='images', postgresql_using='gist', column_name='geom')
     op.drop_geospatial_table('images')
     op.drop_table('image_set_related_materials')
@@ -583,12 +568,10 @@ def downgrade() -> None:
     op.drop_table('image_set_provenance_agents')
     op.drop_table('image_set_provenance_activities')
     op.drop_table('image_set_creators')
-    op.drop_table('annotation_set_labels')
     op.drop_table('provenanceentity_agent')
     op.drop_table('provenanceentity_activity')
     op.drop_table('provenanceactivity_entity')
     op.drop_table('provenanceactivity_agent')
-    op.drop_table('labels')
     op.drop_geospatial_index('idx_image_sets_limits', table_name='image_sets', postgresql_using='gist', column_name='limits')
     op.drop_geospatial_index('idx_image_sets_geom', table_name='image_sets', postgresql_using='gist', column_name='geom')
     op.drop_geospatial_table('image_sets')
@@ -602,7 +585,6 @@ def downgrade() -> None:
     op.drop_table('platforms')
     op.drop_table('pis')
     op.drop_table('licenses')
-    op.drop_table('label_sources')
     op.drop_table('image_photometric_calibrations')
     op.drop_table('image_flatport_parameters')
     op.drop_table('image_domeport_parameters')

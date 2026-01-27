@@ -309,15 +309,11 @@ class CommonFieldsImagesImageSets:
         nullable=True,
         info={"help_text": "The average overlap of two consecutive images..."},
     )
-    objective = Column(Text, info={"help_text": "A general description of the aims and objectives..."})
-    target_environment = Column(Text, info={"help_text": "A description of the habitat or environment..."})
-    target_timescale = Column(Text, info={"help_text": "A description of the period or temporal environment..."})
     spatial_constraints = Column(Text, info={"help_text": "A description / definition of the spatial extent..."})
     temporal_constraints = Column(Text, info={"help_text": "A description / definition of the temporal extent..."})
 
     time_synchronisation = Column(Text, info={"help_text": "Synchronisation procedure and time offsets..."})
     item_identification_scheme = Column(Text, info={"help_text": "How the images file names are constructed..."})
-    curation_protocol = Column(Text, info={"help_text": "A description of the image and metadata curation..."})
     visual_constraints = Column(Text, info={"help_text": "An explanation how the images might be degraded..."})
 
 
@@ -357,3 +353,8 @@ class CommonFieldsAll:
             )
         },
     )
+
+    objective = Column(Text, info={"help_text": "A general description of the aims and objectives..."})
+    target_environment = Column(Text, info={"help_text": "A description of the habitat or environment..."})
+    target_timescale = Column(Text, info={"help_text": "A description of the period or temporal environment..."})
+    curation_protocol = Column(Text, info={"help_text": "A description of the image and metadata curation..."})

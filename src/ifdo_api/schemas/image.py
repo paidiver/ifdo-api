@@ -1,17 +1,18 @@
 from typing import ClassVar
 from uuid import UUID
 from pydantic import BaseModel
-from ifdo_api.schemas.common_fields import CommonFieldsSchema
+from ifdo_api.schemas.common_fields import CommonFieldsAllSchema
+from ifdo_api.schemas.common_fields import CommonFieldsImageImageSetSchema
 
 
-class ImageSchema(CommonFieldsSchema):
+class ImageSchema(CommonFieldsImageImageSetSchema, CommonFieldsAllSchema):
     """Schema for an image, representing its metadata and associated information."""
 
     image_set_id: UUID | None = None
 
     # annotations_labels: list[LabelSchema] = Field(default_factory=list)
     # annotations_creators: list[AnnotatorSchema] = Field(default_factory=list)
-    # annotations: list[ImageAnnotationSchema] = Field(default_factory=list)
+    # annotations: list[AnnotationSchema] = Field(default_factory=list)
 
     model_config: ClassVar[dict] = {
         "extra": "ignore",  # ignore extra fields

@@ -1,9 +1,9 @@
 """This module implements the CRUD for the ProvenanceActivity model."""
 
 from ifdo_api.crud.base import CRUDBase
-from ifdo_api.models.provenance import ProvenanceActivity
-from ifdo_api.models.provenance import ProvenanceAgent
-from ifdo_api.models.provenance import ProvenanceEntity
+from ifdo_api.models.provenance.provenance import ProvenanceActivity
+from ifdo_api.models.provenance.provenance import ProvenanceAgent
+from ifdo_api.models.provenance.provenance import ProvenanceEntity
 
 
 class CRUDProvenanceActivity(CRUDBase[ProvenanceActivity]):

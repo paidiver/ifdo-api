@@ -25,6 +25,7 @@ from ifdo_api.api.v1 import image
 from ifdo_api.api.v1 import image_set
 from ifdo_api.api.v1.annotation import annotation
 from ifdo_api.api.v1.annotation import annotation_label
+from ifdo_api.api.v1.annotation import annotation_set
 from ifdo_api.api.v1.annotation import annotator
 from ifdo_api.api.v1.annotation import label
 from ifdo_api.api.v1.fields import context
@@ -46,6 +47,9 @@ from ifdo_api.api.v1.fields import sensor
 # from ifdo_api.api.v1.provenance import provenance_activity
 # from ifdo_api.api.v1.provenance import provenance_agent
 # from ifdo_api.api.v1.provenance import provenance_entity
+from ifdo_api.api.v1.provenance import provenance_activity
+from ifdo_api.api.v1.provenance import provenance_agent
+from ifdo_api.api.v1.provenance import provenance_entity
 from ifdo_api.db.db import get_db_url
 
 
@@ -147,15 +151,18 @@ app.include_router(image_photometric_calibration.router, prefix="/v1/fields/imag
 app.include_router(related_material.router, prefix="/v1/fields/related_materials", tags=["Fields"])
 
 
+app.include_router(annotation_set.router, prefix="/v1/annotation_sets", tags=["AnnotationSet"])
+
 app.include_router(annotation_label.router, prefix="/v1/annotations/annotation_labels", tags=["Annotation"])
 app.include_router(annotation.router, prefix="/v1/annotations/annotations", tags=["Annotation"])
 app.include_router(annotator.router, prefix="/v1/annotations/annotators", tags=["Annotation"])
-app.include_router(label.router, prefix="/v1/annotations/labels", tags=["Annotation"])
+
+app.include_router(label.router, prefix="/v1/labels", tags=["Label"])
 
 
-# app.include_router(provenance_activity.router, prefix="/v1/provenances/activities", tags=["Provenance"])
-# app.include_router(provenance_agent.router, prefix="/v1/provenances/agents", tags=["Provenance"])
-# app.include_router(provenance_entity.router, prefix="/v1/provenances/entities", tags=["Provenance"])
+app.include_router(provenance_activity.router, prefix="/v1/provenances/activities", tags=["Provenance"])
+app.include_router(provenance_agent.router, prefix="/v1/provenances/agents", tags=["Provenance"])
+app.include_router(provenance_entity.router, prefix="/v1/provenances/entities", tags=["Provenance"])
 
 
 ############## ADD Tipg endpoints here ##############

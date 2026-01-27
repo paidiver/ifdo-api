@@ -2,7 +2,8 @@
 
 from ifdo_api.crud.base import CRUDBase
 from ifdo_api.models.annotations import Label
-from ifdo_api.models.annotations import LabelSource
+
+# from ifdo_api.models.annotations import LabelSource
 
 
 class CRUDLabel(CRUDBase[Label]):
@@ -13,13 +14,13 @@ class CRUDLabel(CRUDBase[Label]):
     """
 
 
-class CRUDLabelSource(CRUDBase[LabelSource]):
-    """CRUD object with default methods to Create, Read, Update, Delete (CRUD).
+# class CRUDLabelSource(CRUDBase[LabelSource]):
+#     """CRUD object with default methods to Create, Read, Update, Delete (CRUD).
 
-    Args:
-        CRUDBase (ModelType): Base class for CRUD operations.
-    """
+#     Args:
+#         CRUDBase (ModelType): Base class for CRUD operations.
+#     """
 
 
 label_crud = CRUDLabel(Label)
-label_source_crud = CRUDLabelSource(LabelSource)
+# label_source_crud = CRUDLabelSource(LabelSource)

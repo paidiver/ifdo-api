@@ -17,16 +17,14 @@ platforms
 sensors
 spatial_ref_sys
 annotators
-label_sources
 related_materials
 image_sets
 annotation_sets
-labels
 images
 annotations
+labels
 annotation_set_creators
 annotation_set_image_sets
-annotation_set_labels
 image_creators
 image_set_creators
 image_set_provenance_activities

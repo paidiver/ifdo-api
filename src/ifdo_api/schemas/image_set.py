@@ -3,7 +3,8 @@ from pydantic import BaseModel
 from pydantic import Field
 from ifdo_api.schemas.annotations.annotation import AnnotatorSchema
 from ifdo_api.schemas.annotations.label import LabelSchema
-from ifdo_api.schemas.common_fields import CommonFieldsSchema
+from ifdo_api.schemas.common_fields import CommonFieldsAllSchema
+from ifdo_api.schemas.common_fields import CommonFieldsImageImageSetSchema
 from ifdo_api.schemas.fields import RelatedMaterialSchema
 from ifdo_api.schemas.image import ImageSchema
 from ifdo_api.schemas.image import SimpleImageSchema
@@ -16,7 +17,7 @@ class LocationSchema(BaseModel):
     lon: float = Field(..., ge=-180, le=180)
 
 
-class ImageSetSchema(CommonFieldsSchema):
+class ImageSetSchema(CommonFieldsImageImageSetSchema, CommonFieldsAllSchema):
     """Schema for a image_set model, representing a collection of images and their metadata."""
 
     # handle: HttpUrl

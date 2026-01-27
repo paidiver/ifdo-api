@@ -1,5 +1,6 @@
 from .annotations import Annotation
 from .annotations import AnnotationLabel
+from .annotations import AnnotationSet
 from .annotations import Annotator
 from .annotations import Label
 from .fields import PI
@@ -21,18 +22,19 @@ from .image import Image
 from .image import image_creators
 from .image_set import ImageSet
 from .image_set import image_set_creators
-from .image_set import image_set_provenance_activities
-from .image_set import image_set_provenance_agents
-from .image_set import image_set_provenance_entities
 from .image_set import image_set_related_materials
 from .provenance import ProvenanceActivity
 from .provenance import ProvenanceAgent
 from .provenance import ProvenanceEntity
+from .provenance import image_set_provenance_activities
+from .provenance import image_set_provenance_agents
+from .provenance import image_set_provenance_entities
 
 __all__ = [
     "PI",
     "Annotation",
     "AnnotationLabel",
+    "AnnotationSet",
     "Annotator",
     "Context",
     "Creator",

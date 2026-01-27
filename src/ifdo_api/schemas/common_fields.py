@@ -23,15 +23,8 @@ from ifdo_api.schemas.fields import ProjectSchema
 from ifdo_api.schemas.fields import SensorSchema
 
 
-# Main Pydantic model
-class CommonFieldsSchema(BaseModel):
+class CommonFieldsImageImageSetSchema(BaseModel):
     """Schema for common fields shared across various models, representing metadata and associated information."""
-
-    id: UUID | None = None
-    # Field(default_factory=uuid4, description="Unique UUID for the image/image_set")
-
-    name: str = Field(..., max_length=255)
-    handle: HttpUrl | None = None
 
     sha256_hash: str | None = None
     date_time: datetime | None = None
@@ -46,19 +39,7 @@ class CommonFieldsSchema(BaseModel):
     # location: Point = Field(..., description="WGS84 geographic center location")
     altitude_meters: float | None = None
     coordinate_uncertainty_m: float | None = None
-
-    context: ContextSchema | None = None
-    project: ProjectSchema | None = None
     event: EventSchema | None = None
-    platform: PlatformSchema | None = None
-    sensor: SensorSchema | None = None
-    pi: PISchema | None = None
-    license: LicenseSchema | None = None
-
-    creators: list[CreatorSchema] = Field(default_factory=list)
-
-    copyright: str | None = None
-    abstract: str | None = None
 
     entropy: float | None = None
     particle_count: int | None = None
@@ -114,6 +95,33 @@ class CommonFieldsSchema(BaseModel):
     item_identification_scheme: str | None = None
     curation_protocol: str | None = None
     visual_constraints: str | None = None
+
+    model_config: ClassVar[dict] = {
+        "from_attributes": True,  # to load from ORM objects
+        "exclude_none": True,  # hide fields with value None when serializing
+    }
+
+
+class CommonFieldsAllSchema(BaseModel):
+    """Schema for common fields shared across various models, representing metadata and associated information."""
+
+    id: UUID | None = None
+    # Field(default_factory=uuid4, description="Unique UUID for the image/image_set")
+
+    name: str = Field(..., max_length=255)
+    handle: HttpUrl | None = None
+
+    copyright: str | None = None
+    abstract: str | None = None
+
+    context: ContextSchema | None = None
+    project: ProjectSchema | None = None
+    platform: PlatformSchema | None = None
+    sensor: SensorSchema | None = None
+    pi: PISchema | None = None
+    license: LicenseSchema | None = None
+
+    creators: list[CreatorSchema] = Field(default_factory=list)
 
     model_config: ClassVar[dict] = {
         "from_attributes": True,  # to load from ORM objects

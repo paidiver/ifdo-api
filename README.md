@@ -141,4 +141,14 @@ dot -V
 
 curl -L https://jdbc.postgresql.org/download/postgresql-42.5.4.jar \\n    --output ~/Downloads/jdbc-driver.jar
 curl -L https://github.com/schemaspy/schemaspy/releases/download/v7.0.2/schemaspy-app.jar \\n    --output ~/Downloads/schemaspy.jar
-java -jar ~/Downloads/schemaspy.jar \\n    -t pgsql11 \\n    -dp ~/Downloads/jdbc-driver.jar \\n    -db paidiver_st3 \\n    -host localhost \\n    -port 5440 \\n    -u myuser \\n    -p mypassword \\n    -o docs -->
+java -jar ~/Downloads/schemaspy.jar \
+  -t pgsql11 \
+  -dp ~/Downloads/jdbc-driver.jar \
+  -db paidiver_st3 \
+  -host localhost \
+  -port 5440 \
+  -u myuser \
+  -p mypassword \
+  -o docs
+
+-->

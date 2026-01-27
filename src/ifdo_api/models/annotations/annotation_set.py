@@ -2,7 +2,6 @@ from sqlalchemy import Column
 from sqlalchemy import ForeignKey
 from sqlalchemy import String
 from sqlalchemy import Table
-from sqlalchemy import Text
 from sqlalchemy.orm import relationship
 from ifdo_api.models.base import Base
 from ifdo_api.models.base import DefaultColumns
@@ -21,13 +20,6 @@ annotation_set_image_sets = Table(
     Base.metadata,
     Column("annotation_id", ForeignKey("annotations.id", ondelete="CASCADE"), primary_key=True),
     Column("image_set_id", ForeignKey("image_sets.id", ondelete="CASCADE"), primary_key=True),
-)
-
-annotation_set_labels = Table(
-    "annotation_set_labels",
-    Base.metadata,
-    Column("annotation_set_id", ForeignKey("annotation_sets.id", ondelete="CASCADE"), primary_key=True),
-    Column("label_id", ForeignKey("labels.id", ondelete="CASCADE"), primary_key=True),
 )
 
 
@@ -67,42 +59,6 @@ class AnnotationSet(CommonFieldsAll, DefaultColumns, Base):
         back_populates="annotations",
         info={"help_text": "Information to identify the creators of the annotation set"},
     )
-    local_path = Column(
-        String(500),
-        default="../raw",
-        nullable=True,
-        info={
-            "help_text": (
-                "Local relative or absolute path to a directory in which (also its sub-directories), the "
-                "referenced annotation files are located. Absolute paths must start with and relative paths without "
-                "path separator (ignoring drive letters on windows). The default is the relative path `../raw`."
-            )
-        },
-    )
-
-    objective = Column(
-        Text,
-        nullable=True,
-        info={"help_text": ("The objective or purpose of the annotation set.")},
-    )
-
-    target = Column(
-        Text,
-        nullable=True,
-        info={"help_text": ("The target or intended subject of the annotation set.")},
-    )
-
-    target_timescale = Column(
-        String(100),
-        nullable=True,
-        info={"help_text": ("The timescale that the annotation set is intended to address.")},
-    )
-
-    curation_protocol = Column(
-        Text,
-        nullable=True,
-        info={"help_text": ("The curation protocol used for the annotation set.")},
-    )
 
     version = Column(
         String(50),
@@ -119,6 +75,14 @@ class AnnotationSet(CommonFieldsAll, DefaultColumns, Base):
 
     annotations = relationship(
         "Annotation",
-        back_populates="annotation_set",
+        back_populates="annotation_sets",
+        cascade="all, delete-orphan",
         info={"help_text": "The annotations that are part of this annotation set."},
+    )
+
+    labels = relationship(
+        "Label",
+        back_populates="annotation_sets",
+        cascade="all, delete-orphan",
+        info={"help_text": "The labels that are part of this annotation set."},
     )
