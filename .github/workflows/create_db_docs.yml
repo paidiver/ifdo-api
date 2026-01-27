@@ -43,7 +43,7 @@ jobs:
       - name: Generate SchemaSpy docs (docker image)
         run: |
           mkdir -p docs
-
+          chmod -R a+rwx docs
           curl -L https://jdbc.postgresql.org/download/postgresql-42.5.4.jar -o jdbc-driver.jar
 
           docker run --rm \
