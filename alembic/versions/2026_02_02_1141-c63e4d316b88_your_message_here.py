@@ -1,8 +1,8 @@
-"""Initial Migration
+"""Your message here
 
-Revision ID: deecbda256f6
+Revision ID: c63e4d316b88
 Revises: 
-Create Date: 2026-01-27 14:50:40.181148
+Create Date: 2026-02-02 11:41:58.364643
 
 """
 from typing import Sequence, Union
@@ -13,7 +13,7 @@ from geoalchemy2 import Geometry
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision: str = 'deecbda256f6'
+revision: str = 'c63e4d316b88'
 down_revision: Union[str, Sequence[str], None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -169,35 +169,6 @@ def upgrade() -> None:
     sa.UniqueConstraint('id'),
     sa.UniqueConstraint('name')
     )
-    op.create_table('provenance_activities',
-    sa.Column('start_time', sa.DateTime(), nullable=True),
-    sa.Column('end_time', sa.DateTime(), nullable=True),
-    sa.Column('id', sa.UUID(), nullable=False),
-    sa.Column('created_at', sa.DateTime(), nullable=False),
-    sa.Column('updated_at', sa.DateTime(), nullable=False),
-    sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('id')
-    )
-    op.create_table('provenance_agents',
-    sa.Column('name', sa.String(length=255), nullable=False),
-    sa.Column('unique_id', sa.String(length=500), nullable=False),
-    sa.Column('id', sa.UUID(), nullable=False),
-    sa.Column('created_at', sa.DateTime(), nullable=False),
-    sa.Column('updated_at', sa.DateTime(), nullable=False),
-    sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('id'),
-    sa.UniqueConstraint('unique_id')
-    )
-    op.create_table('provenance_entities',
-    sa.Column('name', sa.String(length=255), nullable=False),
-    sa.Column('unique_id', sa.String(length=500), nullable=False),
-    sa.Column('created_at', sa.DateTime(), nullable=True),
-    sa.Column('id', sa.UUID(), nullable=False),
-    sa.Column('updated_at', sa.DateTime(), nullable=False),
-    sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('id'),
-    sa.UniqueConstraint('unique_id')
-    )
     op.create_table('related_materials',
     sa.Column('uri', sa.String(), nullable=True),
     sa.Column('title', sa.String(length=255), nullable=True),
@@ -334,33 +305,19 @@ def upgrade() -> None:
     )
     op.create_geospatial_index('idx_image_sets_geom', 'image_sets', ['geom'], unique=False, postgresql_using='gist', postgresql_ops={})
     op.create_geospatial_index('idx_image_sets_limits', 'image_sets', ['limits'], unique=False, postgresql_using='gist', postgresql_ops={})
-    op.create_table('provenanceactivity_agent',
-    sa.Column('activity_id', sa.UUID(), nullable=False),
-    sa.Column('agent_id', sa.UUID(), nullable=False),
-    sa.ForeignKeyConstraint(['activity_id'], ['provenance_activities.id'], ),
-    sa.ForeignKeyConstraint(['agent_id'], ['provenance_agents.id'], ),
-    sa.PrimaryKeyConstraint('activity_id', 'agent_id')
+    op.create_table('annotation_set_creators',
+    sa.Column('annotation_set_id', sa.UUID(), nullable=False),
+    sa.Column('creator_id', sa.UUID(), nullable=False),
+    sa.ForeignKeyConstraint(['annotation_set_id'], ['annotation_sets.id'], ondelete='CASCADE'),
+    sa.ForeignKeyConstraint(['creator_id'], ['creators.id'], ondelete='CASCADE'),
+    sa.PrimaryKeyConstraint('annotation_set_id', 'creator_id')
     )
-    op.create_table('provenanceactivity_entity',
-    sa.Column('activity_id', sa.UUID(), nullable=False),
-    sa.Column('entity_id', sa.UUID(), nullable=False),
-    sa.ForeignKeyConstraint(['activity_id'], ['provenance_activities.id'], ),
-    sa.ForeignKeyConstraint(['entity_id'], ['provenance_entities.id'], ),
-    sa.PrimaryKeyConstraint('activity_id', 'entity_id')
-    )
-    op.create_table('provenanceentity_activity',
-    sa.Column('entity_id', sa.UUID(), nullable=False),
-    sa.Column('activity_id', sa.UUID(), nullable=False),
-    sa.ForeignKeyConstraint(['activity_id'], ['provenance_activities.id'], ),
-    sa.ForeignKeyConstraint(['entity_id'], ['provenance_entities.id'], ),
-    sa.PrimaryKeyConstraint('entity_id', 'activity_id')
-    )
-    op.create_table('provenanceentity_agent',
-    sa.Column('entity_id', sa.UUID(), nullable=False),
-    sa.Column('agent_id', sa.UUID(), nullable=False),
-    sa.ForeignKeyConstraint(['agent_id'], ['provenance_agents.id'], ),
-    sa.ForeignKeyConstraint(['entity_id'], ['provenance_entities.id'], ),
-    sa.PrimaryKeyConstraint('entity_id', 'agent_id')
+    op.create_table('annotation_set_image_sets',
+    sa.Column('annotation_set_id', sa.UUID(), nullable=False),
+    sa.Column('image_set_id', sa.UUID(), nullable=False),
+    sa.ForeignKeyConstraint(['annotation_set_id'], ['annotation_sets.id'], ondelete='CASCADE'),
+    sa.ForeignKeyConstraint(['image_set_id'], ['image_sets.id'], ondelete='CASCADE'),
+    sa.PrimaryKeyConstraint('annotation_set_id', 'image_set_id')
     )
     op.create_table('image_set_creators',
     sa.Column('image_set_id', sa.UUID(), nullable=False),
@@ -368,27 +325,6 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['creator_id'], ['creators.id'], ondelete='CASCADE'),
     sa.ForeignKeyConstraint(['image_set_id'], ['image_sets.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('image_set_id', 'creator_id')
-    )
-    op.create_table('image_set_provenance_activities',
-    sa.Column('image_set_id', sa.UUID(), nullable=False),
-    sa.Column('activity_id', sa.UUID(), nullable=False),
-    sa.ForeignKeyConstraint(['activity_id'], ['provenance_activities.id'], ondelete='CASCADE'),
-    sa.ForeignKeyConstraint(['image_set_id'], ['image_sets.id'], ondelete='CASCADE'),
-    sa.PrimaryKeyConstraint('image_set_id', 'activity_id')
-    )
-    op.create_table('image_set_provenance_agents',
-    sa.Column('image_set_id', sa.UUID(), nullable=False),
-    sa.Column('agent_id', sa.UUID(), nullable=False),
-    sa.ForeignKeyConstraint(['agent_id'], ['provenance_agents.id'], ondelete='CASCADE'),
-    sa.ForeignKeyConstraint(['image_set_id'], ['image_sets.id'], ondelete='CASCADE'),
-    sa.PrimaryKeyConstraint('image_set_id', 'agent_id')
-    )
-    op.create_table('image_set_provenance_entities',
-    sa.Column('image_set_id', sa.UUID(), nullable=False),
-    sa.Column('entity_id', sa.UUID(), nullable=False),
-    sa.ForeignKeyConstraint(['entity_id'], ['provenance_entities.id'], ondelete='CASCADE'),
-    sa.ForeignKeyConstraint(['image_set_id'], ['image_sets.id'], ondelete='CASCADE'),
-    sa.PrimaryKeyConstraint('image_set_id', 'entity_id')
     )
     op.create_table('image_set_related_materials',
     sa.Column('image_set_id', sa.UUID(), nullable=False),
@@ -485,12 +421,12 @@ def upgrade() -> None:
     op.create_geospatial_index('idx_images_geom', 'images', ['geom'], unique=False, postgresql_using='gist', postgresql_ops={})
     op.create_table('labels',
     sa.Column('name', sa.String(length=255), nullable=False),
-    sa.Column('group', sa.String(length=255), nullable=False),
+    sa.Column('parent_label_name', sa.String(length=255), nullable=False),
     sa.Column('lowest_taxonomic_name', sa.String(length=255), nullable=True),
     sa.Column('lowest_aphia_id', sa.String(length=50), nullable=True),
     sa.Column('name_is_lowest', sa.Boolean(), nullable=False),
     sa.Column('identification_qualifier', sa.String(length=255), nullable=True),
-    sa.Column('annotation_set_id', sa.UUID(), nullable=True),
+    sa.Column('annotation_set_id', sa.UUID(), nullable=False),
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('created_at', sa.DateTime(), nullable=False),
     sa.Column('updated_at', sa.DateTime(), nullable=False),
@@ -504,7 +440,7 @@ def upgrade() -> None:
     sa.Column('annotation_platform', sa.String(length=255), nullable=True),
     sa.Column('shape', sa.Enum('single_pixel', 'polyline', 'polygon', 'circle', 'rectangle', 'ellipse', 'whole_image', name='shapeenum'), nullable=False),
     sa.Column('coordinates', postgresql.JSONB(astext_type=sa.Text()), nullable=False),
-    sa.Column('annotation_set_id', sa.UUID(), nullable=True),
+    sa.Column('annotation_set_id', sa.UUID(), nullable=False),
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('created_at', sa.DateTime(), nullable=False),
     sa.Column('updated_at', sa.DateTime(), nullable=False),
@@ -523,8 +459,7 @@ def upgrade() -> None:
     op.create_table('annotation_labels',
     sa.Column('label_id', sa.UUID(), nullable=False),
     sa.Column('annotation_id', sa.UUID(), nullable=False),
-    sa.Column('annotator_id', sa.UUID(), nullable=False),
-    sa.Column('confidence', sa.Float(), nullable=True),
+    sa.Column('annotator_id', sa.UUID(), nullable=True),
     sa.Column('creation_datetime', sa.String(), nullable=False),
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('created_at', sa.DateTime(), nullable=False),
@@ -535,28 +470,12 @@ def upgrade() -> None:
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('id')
     )
-    op.create_table('annotation_set_creators',
-    sa.Column('annotation_id', sa.UUID(), nullable=False),
-    sa.Column('creator_id', sa.UUID(), nullable=False),
-    sa.ForeignKeyConstraint(['annotation_id'], ['annotations.id'], ondelete='CASCADE'),
-    sa.ForeignKeyConstraint(['creator_id'], ['creators.id'], ondelete='CASCADE'),
-    sa.PrimaryKeyConstraint('annotation_id', 'creator_id')
-    )
-    op.create_table('annotation_set_image_sets',
-    sa.Column('annotation_id', sa.UUID(), nullable=False),
-    sa.Column('image_set_id', sa.UUID(), nullable=False),
-    sa.ForeignKeyConstraint(['annotation_id'], ['annotations.id'], ondelete='CASCADE'),
-    sa.ForeignKeyConstraint(['image_set_id'], ['image_sets.id'], ondelete='CASCADE'),
-    sa.PrimaryKeyConstraint('annotation_id', 'image_set_id')
-    )
     # ### end Alembic commands ###
 
 
 def downgrade() -> None:
     """Downgrade schema."""
     # ### commands auto generated by Alembic - please adjust! ###
-    op.drop_table('annotation_set_image_sets')
-    op.drop_table('annotation_set_creators')
     op.drop_table('annotation_labels')
     op.drop_table('image_creators')
     op.drop_table('annotations')
@@ -564,23 +483,15 @@ def downgrade() -> None:
     op.drop_geospatial_index('idx_images_geom', table_name='images', postgresql_using='gist', column_name='geom')
     op.drop_geospatial_table('images')
     op.drop_table('image_set_related_materials')
-    op.drop_table('image_set_provenance_entities')
-    op.drop_table('image_set_provenance_agents')
-    op.drop_table('image_set_provenance_activities')
     op.drop_table('image_set_creators')
-    op.drop_table('provenanceentity_agent')
-    op.drop_table('provenanceentity_activity')
-    op.drop_table('provenanceactivity_entity')
-    op.drop_table('provenanceactivity_agent')
+    op.drop_table('annotation_set_image_sets')
+    op.drop_table('annotation_set_creators')
     op.drop_geospatial_index('idx_image_sets_limits', table_name='image_sets', postgresql_using='gist', column_name='limits')
     op.drop_geospatial_index('idx_image_sets_geom', table_name='image_sets', postgresql_using='gist', column_name='geom')
     op.drop_geospatial_table('image_sets')
     op.drop_table('annotation_sets')
     op.drop_table('sensors')
     op.drop_table('related_materials')
-    op.drop_table('provenance_entities')
-    op.drop_table('provenance_agents')
-    op.drop_table('provenance_activities')
     op.drop_table('projects')
     op.drop_table('platforms')
     op.drop_table('pis')

@@ -16,8 +16,6 @@ from tipg.database import close_db_connection
 from tipg.database import connect_to_db
 from tipg.errors import DEFAULT_STATUS_CODES
 from tipg.errors import add_exception_handlers
-from tipg.factory import OGCFeaturesFactory
-from tipg.factory import OGCTilesFactory
 from tipg.settings import PostgresSettings
 from ifdo_api.api.exceptions import AppException
 from ifdo_api.api.v1 import catalog
@@ -43,13 +41,6 @@ from ifdo_api.api.v1.fields import platform
 from ifdo_api.api.v1.fields import project
 from ifdo_api.api.v1.fields import related_material
 from ifdo_api.api.v1.fields import sensor
-
-# from ifdo_api.api.v1.provenance import provenance_activity
-# from ifdo_api.api.v1.provenance import provenance_agent
-# from ifdo_api.api.v1.provenance import provenance_entity
-from ifdo_api.api.v1.provenance import provenance_activity
-from ifdo_api.api.v1.provenance import provenance_agent
-from ifdo_api.api.v1.provenance import provenance_entity
 from ifdo_api.db.db import get_db_url
 
 
@@ -158,20 +149,6 @@ app.include_router(annotation.router, prefix="/v1/annotations/annotations", tags
 app.include_router(annotator.router, prefix="/v1/annotations/annotators", tags=["Annotation"])
 
 app.include_router(label.router, prefix="/v1/labels", tags=["Label"])
-
-
-app.include_router(provenance_activity.router, prefix="/v1/provenances/activities", tags=["Provenance"])
-app.include_router(provenance_agent.router, prefix="/v1/provenances/agents", tags=["Provenance"])
-app.include_router(provenance_entity.router, prefix="/v1/provenances/entities", tags=["Provenance"])
-
-
-############## ADD Tipg endpoints here ##############
-endpoints_features = OGCFeaturesFactory(with_common=False, router_prefix="/v1/ogc-features")
-endpoints_tiles = OGCTilesFactory(with_common=False, router_prefix="/v1/ogc-tiles")
-
-app.include_router(endpoints_features.router, prefix="/v1/ogc-features")
-app.include_router(endpoints_tiles.router, prefix="/v1/ogc-tiles")
-
 
 add_exception_handlers(app, DEFAULT_STATUS_CODES)
 

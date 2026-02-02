@@ -41,10 +41,6 @@ class ImageSetSchema(CommonFieldsImageImageSetSchema, CommonFieldsAllSchema):
     annotations_labels: list[LabelSchema] | None = None
     annotations_creators: list[AnnotatorSchema] | None = None
 
-    # provenance_agents: list[str] = Field(default_factory=list)
-    # provenance_entities: list[str] = Field(default_factory=list)
-    # provenance_activities: list[str] = Field(default_factory=list)
-
     model_config: ClassVar[dict] = {
         "extra": "ignore",  # ignore extra fields
         "from_attributes": True,  # to load from ORM objects

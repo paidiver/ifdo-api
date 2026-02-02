@@ -13,6 +13,7 @@ env:
 
 jobs:
   create_namespace:
+    if: github.actor != 'github-actions[bot]'
     name: Create Namespace
     runs-on: ubuntu-latest
     container:
@@ -29,6 +30,7 @@ jobs:
           kubectl get namespace "${{ secrets.KUBE_NAMESPACE }}" || kubectl create namespace "${{ secrets.KUBE_NAMESPACE }}"
 
   create_secrets:
+    if: github.actor != 'github-actions[bot]'
     name: Create Secrets
     runs-on: ubuntu-latest
     container:
@@ -73,6 +75,7 @@ jobs:
 
 
   ssl_certificates:
+    if: github.actor != 'github-actions[bot]'
     name: Apply SSL Certificates
     runs-on: ubuntu-latest
     container:
@@ -94,6 +97,7 @@ jobs:
 
 
   deploy-redis:
+    if: github.actor != 'github-actions[bot]'
     name: Deploy Redis Helm Charts
     runs-on: ubuntu-latest
     needs: [ssl_certificates]

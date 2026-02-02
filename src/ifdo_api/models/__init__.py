@@ -23,12 +23,6 @@ from .image import image_creators
 from .image_set import ImageSet
 from .image_set import image_set_creators
 from .image_set import image_set_related_materials
-from .provenance import ProvenanceActivity
-from .provenance import ProvenanceAgent
-from .provenance import ProvenanceEntity
-from .provenance import image_set_provenance_activities
-from .provenance import image_set_provenance_agents
-from .provenance import image_set_provenance_entities
 
 __all__ = [
     "PI",
@@ -51,15 +45,9 @@ __all__ = [
     "License",
     "Platform",
     "Project",
-    "ProvenanceActivity",
-    "ProvenanceAgent",
-    "ProvenanceEntity",
     "RelatedMaterial",
     "Sensor",
     "image_creators",
     "image_set_creators",
-    "image_set_provenance_activities",
-    "image_set_provenance_agents",
-    "image_set_provenance_entities",
     "image_set_related_materials",
 ]

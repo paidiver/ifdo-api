@@ -33,11 +33,6 @@ from ifdo_api.schemas.ifdo import ifdo_mapping
 from ifdo_api.schemas.image import ImageSchema
 from ifdo_api.schemas.image_set import ImageSetSchema
 
-# from ifdo_api.crud.provenance import provenance_agent_crud
-# from ifdo_api.schemas.ifdo import ifdo_provenance_mapping
-# from ifdo_api.schemas.provenance import ProvenanceAgentSchema
-
-
 image_set_models_info = {
     "context": {"crud": context_crud, "unique": "name"},
     "project": {"crud": project_crud, "unique": "name"},

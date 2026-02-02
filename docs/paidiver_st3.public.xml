@@ -31,20 +31,32 @@
          </index>
       </table>
       <table name="annotation_set_creators" remarks="" schema="public" type="TABLE">
-         <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="creator_id" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
-            <parent column="id" foreignKey="annotation_set_creators_creator_id_fkey" implied="false" onDeleteCascade="true" schema="public" table="creators"/>
-         </column>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="annotation_set_id" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
+         <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="annotation_set_id" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
             <parent column="id" foreignKey="annotation_set_creators_annotation_set_id_fkey" implied="false" onDeleteCascade="true" schema="public" table="annotation_sets"/>
          </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="creator_id" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
+            <parent column="id" foreignKey="annotation_set_creators_creator_id_fkey" implied="false" onDeleteCascade="true" schema="public" table="creators"/>
+         </column>
+         <primaryKey column="annotation_set_id" sequenceNumberInPK="1"/>
+         <primaryKey column="creator_id" sequenceNumberInPK="2"/>
+         <index name="annotation_set_creators_pkey" unique="true">
+            <column ascending="true" name="annotation_set_id"/>
+            <column ascending="true" name="creator_id"/>
+         </index>
       </table>
       <table name="annotation_set_image_sets" remarks="" schema="public" type="TABLE">
-         <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="image_set_id" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
-            <parent column="id" foreignKey="annotation_set_image_sets_image_set_id_fkey" implied="false" onDeleteCascade="true" schema="public" table="image_sets"/>
-         </column>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="annotation_set_id" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
+         <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="annotation_set_id" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
             <parent column="id" foreignKey="annotation_set_image_sets_annotation_set_id_fkey" implied="false" onDeleteCascade="true" schema="public" table="annotation_sets"/>
          </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="image_set_id" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
+            <parent column="id" foreignKey="annotation_set_image_sets_image_set_id_fkey" implied="false" onDeleteCascade="true" schema="public" table="image_sets"/>
+         </column>
+         <primaryKey column="annotation_set_id" sequenceNumberInPK="1"/>
+         <primaryKey column="image_set_id" sequenceNumberInPK="2"/>
+         <index name="annotation_set_image_sets_pkey" unique="true">
+            <column ascending="true" name="annotation_set_id"/>
+            <column ascending="true" name="image_set_id"/>
+         </index>
       </table>
       <table name="annotation_sets" remarks="" schema="public" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="context_id" nullable="true" remarks="" size="2147483647" type="uuid" typeCode="1111">
@@ -356,48 +368,6 @@
             <column ascending="true" name="creator_id"/>
          </index>
       </table>
-      <table name="image_set_provenance_activities" remarks="" schema="public" type="TABLE">
-         <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="image_set_id" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
-            <parent column="id" foreignKey="image_set_provenance_activities_image_set_id_fkey" implied="false" onDeleteCascade="true" schema="public" table="image_sets"/>
-         </column>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="activity_id" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
-            <parent column="id" foreignKey="image_set_provenance_activities_activity_id_fkey" implied="false" onDeleteCascade="true" schema="public" table="provenance_activities"/>
-         </column>
-         <primaryKey column="image_set_id" sequenceNumberInPK="1"/>
-         <primaryKey column="activity_id" sequenceNumberInPK="2"/>
-         <index name="image_set_provenance_activities_pkey" unique="true">
-            <column ascending="true" name="image_set_id"/>
-            <column ascending="true" name="activity_id"/>
-         </index>
-      </table>
-      <table name="image_set_provenance_agents" remarks="" schema="public" type="TABLE">
-         <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="image_set_id" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
-            <parent column="id" foreignKey="image_set_provenance_agents_image_set_id_fkey" implied="false" onDeleteCascade="true" schema="public" table="image_sets"/>
-         </column>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="agent_id" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
-            <parent column="id" foreignKey="image_set_provenance_agents_agent_id_fkey" implied="false" onDeleteCascade="true" schema="public" table="provenance_agents"/>
-         </column>
-         <primaryKey column="image_set_id" sequenceNumberInPK="1"/>
-         <primaryKey column="agent_id" sequenceNumberInPK="2"/>
-         <index name="image_set_provenance_agents_pkey" unique="true">
-            <column ascending="true" name="image_set_id"/>
-            <column ascending="true" name="agent_id"/>
-         </index>
-      </table>
-      <table name="image_set_provenance_entities" remarks="" schema="public" type="TABLE">
-         <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="image_set_id" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
-            <parent column="id" foreignKey="image_set_provenance_entities_image_set_id_fkey" implied="false" onDeleteCascade="true" schema="public" table="image_sets"/>
-         </column>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="entity_id" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
-            <parent column="id" foreignKey="image_set_provenance_entities_entity_id_fkey" implied="false" onDeleteCascade="true" schema="public" table="provenance_entities"/>
-         </column>
-         <primaryKey column="image_set_id" sequenceNumberInPK="1"/>
-         <primaryKey column="entity_id" sequenceNumberInPK="2"/>
-         <index name="image_set_provenance_entities_pkey" unique="true">
-            <column ascending="true" name="image_set_id"/>
-            <column ascending="true" name="entity_id"/>
-         </index>
-      </table>
       <table name="image_set_related_materials" remarks="" schema="public" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="image_set_id" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
             <parent column="id" foreignKey="image_set_related_materials_image_set_id_fkey" implied="false" onDeleteCascade="true" schema="public" table="image_sets"/>
@@ -509,9 +479,6 @@
          <column autoUpdated="false" defaultValue="null" digits="0" id="67" name="id" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
             <child column="image_set_id" foreignKey="annotation_set_image_sets_image_set_id_fkey" implied="false" onDeleteCascade="true" schema="public" table="annotation_set_image_sets"/>
             <child column="image_set_id" foreignKey="image_set_creators_image_set_id_fkey" implied="false" onDeleteCascade="true" schema="public" table="image_set_creators"/>
-            <child column="image_set_id" foreignKey="image_set_provenance_activities_image_set_id_fkey" implied="false" onDeleteCascade="true" schema="public" table="image_set_provenance_activities"/>
-            <child column="image_set_id" foreignKey="image_set_provenance_agents_image_set_id_fkey" implied="false" onDeleteCascade="true" schema="public" table="image_set_provenance_agents"/>
-            <child column="image_set_id" foreignKey="image_set_provenance_entities_image_set_id_fkey" implied="false" onDeleteCascade="true" schema="public" table="image_set_provenance_entities"/>
             <child column="image_set_id" foreignKey="image_set_related_materials_image_set_id_fkey" implied="false" onDeleteCascade="true" schema="public" table="image_set_related_materials"/>
             <child column="image_set_id" foreignKey="images_image_set_id_fkey" implied="false" onDeleteCascade="true" schema="public" table="images"/>
          </column>
@@ -653,19 +620,19 @@
       </table>
       <table name="labels" remarks="" schema="public" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="name" nullable="false" remarks="" size="255" type="varchar" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="lowest_taxonomic_name" nullable="true" remarks="" size="255" type="varchar" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="lowest_aphia_id" nullable="true" remarks="" size="50" type="varchar" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="name_is_lowest" nullable="false" remarks="" size="1" type="bool" typeCode="-7"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="identification_qualifier" nullable="true" remarks="" size="255" type="varchar" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="5" name="annotation_set_id" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
+         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="parent_label_name" nullable="false" remarks="" size="255" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="lowest_taxonomic_name" nullable="true" remarks="" size="255" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="lowest_aphia_id" nullable="true" remarks="" size="50" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="name_is_lowest" nullable="false" remarks="" size="1" type="bool" typeCode="-7"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="5" name="identification_qualifier" nullable="true" remarks="" size="255" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="annotation_set_id" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
             <parent column="id" foreignKey="labels_annotation_set_id_fkey" implied="false" onDeleteCascade="true" schema="public" table="annotation_sets"/>
          </column>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="id" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
+         <column autoUpdated="false" defaultValue="null" digits="0" id="7" name="id" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
             <child column="label_id" foreignKey="annotation_labels_label_id_fkey" implied="false" onDeleteCascade="true" schema="public" table="annotation_labels"/>
          </column>
-         <column autoUpdated="false" defaultValue="null" digits="6" id="7" name="created_at" nullable="false" remarks="" size="29" type="timestamp" typeCode="93"/>
-         <column autoUpdated="false" defaultValue="null" digits="6" id="8" name="updated_at" nullable="false" remarks="" size="29" type="timestamp" typeCode="93"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="9" name="parent_label_name" nullable="false" remarks="" size="255" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="8" name="created_at" nullable="false" remarks="" size="29" type="timestamp" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="9" name="updated_at" nullable="false" remarks="" size="29" type="timestamp" typeCode="93"/>
          <primaryKey column="id" sequenceNumberInPK="1"/>
          <index name="labels_pkey" unique="true">
             <column ascending="true" name="id"/>
@@ -758,124 +725,6 @@
          </index>
          <index name="projects_name_key" unique="true">
             <column ascending="true" name="name"/>
-         </index>
-      </table>
-      <table name="provenance_activities" remarks="" schema="public" type="TABLE">
-         <column autoUpdated="false" defaultValue="null" digits="6" id="0" name="start_time" nullable="true" remarks="" size="29" type="timestamp" typeCode="93"/>
-         <column autoUpdated="false" defaultValue="null" digits="6" id="1" name="end_time" nullable="true" remarks="" size="29" type="timestamp" typeCode="93"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="id" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
-            <child column="activity_id" foreignKey="image_set_provenance_activities_activity_id_fkey" implied="false" onDeleteCascade="true" schema="public" table="image_set_provenance_activities"/>
-            <child column="activity_id" foreignKey="provenanceactivity_agent_activity_id_fkey" implied="false" onDeleteCascade="false" schema="public" table="provenanceactivity_agent"/>
-            <child column="activity_id" foreignKey="provenanceactivity_entity_activity_id_fkey" implied="false" onDeleteCascade="false" schema="public" table="provenanceactivity_entity"/>
-            <child column="activity_id" foreignKey="provenanceentity_activity_activity_id_fkey" implied="false" onDeleteCascade="false" schema="public" table="provenanceentity_activity"/>
-         </column>
-         <column autoUpdated="false" defaultValue="null" digits="6" id="3" name="created_at" nullable="false" remarks="" size="29" type="timestamp" typeCode="93"/>
-         <column autoUpdated="false" defaultValue="null" digits="6" id="4" name="updated_at" nullable="false" remarks="" size="29" type="timestamp" typeCode="93"/>
-         <primaryKey column="id" sequenceNumberInPK="1"/>
-         <index name="provenance_activities_pkey" unique="true">
-            <column ascending="true" name="id"/>
-         </index>
-         <index name="provenance_activities_id_key" unique="true">
-            <column ascending="true" name="id"/>
-         </index>
-      </table>
-      <table name="provenance_agents" remarks="" schema="public" type="TABLE">
-         <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="name" nullable="false" remarks="" size="255" type="varchar" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="unique_id" nullable="false" remarks="" size="500" type="varchar" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="id" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
-            <child column="agent_id" foreignKey="image_set_provenance_agents_agent_id_fkey" implied="false" onDeleteCascade="true" schema="public" table="image_set_provenance_agents"/>
-            <child column="agent_id" foreignKey="provenanceactivity_agent_agent_id_fkey" implied="false" onDeleteCascade="false" schema="public" table="provenanceactivity_agent"/>
-            <child column="agent_id" foreignKey="provenanceentity_agent_agent_id_fkey" implied="false" onDeleteCascade="false" schema="public" table="provenanceentity_agent"/>
-         </column>
-         <column autoUpdated="false" defaultValue="null" digits="6" id="3" name="created_at" nullable="false" remarks="" size="29" type="timestamp" typeCode="93"/>
-         <column autoUpdated="false" defaultValue="null" digits="6" id="4" name="updated_at" nullable="false" remarks="" size="29" type="timestamp" typeCode="93"/>
-         <primaryKey column="id" sequenceNumberInPK="1"/>
-         <index name="provenance_agents_pkey" unique="true">
-            <column ascending="true" name="id"/>
-         </index>
-         <index name="provenance_agents_id_key" unique="true">
-            <column ascending="true" name="id"/>
-         </index>
-         <index name="provenance_agents_unique_id_key" unique="true">
-            <column ascending="true" name="unique_id"/>
-         </index>
-      </table>
-      <table name="provenance_entities" remarks="" schema="public" type="TABLE">
-         <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="name" nullable="false" remarks="" size="255" type="varchar" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="unique_id" nullable="false" remarks="" size="500" type="varchar" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="6" id="2" name="created_at" nullable="true" remarks="" size="29" type="timestamp" typeCode="93"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="id" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
-            <child column="entity_id" foreignKey="image_set_provenance_entities_entity_id_fkey" implied="false" onDeleteCascade="true" schema="public" table="image_set_provenance_entities"/>
-            <child column="entity_id" foreignKey="provenanceactivity_entity_entity_id_fkey" implied="false" onDeleteCascade="false" schema="public" table="provenanceactivity_entity"/>
-            <child column="entity_id" foreignKey="provenanceentity_activity_entity_id_fkey" implied="false" onDeleteCascade="false" schema="public" table="provenanceentity_activity"/>
-            <child column="entity_id" foreignKey="provenanceentity_agent_entity_id_fkey" implied="false" onDeleteCascade="false" schema="public" table="provenanceentity_agent"/>
-         </column>
-         <column autoUpdated="false" defaultValue="null" digits="6" id="4" name="updated_at" nullable="false" remarks="" size="29" type="timestamp" typeCode="93"/>
-         <primaryKey column="id" sequenceNumberInPK="1"/>
-         <index name="provenance_entities_pkey" unique="true">
-            <column ascending="true" name="id"/>
-         </index>
-         <index name="provenance_entities_id_key" unique="true">
-            <column ascending="true" name="id"/>
-         </index>
-         <index name="provenance_entities_unique_id_key" unique="true">
-            <column ascending="true" name="unique_id"/>
-         </index>
-      </table>
-      <table name="provenanceactivity_agent" remarks="" schema="public" type="TABLE">
-         <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="activity_id" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
-            <parent column="id" foreignKey="provenanceactivity_agent_activity_id_fkey" implied="false" onDeleteCascade="false" schema="public" table="provenance_activities"/>
-         </column>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="agent_id" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
-            <parent column="id" foreignKey="provenanceactivity_agent_agent_id_fkey" implied="false" onDeleteCascade="false" schema="public" table="provenance_agents"/>
-         </column>
-         <primaryKey column="activity_id" sequenceNumberInPK="1"/>
-         <primaryKey column="agent_id" sequenceNumberInPK="2"/>
-         <index name="provenanceactivity_agent_pkey" unique="true">
-            <column ascending="true" name="activity_id"/>
-            <column ascending="true" name="agent_id"/>
-         </index>
-      </table>
-      <table name="provenanceactivity_entity" remarks="" schema="public" type="TABLE">
-         <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="activity_id" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
-            <parent column="id" foreignKey="provenanceactivity_entity_activity_id_fkey" implied="false" onDeleteCascade="false" schema="public" table="provenance_activities"/>
-         </column>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="entity_id" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
-            <parent column="id" foreignKey="provenanceactivity_entity_entity_id_fkey" implied="false" onDeleteCascade="false" schema="public" table="provenance_entities"/>
-         </column>
-         <primaryKey column="activity_id" sequenceNumberInPK="1"/>
-         <primaryKey column="entity_id" sequenceNumberInPK="2"/>
-         <index name="provenanceactivity_entity_pkey" unique="true">
-            <column ascending="true" name="activity_id"/>
-            <column ascending="true" name="entity_id"/>
-         </index>
-      </table>
-      <table name="provenanceentity_activity" remarks="" schema="public" type="TABLE">
-         <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="entity_id" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
-            <parent column="id" foreignKey="provenanceentity_activity_entity_id_fkey" implied="false" onDeleteCascade="false" schema="public" table="provenance_entities"/>
-         </column>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="activity_id" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
-            <parent column="id" foreignKey="provenanceentity_activity_activity_id_fkey" implied="false" onDeleteCascade="false" schema="public" table="provenance_activities"/>
-         </column>
-         <primaryKey column="entity_id" sequenceNumberInPK="1"/>
-         <primaryKey column="activity_id" sequenceNumberInPK="2"/>
-         <index name="provenanceentity_activity_pkey" unique="true">
-            <column ascending="true" name="entity_id"/>
-            <column ascending="true" name="activity_id"/>
-         </index>
-      </table>
-      <table name="provenanceentity_agent" remarks="" schema="public" type="TABLE">
-         <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="entity_id" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
-            <parent column="id" foreignKey="provenanceentity_agent_entity_id_fkey" implied="false" onDeleteCascade="false" schema="public" table="provenance_entities"/>
-         </column>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="agent_id" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
-            <parent column="id" foreignKey="provenanceentity_agent_agent_id_fkey" implied="false" onDeleteCascade="false" schema="public" table="provenance_agents"/>
-         </column>
-         <primaryKey column="entity_id" sequenceNumberInPK="1"/>
-         <primaryKey column="agent_id" sequenceNumberInPK="2"/>
-         <index name="provenanceentity_agent_pkey" unique="true">
-            <column ascending="true" name="entity_id"/>
-            <column ascending="true" name="agent_id"/>
          </index>
       </table>
       <table name="related_materials" remarks="" schema="public" type="TABLE">

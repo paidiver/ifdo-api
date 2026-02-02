@@ -30,27 +30,6 @@ image_set_related_materials = Table(
     Column("material_id", ForeignKey("related_materials.id", ondelete="CASCADE"), primary_key=True),
 )
 
-image_set_provenance_agents = Table(
-    "image_set_provenance_agents",
-    Base.metadata,
-    Column("image_set_id", ForeignKey("image_sets.id", ondelete="CASCADE"), primary_key=True),
-    Column("agent_id", ForeignKey("provenance_agents.id", ondelete="CASCADE"), primary_key=True),
-)
-
-image_set_provenance_entities = Table(
-    "image_set_provenance_entities",
-    Base.metadata,
-    Column("image_set_id", ForeignKey("image_sets.id", ondelete="CASCADE"), primary_key=True),
-    Column("entity_id", ForeignKey("provenance_entities.id", ondelete="CASCADE"), primary_key=True),
-)
-
-image_set_provenance_activities = Table(
-    "image_set_provenance_activities",
-    Base.metadata,
-    Column("image_set_id", ForeignKey("image_sets.id", ondelete="CASCADE"), primary_key=True),
-    Column("activity_id", ForeignKey("provenance_activities.id", ondelete="CASCADE"), primary_key=True),
-)
-
 
 class ImageSet(CommonFieldsAll, CommonFieldsImagesImageSets, DefaultColumns, Base):
     """A collection of images, videos, or other media files that are related to a specific project, event, or context."""
@@ -177,9 +156,6 @@ class ImageSet(CommonFieldsAll, CommonFieldsImagesImageSets, DefaultColumns, Bas
     )
 
     related_materials = relationship("RelatedMaterial", secondary=image_set_related_materials, back_populates="image_sets")
-    provenance_agents = relationship("ProvenanceAgent", secondary=image_set_provenance_agents, back_populates="image_sets")
-    provenance_entities = relationship("ProvenanceEntity", secondary=image_set_provenance_entities, back_populates="image_sets")
-    provenance_activities = relationship("ProvenanceActivity", secondary=image_set_provenance_activities, back_populates="image_sets")
 
     images = relationship(
         "Image",

@@ -1,13 +1,6 @@
 alembic_version
 annotation_labels
-provenanceentity_agent
-provenanceentity_activity
-provenanceactivity_entity
-provenanceactivity_agent
 image_set_related_materials
-image_set_provenance_entities
-image_set_provenance_agents
-image_set_provenance_activities
 image_set_creators
 image_creators
 annotation_set_image_sets
@@ -15,8 +8,8 @@ annotation_set_creators
 annotations
 labels
 images
-annotation_sets
 image_sets
+annotation_sets
 related_materials
 annotators
 spatial_ref_sys
@@ -29,11 +22,8 @@ image_camera_poses
 image_camera_housing_viewports
 image_camera_calibration_models
 events
-provenance_agents
 projects
 pis
 licenses
 creators
 contexts
-provenance_entities
-provenance_activities
