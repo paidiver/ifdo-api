@@ -1,5 +1,6 @@
 from sqlalchemy import Column
 from sqlalchemy import Enum
+from sqlalchemy import Float
 from sqlalchemy import ForeignKey
 from sqlalchemy import String
 from sqlalchemy.dialects.postgresql import JSONB
@@ -69,6 +70,12 @@ class Annotation(DefaultColumns, Base):
             "value of a circle defines the radius. The first and last coordinates of a polygon must be equal. "
             "Format: [[p1.x,p1.y,p2x,p2.y,...]..]"
         },
+    )
+
+    dimension_pixels = Column(
+        Float,
+        nullable=True,
+        info={"help": "The real-world dimension (e.g., length, diameter) in pixels corresponding to the annotation, if applicable"},
     )
 
     annotation_labels = relationship(
