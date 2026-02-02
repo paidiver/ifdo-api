@@ -13,8 +13,6 @@ jobs:
     if: github.actor != 'github-actions[bot]'
     name: Linting build
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python 3.10
