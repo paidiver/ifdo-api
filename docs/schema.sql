@@ -281,8 +281,8 @@ CREATE TABLE public.annotation_labels (
 --
 
 CREATE TABLE public.annotation_set_creators (
-    creator_id uuid NOT NULL,
-    annotation_set_id uuid NOT NULL
+    annotation_set_id uuid NOT NULL,
+    creator_id uuid NOT NULL
 );
 
 
@@ -291,8 +291,8 @@ CREATE TABLE public.annotation_set_creators (
 --
 
 CREATE TABLE public.annotation_set_image_sets (
-    image_set_id uuid NOT NULL,
-    annotation_set_id uuid NOT NULL
+    annotation_set_id uuid NOT NULL,
+    image_set_id uuid NOT NULL
 );
 
 
@@ -500,36 +500,6 @@ CREATE TABLE public.image_set_creators (
 
 
 --
--- Name: image_set_provenance_activities; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.image_set_provenance_activities (
-    image_set_id uuid NOT NULL,
-    activity_id uuid NOT NULL
-);
-
-
---
--- Name: image_set_provenance_agents; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.image_set_provenance_agents (
-    image_set_id uuid NOT NULL,
-    agent_id uuid NOT NULL
-);
-
-
---
--- Name: image_set_provenance_entities; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.image_set_provenance_entities (
-    image_set_id uuid NOT NULL,
-    entity_id uuid NOT NULL
-);
-
-
---
 -- Name: image_set_related_materials; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -696,6 +666,7 @@ CREATE TABLE public.images (
 
 CREATE TABLE public.labels (
     name character varying(255) NOT NULL,
+    parent_label_name character varying(255) NOT NULL,
     lowest_taxonomic_name character varying(255),
     lowest_aphia_id character varying(50),
     name_is_lowest boolean NOT NULL,
@@ -703,8 +674,7 @@ CREATE TABLE public.labels (
     annotation_set_id uuid NOT NULL,
     id uuid NOT NULL,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    parent_label_name character varying(255) NOT NULL
+    updated_at timestamp without time zone NOT NULL
 );
 
 
@@ -761,85 +731,6 @@ CREATE TABLE public.projects (
 
 
 --
--- Name: provenance_activities; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.provenance_activities (
-    start_time timestamp without time zone,
-    end_time timestamp without time zone,
-    id uuid NOT NULL,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
-);
-
-
---
--- Name: provenance_agents; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.provenance_agents (
-    name character varying(255) NOT NULL,
-    unique_id character varying(500) NOT NULL,
-    id uuid NOT NULL,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
-);
-
-
---
--- Name: provenance_entities; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.provenance_entities (
-    name character varying(255) NOT NULL,
-    unique_id character varying(500) NOT NULL,
-    created_at timestamp without time zone,
-    id uuid NOT NULL,
-    updated_at timestamp without time zone NOT NULL
-);
-
-
---
--- Name: provenanceactivity_agent; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.provenanceactivity_agent (
-    activity_id uuid NOT NULL,
-    agent_id uuid NOT NULL
-);
-
-
---
--- Name: provenanceactivity_entity; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.provenanceactivity_entity (
-    activity_id uuid NOT NULL,
-    entity_id uuid NOT NULL
-);
-
-
---
--- Name: provenanceentity_activity; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.provenanceentity_activity (
-    entity_id uuid NOT NULL,
-    activity_id uuid NOT NULL
-);
-
-
---
--- Name: provenanceentity_agent; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.provenanceentity_agent (
-    entity_id uuid NOT NULL,
-    agent_id uuid NOT NULL
-);
-
-
---
 -- Name: related_materials; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -888,6 +779,22 @@ ALTER TABLE ONLY public.annotation_labels
 
 ALTER TABLE ONLY public.annotation_labels
     ADD CONSTRAINT annotation_labels_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: annotation_set_creators annotation_set_creators_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.annotation_set_creators
+    ADD CONSTRAINT annotation_set_creators_pkey PRIMARY KEY (annotation_set_id, creator_id);
+
+
+--
+-- Name: annotation_set_image_sets annotation_set_image_sets_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.annotation_set_image_sets
+    ADD CONSTRAINT annotation_set_image_sets_pkey PRIMARY KEY (annotation_set_id, image_set_id);
 
 
 --
@@ -1139,30 +1046,6 @@ ALTER TABLE ONLY public.image_set_creators
 
 
 --
--- Name: image_set_provenance_activities image_set_provenance_activities_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.image_set_provenance_activities
-    ADD CONSTRAINT image_set_provenance_activities_pkey PRIMARY KEY (image_set_id, activity_id);
-
-
---
--- Name: image_set_provenance_agents image_set_provenance_agents_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.image_set_provenance_agents
-    ADD CONSTRAINT image_set_provenance_agents_pkey PRIMARY KEY (image_set_id, agent_id);
-
-
---
--- Name: image_set_provenance_entities image_set_provenance_entities_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.image_set_provenance_entities
-    ADD CONSTRAINT image_set_provenance_entities_pkey PRIMARY KEY (image_set_id, entity_id);
-
-
---
 -- Name: image_set_related_materials image_set_related_materials_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1352,102 +1235,6 @@ ALTER TABLE ONLY public.projects
 
 ALTER TABLE ONLY public.projects
     ADD CONSTRAINT projects_pkey PRIMARY KEY (id);
-
-
---
--- Name: provenance_activities provenance_activities_id_key; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.provenance_activities
-    ADD CONSTRAINT provenance_activities_id_key UNIQUE (id);
-
-
---
--- Name: provenance_activities provenance_activities_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.provenance_activities
-    ADD CONSTRAINT provenance_activities_pkey PRIMARY KEY (id);
-
-
---
--- Name: provenance_agents provenance_agents_id_key; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.provenance_agents
-    ADD CONSTRAINT provenance_agents_id_key UNIQUE (id);
-
-
---
--- Name: provenance_agents provenance_agents_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.provenance_agents
-    ADD CONSTRAINT provenance_agents_pkey PRIMARY KEY (id);
-
-
---
--- Name: provenance_agents provenance_agents_unique_id_key; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.provenance_agents
-    ADD CONSTRAINT provenance_agents_unique_id_key UNIQUE (unique_id);
-
-
---
--- Name: provenance_entities provenance_entities_id_key; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.provenance_entities
-    ADD CONSTRAINT provenance_entities_id_key UNIQUE (id);
-
-
---
--- Name: provenance_entities provenance_entities_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.provenance_entities
-    ADD CONSTRAINT provenance_entities_pkey PRIMARY KEY (id);
-
-
---
--- Name: provenance_entities provenance_entities_unique_id_key; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.provenance_entities
-    ADD CONSTRAINT provenance_entities_unique_id_key UNIQUE (unique_id);
-
-
---
--- Name: provenanceactivity_agent provenanceactivity_agent_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.provenanceactivity_agent
-    ADD CONSTRAINT provenanceactivity_agent_pkey PRIMARY KEY (activity_id, agent_id);
-
-
---
--- Name: provenanceactivity_entity provenanceactivity_entity_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.provenanceactivity_entity
-    ADD CONSTRAINT provenanceactivity_entity_pkey PRIMARY KEY (activity_id, entity_id);
-
-
---
--- Name: provenanceentity_activity provenanceentity_activity_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.provenanceentity_activity
-    ADD CONSTRAINT provenanceentity_activity_pkey PRIMARY KEY (entity_id, activity_id);
-
-
---
--- Name: provenanceentity_agent provenanceentity_agent_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.provenanceentity_agent
-    ADD CONSTRAINT provenanceentity_agent_pkey PRIMARY KEY (entity_id, agent_id);
 
 
 --
@@ -1645,54 +1432,6 @@ ALTER TABLE ONLY public.image_set_creators
 
 ALTER TABLE ONLY public.image_set_creators
     ADD CONSTRAINT image_set_creators_image_set_id_fkey FOREIGN KEY (image_set_id) REFERENCES public.image_sets(id) ON DELETE CASCADE;
-
-
---
--- Name: image_set_provenance_activities image_set_provenance_activities_activity_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.image_set_provenance_activities
-    ADD CONSTRAINT image_set_provenance_activities_activity_id_fkey FOREIGN KEY (activity_id) REFERENCES public.provenance_activities(id) ON DELETE CASCADE;
-
-
---
--- Name: image_set_provenance_activities image_set_provenance_activities_image_set_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.image_set_provenance_activities
-    ADD CONSTRAINT image_set_provenance_activities_image_set_id_fkey FOREIGN KEY (image_set_id) REFERENCES public.image_sets(id) ON DELETE CASCADE;
-
-
---
--- Name: image_set_provenance_agents image_set_provenance_agents_agent_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.image_set_provenance_agents
-    ADD CONSTRAINT image_set_provenance_agents_agent_id_fkey FOREIGN KEY (agent_id) REFERENCES public.provenance_agents(id) ON DELETE CASCADE;
-
-
---
--- Name: image_set_provenance_agents image_set_provenance_agents_image_set_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.image_set_provenance_agents
-    ADD CONSTRAINT image_set_provenance_agents_image_set_id_fkey FOREIGN KEY (image_set_id) REFERENCES public.image_sets(id) ON DELETE CASCADE;
-
-
---
--- Name: image_set_provenance_entities image_set_provenance_entities_entity_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.image_set_provenance_entities
-    ADD CONSTRAINT image_set_provenance_entities_entity_id_fkey FOREIGN KEY (entity_id) REFERENCES public.provenance_entities(id) ON DELETE CASCADE;
-
-
---
--- Name: image_set_provenance_entities image_set_provenance_entities_image_set_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.image_set_provenance_entities
-    ADD CONSTRAINT image_set_provenance_entities_image_set_id_fkey FOREIGN KEY (image_set_id) REFERENCES public.image_sets(id) ON DELETE CASCADE;
 
 
 --
@@ -1933,70 +1672,6 @@ ALTER TABLE ONLY public.images
 
 ALTER TABLE ONLY public.labels
     ADD CONSTRAINT labels_annotation_set_id_fkey FOREIGN KEY (annotation_set_id) REFERENCES public.annotation_sets(id) ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
--- Name: provenanceactivity_agent provenanceactivity_agent_activity_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.provenanceactivity_agent
-    ADD CONSTRAINT provenanceactivity_agent_activity_id_fkey FOREIGN KEY (activity_id) REFERENCES public.provenance_activities(id);
-
-
---
--- Name: provenanceactivity_agent provenanceactivity_agent_agent_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.provenanceactivity_agent
-    ADD CONSTRAINT provenanceactivity_agent_agent_id_fkey FOREIGN KEY (agent_id) REFERENCES public.provenance_agents(id);
-
-
---
--- Name: provenanceactivity_entity provenanceactivity_entity_activity_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.provenanceactivity_entity
-    ADD CONSTRAINT provenanceactivity_entity_activity_id_fkey FOREIGN KEY (activity_id) REFERENCES public.provenance_activities(id);
-
-
---
--- Name: provenanceactivity_entity provenanceactivity_entity_entity_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.provenanceactivity_entity
-    ADD CONSTRAINT provenanceactivity_entity_entity_id_fkey FOREIGN KEY (entity_id) REFERENCES public.provenance_entities(id);
-
-
---
--- Name: provenanceentity_activity provenanceentity_activity_activity_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.provenanceentity_activity
-    ADD CONSTRAINT provenanceentity_activity_activity_id_fkey FOREIGN KEY (activity_id) REFERENCES public.provenance_activities(id);
-
-
---
--- Name: provenanceentity_activity provenanceentity_activity_entity_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.provenanceentity_activity
-    ADD CONSTRAINT provenanceentity_activity_entity_id_fkey FOREIGN KEY (entity_id) REFERENCES public.provenance_entities(id);
-
-
---
--- Name: provenanceentity_agent provenanceentity_agent_agent_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.provenanceentity_agent
-    ADD CONSTRAINT provenanceentity_agent_agent_id_fkey FOREIGN KEY (agent_id) REFERENCES public.provenance_agents(id);
-
-
---
--- Name: provenanceentity_agent provenanceentity_agent_entity_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.provenanceentity_agent
-    ADD CONSTRAINT provenanceentity_agent_entity_id_fkey FOREIGN KEY (entity_id) REFERENCES public.provenance_entities(id);
 
 
 --
